@@ -1,0 +1,10 @@
+export  const HttpStatus={
+STATUS_200 : 200,
+STATUS_400 : 400,
+STATUS_404 : 404,
+STATUS_500 : 500,
+STATUS_403 : 403,
+STATUS_401 : 401,
+STATUS_SUCCESS : 'success',
+STATUS_FAILED : 'failed'
+}
