@@ -4,7 +4,7 @@ import jwtHandler from "../utilities/jwtHandler";
 import { isValid } from "date-fns";
 
 export  const Authorize = (req:Request,res:Response,next:NextFunction)=>{
-if(req.url === '/api/login' || req.url === '/api/register'){
+if(req.url === '/api/login' || req.url === '/api/register' || '/register/sendMail' || '/register/verify'){
    return next()
     
 }
