@@ -13,9 +13,7 @@ import { dateFormatter } from '../utilities/dateFormatter'
 
 export default class UserRepository{
     connection! : Connection | undefined
-     constructor(){
-    this.getConnection()
-    }
+   
      private  async getConnection(): Promise<Pool | undefined>{
         try{
             return  await new conn().getConnect()
