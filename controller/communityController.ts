@@ -35,12 +35,26 @@ router.post('/community/checkers/create',async(req,res)=>{
     res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,messgae:'Successfully Created Community'})
 })
 
-router.get('/community/checkers',(req,res)=>{
+router.get('/community/checkers',async(req,res)=>{
+    var response = await new Community().GetAllSubAdmins()
+    if(response.length < 1){
+      res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Checkers '})
+    }
+    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Checkers',data:response})
+})
+//for the community page
+router.get('/community/checkers/:CommunityId',(req,res)=>{
 
 })
 
-router.get('/community/checkers/:Id',(req,res)=>{
-
+//For the checkers page
+router.get('/community/checkers/:Id',async(req,res)=>{
+    const param = req.params.Id
+    var response = await new Community().GetCheckersById(Number(param))
+    if(response.length < 1){
+        res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Checkers'})
+      }
+      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Checkers',data:response[0]})
 })
 
 router.post('/community/subAdmin/create',async(req,res)=>{
@@ -52,12 +66,21 @@ router.post('/community/subAdmin/create',async(req,res)=>{
     res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,messgae:'Successfully Created Community'})
 })
 
-router.get('/community/subAdmin',(req,res)=>{
-
+router.get('/community/subAdmin',async(req,res)=>{
+    var response = await new Community().GetAllSubAdmins()
+    if(response.length < 1){
+      res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch SubAdmins'})
+    }
+    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch subAdmin',data:response})
 })
 
-router.get('/community/subAdmin/:Id',(req,res)=>{
-
+router.get('/community/subAdmin/:Id',async(req,res)=>{
+const param = req.params.Id
+var response = await new Community().GetSubAdminsById(Number(param))
+if(response.length < 1){
+    res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch SubAdmins'})
+  }
+  res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch subAdmin',data:response[0]})
 })
 
 

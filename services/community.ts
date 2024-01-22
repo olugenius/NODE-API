@@ -19,4 +19,25 @@ export default class Community{
 
         return await new communityRepository().createCheckers(payload)
      }
+     
+     async GetCheckersById(Id:number):Promise<any | null>{
+      return await new communityRepository().getCheckersById(Id)
+     }
+
+     async GetAllCheckers(){
+      return await new communityRepository().GetAllCheckers()
+
+     }
+
+     async GetAllSubAdmins(){
+      return await new communityRepository().GetAllSubAdmins()
+
+
+     }
+
+     async GetSubAdminsById(Id:number){
+      return await new communityRepository().GetSubAdminsById(Id)
+      
+
+     }
 }
