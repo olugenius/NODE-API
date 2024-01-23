@@ -59,6 +59,9 @@ const router = express.Router()
 
 // })
 
+router.get('',(req,res)=>{
+  res.send("Welcome to VSURED Api Platform")
+})
 
 router.post('/login',LoginValidator,async(req:Request,res:Response)=>{
     const reqBody = <loginModel>req.body
@@ -185,7 +188,6 @@ router.post('/register/sendMail',EmailValidator,async(req:Request,res:Response)=
     //Start sending sms or email
     res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:`Token sent successfully Via ${reqBody.Medium}`,Email:`${reqBody.Email}`})
 
-  
     
 })
 
