@@ -152,7 +152,7 @@ async (req:any,res:any)=>{
             }
 
          let response = await new userRepo().createUser(reqBody)
-          if(response.status !== HttpStatus.STATUS_SUCCESS){
+          if(response.status.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
             res.status(HttpStatus.STATUS_400).json({status: response.status,message:'Error registering user'})
             return;
           }

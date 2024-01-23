@@ -13,9 +13,7 @@ import { dateFormatter } from '../utilities/dateFormatter'
 
 export default class UserRepository{
     connection! : Connection | undefined
-     constructor(){
-    this.getConnection()
-    }
+   
      private  async getConnection(): Promise<Pool | undefined>{
         try{
             return  await new conn().getConnect()
@@ -52,7 +50,7 @@ export default class UserRepository{
                     reject(err)
                     }
 
-                    connection?.query(`SELECT * FROM Users WHERE Phone = '${Phone}'`,(err,data)=>{
+                    connection?.query(`SELECT * FROM Users WHERE Phone = ?`,[Phone],(err,data)=>{
                         connection.release()
                         if(err){
                            console.log('error querying database',err)           
@@ -70,23 +68,6 @@ export default class UserRepository{
                     })
             })
     
-             //await new Promise<void>((resolve,reject)=>{
-    
-                // connection?.query(`SELECT * FROM Users WHERE Phone = '${Phone}'`,(err,data)=>{
-                //     if(err){
-                //        console.log('error querying database',err)
-                //        reject(err)
-       
-                //     }
-                //     else{
-                //        console.log('successfully query',data)
-                //        result = data
-                //        resolve()
-                //     }
-                //    })
-    
-    
-             //})
              return result
 
         }catch(error){
@@ -177,7 +158,7 @@ export default class UserRepository{
 
                     let token = Math.floor(100000 + Math.random() * 900000);
                     
-                       connection?.query(`INSERT INTO MailToken(Token,Email,MailFor,Used) VALUES('${token.toString()}','${email}','${mailFor}',False) `,(err,data)=>{
+                       connection?.query(`INSERT INTO MailToken(Token,Email,MailFor,Used) VALUES(?,?,?,?) `,[token.toString(),email,mailFor,false],(err,data)=>{
                         connection.release()
                         if(err){
                            console.log('error querying database',err)
@@ -222,7 +203,7 @@ export default class UserRepository{
                 reject(err)
                 }
 
-                 connection?.query(`SELECT * FROM  MailToken WHERE Email = '${email}' and Used=False and MailFor= '${mailFor}'`,(err,data)=>{
+                 connection?.query(`SELECT * FROM  MailToken WHERE Email = ? and Used=False and MailFor= ?`,[email,mailFor],(err,data)=>{
                 connection.release()
                 if(err){
                    console.log('error querying database',err)   
@@ -352,7 +333,7 @@ export default class UserRepository{
                         console.log('connection error',err)
                         reject(err)
                         }
-                        connection?.query(`UPDATE MailToken SET Used = True,UpdatedAt= '${updatedAt}' where Email='${email}' and MailFor='${mailFor}'`,(err,data)=>{
+                        connection?.query(`UPDATE MailToken SET Used = ?,UpdatedAt= ? where Email=? and MailFor=?`,[true,updatedAt,email,mailFor],(err,data)=>{
                             if(err){
                                console.log('error querying database',err)   
                                resolve('failed')    
@@ -365,7 +346,7 @@ export default class UserRepository{
         
                            if(mailFor === 'EmailVerify'){
                             
-                                connection?.query(`UPDATE Users SET IsVerified = True where Email='${email}'`,(err,data)=>{
+                                connection?.query(`UPDATE Users SET IsVerified = ? where Email=?`,[true,email],(err,data)=>{
                                     if(err){
                                        console.log('error querying database',err)
                                        resolve('Failed')
@@ -397,83 +378,6 @@ export default class UserRepository{
     }
 
 
-    // async createUser(payload:registerModel):Promise<registerResponseModel>{
-   
-    //     let response : registerResponseModel = {status: ''}
-    //     try{
-    //         const saltRound = 10
-    //         const passwordEncrypt = await bcrypt.hash(payload.Password,saltRound)
-    //         let dateFormat = format(payload.DOB, 'yyyy-MM-dd')
-    //         const connection =  await this.getConnection()
-    //         await new Promise<void>((resolve,reject)=>{
-             
-    //             connection?.getConnection((err,connection)=>{
-    //                 if(err){
-    //                     console.log('connection error',err)
-    //                     reject(err)
-    //                 }
-                    
-                  
-    //                 const query = `INSERT INTO Users(FirstName,LastName,DOB,Gender,Address,Phone,Email,PhotoPath,Password,VerifyChannel,IsVerified,Language,CompanyType) VALUES('${payload.FirstName}','${payload.LastName}','${dateFormat}','${payload.Gender}','${payload.Address}','${payload.Phone}','${payload.Email}','${payload.PhotoPath}','${passwordEncrypt}','${payload.VerifyChannel}',${payload.IsVerified ?? false},'${payload.Language}','${payload.CompanyType}')`
-    //                 connection.release()
-    //                 //await new Promise<void>((resolve,reject)=>{
-    //                     connection?.query(query,(err,data)=>{
-    //                         if(err){
-    //                             console.log('error querying database',err)
-    //                             response.status = 'Failed'
-                               
-    //                         }else{
-    //                             console.log('successfully query',data)
-    //                             response.status = 'Success'
-                               
-                               
-    //                         }
-            
-    //                      })
-         
-    //                 })
-    //                    resolve()
-                    
-    //                 //})
-
-    //         })
-          
-               
-    //             // const saltRound = 10
-    //             // const passwordEncrypt = await bcrypt.hash(payload.Password,saltRound)
-    //             // let dateFormat = format(payload.DOB, 'yyyy-MM-dd')
-    //             // const query = `INSERT INTO Users(FirstName,LastName,DOB,Gender,Address,Phone,Email,PhotoPath,Password,VerifyChannel,IsVerified,Language,CompanyType) VALUES('${payload.FirstName}','${payload.LastName}','${dateFormat}','${payload.Gender}','${payload.Address}','${payload.Phone}','${payload.Email}','${payload.PhotoPath}','${passwordEncrypt}','${payload.VerifyChannel}',${payload.IsVerified ?? false},'${payload.Language}','${payload.CompanyType}')`
-    //             // await new Promise<void>((resolve,reject)=>{
-    //             //     connection?.query(query,(err,data)=>{
-    //             //         if(err){
-    //             //             console.log('error querying database',err)
-    //             //             reject(err)
-    //             //         }else{
-    //             //             console.log('successfully query',data)
-    //             //             resolve()
-                           
-    //             //         }
-        
-    //             //      })
-     
-    //             // })
-
-    //             return response
-
-    //     }
-    //     catch(error){
-    //         console.error('Error creating user:', error);
-    //         return {status:'Failed'}
-    //     }
-           
-    //             //response.verifyChannel = payload.VerifyChannel
-               
-               
-
-                 
-        
-    // }
-
 
     async createUser(payload:registerModel):Promise<registerResponseModel>{
    
@@ -492,9 +396,10 @@ export default class UserRepository{
                     }
                     
                   
-                    const query = `INSERT INTO Users(FirstName,LastName,DOB,Gender,Address,Phone,Email,PhotoPath,Password,VerifyChannel,IsVerified,Language,CompanyType) VALUES('${payload.FirstName}','${payload.LastName}','${dateFormat}','${payload.Gender}','${payload.Address}','${payload.Phone}','${payload.Email}','${payload.PhotoPath}','${passwordEncrypt}','${payload.VerifyChannel}',${payload.IsVerified ?? false},'${payload.Language}','${payload.CompanyType}')`
-                    connection.release()
-                        connection?.query(query,(err,data)=>{
+                    const query = `INSERT INTO Users(FirstName,LastName,DOB,Gender,Address,Phone,Email,PhotoPath,Password,IsVerified,Language,CompanyType) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)`
+                   
+                        connection?.query(query,[payload.FirstName,payload.LastName,dateFormat,payload.Gender,payload.Address,payload.Phone,payload.Email,payload.PhotoPath,passwordEncrypt,false,payload.Language,payload.CompanyType],(err,data)=>{
+                         connection.release()
                             if(err){
                                 console.log('error querying database',err)
                                 response.status = 'Failed'
