@@ -1,7 +1,6 @@
 import { Request,Response,NextFunction } from "express";
 import { HttpStatus } from "../utilities/HttpstatusCode";
 import jwtHandler from "../utilities/jwtHandler";
-import { isValid } from "date-fns";
 
 export  const Authorize = (req:Request,res:Response,next:NextFunction)=>{
 if(req.url === '/api/login' || req.url === '/api/register' || '/register/sendMail' || '/register/verify'){
@@ -9,6 +8,7 @@ if(req.url === '/api/login' || req.url === '/api/register' || '/register/sendMai
     
 }
     let token = req.header('Authorization')
+    console.log('Authorization token value: ',token)
 if(!token){
     res.status(HttpStatus.STATUS_401).json({status:HttpStatus.STATUS_FAILED,message:'Request UnAuthorized'})
     return;
