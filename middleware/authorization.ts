@@ -14,7 +14,7 @@ if(!token){
     return;
 }
 let IsValid = jwtHandler.IsValidToken(token)
-if(!isValid){
+if(!IsValid){
     res.status(HttpStatus.STATUS_403).json({status:HttpStatus.STATUS_FAILED,message:'Request Forbidden, Invalid Token'})
     return;
 }
