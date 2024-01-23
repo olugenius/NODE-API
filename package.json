@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node ./dist/app.js"
+    "start": "node ./dist/app.js",
+    "postinstall":"tsc",
+    "devstart": "tsc && node ./dist/app.js"
   },
   "author": "",
   "license": "ISC",
