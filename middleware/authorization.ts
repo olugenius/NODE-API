@@ -3,12 +3,11 @@ import { HttpStatus } from "../utilities/HttpstatusCode";
 import jwtHandler from "../utilities/jwtHandler";
 
 export  const Authorize = (req:Request,res:Response,next:NextFunction)=>{
-if(req.url === '/api/login' || req.url === '/api/register' || '/register/sendMail' || '/register/verify'){
+if(req.url === '/api/login' || req.url === '/api/register' || req.url === '/register/sendMail' || req.url === '/register/verify'){
    return next()
     
 }
     let token = req.header('Authorization')
-    console.log('Authorization token value: ',token)
 if(!token){
     res.status(HttpStatus.STATUS_401).json({status:HttpStatus.STATUS_FAILED,message:'Request UnAuthorized'})
     return;
