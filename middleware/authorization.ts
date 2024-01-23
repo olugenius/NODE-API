@@ -18,6 +18,6 @@ if(!IsValid){
     res.status(HttpStatus.STATUS_403).json({status:HttpStatus.STATUS_FAILED,message:'Request Forbidden, Invalid Token'})
     return;
 }
-next()
+return next()
 
 }
