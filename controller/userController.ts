@@ -17,6 +17,7 @@ import resetPasswordRequestModel from '../model/resetPasswordRequestModel'
 import jwtHandler from '../utilities/jwtHandler'
 import refreshTokenRequestmodel from '../model/refreshTokenRequestModel'
 import { isValid } from 'date-fns'
+import { SendMail } from '../utilities/EmailHandler'
 
 const router = express.Router()
 
@@ -70,8 +71,8 @@ router.post('/login',LoginValidator,async(req:Request,res:Response)=>{
           res.status(HttpStatus.STATUS_200).json(error.array())
           return;
         }
-            let response = <registerModel[]> await new userRepo().GetUserByPhone(reqBody.Phone)
-            if(response.length < 1){
+            let response = <registerModel[]> await new userRepo().GetUserByEmailOrPhone(reqBody.Phone)
+            if(response?.length < 1){
 
                 res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'invalid Phone Number or Password'})
                 return;
@@ -84,7 +85,7 @@ router.post('/login',LoginValidator,async(req:Request,res:Response)=>{
                 return;
                }
 
-                if(!response[0].IsVerified){
+                if(!response[0]?.IsVerified){
                     res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email is not yet verified'})
                     return;
                 }
@@ -108,7 +109,7 @@ router.post('/refreshToken',RefreshTokenValidator,async(req:Request,res:Response
         return;
       }
           let response = <registerModel[]> await new userRepo().GetUserByEmail(reqBody.Email)
-          if(response.length < 1){
+          if(response?.length < 1){
 
               res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Email does not exist as a registered user, Please register'})
               return;
@@ -155,7 +156,7 @@ async (req:any,res:any)=>{
             }
 
          let response = await new userRepo().createUser(reqBody)
-          if(response.status.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+          if(response?.status?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
             res.status(HttpStatus.STATUS_400).json({status: response.status,message:'Error registering user'})
             return;
           }
@@ -179,13 +180,19 @@ router.post('/register/sendMail',EmailValidator,async(req:Request,res:Response)=
       return;
     }
         //store in database
-    let response = await new userRepo().AddToken(reqBody.Email,'EmailVerify')
-    console.log('Add token response: ',response)
-    if(response.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+        let token = Math.floor(100000 + Math.random() * 900000);
+    let response = await new userRepo().AddToken(reqBody.Email,'EmailVerify',token.toString(),reqBody.Medium)
+  
+    if(response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
       res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
       return;
     }
     //Start sending sms or email
+    const mailRes = await SendMail(`${reqBody.Email}`,`Please Validate your account by using this token ${token.toString()}`)
+    
+    if(!mailRes){
+      res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
+    }
     res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:`Token sent successfully Via ${reqBody.Medium}`,Email:`${reqBody.Email}`})
 
     
@@ -200,11 +207,11 @@ router.post('/register/verify',VerifyEmailValidator,async(req:Request,res:Respon
     }
         //Get Token from Db
     let response = <userToken[]>await new userRepo().GetUserToken(reqBody.Email,'EmailVerify')
-    if(response.length < 1){
+    if(response?.length < 1){
        res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
        return;
     }
-       let tokenRes = response.find(c=>c.Token === reqBody.Token && c.Used == false)
+       let tokenRes = response?.find(c=>c.Token === reqBody.Token && c.Used == false)
        console.log('token response',tokenRes)
          //verify token
     if(!tokenRes){
@@ -212,7 +219,7 @@ router.post('/register/verify',VerifyEmailValidator,async(req:Request,res:Respon
         return;
     }
         let result = await new userRepo().UpdateUserToken(reqBody.Email,'EmailVerify')
-        if(result.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+        if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
             res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
             return;
         }
@@ -230,7 +237,7 @@ router.post('/forgotPassword/sendMail',ForgotPasswordValidator,async(req:Request
     }else{
 
         let response = <registerModel[]>await new userRepo().GetUserByEmail(reqBody.Email)
-        if(response.length < 1){
+        if(response?.length < 1){
 
             res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Email Address'})
             return;
@@ -243,8 +250,9 @@ router.post('/forgotPassword/sendMail',ForgotPasswordValidator,async(req:Request
             res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'invalid Date of Birth'})
             return;
           }
-            let result = await new userRepo().AddToken(reqBody.Email,'ForgotPassword')
-            if(result.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+          let token = Math.floor(100000 + Math.random() * 900000);
+            let result = await new userRepo().AddToken(reqBody.Email,'ForgotPassword',token.toString(),reqBody.Medium)
+            if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
                 res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
                 return;
               }
@@ -267,7 +275,7 @@ router.post('/forgotPassword/verify',ForgotPasswordVerifyValidator,async(req:Req
     }
         //Get Token from Db
     let response = <userToken[]>await new userRepo().GetUserToken(reqBody.Email,'ForgotPassword')
-    if(response.length < 1){
+    if(response?.length < 1){
        res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
        return;
     }
@@ -281,7 +289,7 @@ router.post('/forgotPassword/verify',ForgotPasswordVerifyValidator,async(req:Req
     }
         let result = await new userRepo().UpdateUserToken(reqBody.Email,'ForgotPassword')
         console.log('token update result:',tokenRes)
-        if(result.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+        if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
 
             res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'forgot Password Verification Failed, Please try again'})
             return;
@@ -300,14 +308,14 @@ router.post('/resetPassword',resetPasswordValidator,async(req:Request,res:Respon
     return;
   }
       //Get Token from Db
-  let response = <userToken[]>await new userRepo().GetUserByEmail(reqBody.Email,)
-  if(response.length < 1){
+  let response = <userToken[]>await new userRepo().GetUserByEmail(reqBody.Email)
+  if(response?.length < 1){
      res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
      return;
   }
  
       let result = await new userRepo().UpdateUserPassword(reqBody.NewPassword,reqBody.Email)
-      if(result.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+      if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
 
           res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Reset Password Failed, Please try again'})
           return;

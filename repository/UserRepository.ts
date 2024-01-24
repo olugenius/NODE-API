@@ -79,6 +79,71 @@ export default class UserRepository{
          
     }
 
+    async GetUserByEmailOrPhone(Email:string):Promise<any | null>{
+        
+       
+        try{
+
+       const connection =  await this.getConnection()   
+        let result = await new Promise<any>((resolve,reject)=>{
+            connection?.getConnection((err,connection)=>{
+                if(err){
+                console.log('connection error',err)
+                reject(err)
+                }
+                connection?.query(`SELECT * FROM Users WHERE (Email = ? or Phone =?)`,[Email,Email],(err,data)=>{
+                    connection.release()
+                    if(err){
+                       console.log('error querying database',err)
+                       
+       
+                    }
+                    else{
+                       console.log('successfully query',data)
+                       
+                       
+                    }
+                    resolve(data)
+                   })
+
+                console.log('connection success')
+               
+                
+                })
+                
+        })
+
+        //console.log('About to query Db after connection success')
+         //await new Promise<void>((resolve,reject)=>{
+
+            // connection?.query(`SELECT * FROM Users WHERE Email = ?`,[Email],(err,data)=>{
+            //     if(err){
+            //        console.log('error querying database',err)
+            //        reject(err)
+   
+            //     }
+            //     else{
+            //        console.log('successfully query',data)
+            //        result = data
+            //        resolve()
+            //     }
+            //    })
+
+
+         //})
+
+         return result
+
+        }catch(error){
+          console.error('An error occurred',error)
+          
+        }
+        
+
+         
+         
+    }
+
     async GetUserByEmail(Email:string):Promise<any | null>{
         
        
@@ -144,7 +209,7 @@ export default class UserRepository{
          
     }
 
-    async AddToken(email:string,mailFor:string):Promise<string>{
+    async AddToken(email:string,mailFor:string,token:string,medium:string):Promise<string>{
         let  result :string = ''
         try{
             const connection =  await this.getConnection() 
@@ -156,9 +221,9 @@ export default class UserRepository{
                     reject(err)
                     }
 
-                    let token = Math.floor(100000 + Math.random() * 900000);
                     
-                       connection?.query(`INSERT INTO MailToken(Token,Email,MailFor,Used) VALUES(?,?,?,?) `,[token.toString(),email,mailFor,false],(err,data)=>{
+                        let channel =  medium.toLowerCase() === 'email' ? 'Email' : 'Phone'
+                       connection?.query(`INSERT INTO MailToken(Token,${channel},MailFor,Used) VALUES(?,?,?,?) `,[token.toString(),email,mailFor,false],(err,data)=>{
                         connection.release()
                         if(err){
                            console.log('error querying database',err)
@@ -203,7 +268,7 @@ export default class UserRepository{
                 reject(err)
                 }
 
-                 connection?.query(`SELECT * FROM  MailToken WHERE Email = ? and Used=False and MailFor= ?`,[email,mailFor],(err,data)=>{
+                 connection?.query(`SELECT * FROM  MailToken WHERE (Email = ? or Phone=?)and Used=False and MailFor= ?`,[email,email,mailFor],(err,data)=>{
                 connection.release()
                 if(err){
                    console.log('error querying database',err)   
@@ -246,7 +311,7 @@ export default class UserRepository{
                 reject(err)
                 }
 
-                 connection?.query(`UPDATE Users SET Password=? WHERE Email = ?`,[passwordEncrypt,email],(err,data)=>{
+                 connection?.query(`UPDATE Users SET Password=? WHERE (Email = ? or Phone=?)`,[passwordEncrypt,email,email],(err,data)=>{
                 connection.release()
                 if(err){
                    console.log('error querying database',err)   
@@ -289,7 +354,7 @@ export default class UserRepository{
                 reject(err)
                 }
 
-                 connection?.query(`UPDATE Users SET RefreshToken=? WHERE Phone = ?`,[token,phone],(err,data)=>{
+                 connection?.query(`UPDATE Users SET RefreshToken=? WHERE (Phone = ? or Email=?)`,[token,phone,phone],(err,data)=>{
                 connection.release()
                 if(err){
                    console.log('error querying database',err)   
@@ -333,7 +398,7 @@ export default class UserRepository{
                         console.log('connection error',err)
                         reject(err)
                         }
-                        connection?.query(`UPDATE MailToken SET Used = ?,UpdatedAt= ? where Email=? and MailFor=?`,[true,updatedAt,email,mailFor],(err,data)=>{
+                        connection?.query(`UPDATE MailToken SET Used = ?,UpdatedAt= ? where (Email=? or Phone=?) and MailFor=?`,[true,updatedAt,email,email,mailFor],(err,data)=>{
                             if(err){
                                console.log('error querying database',err)   
                                resolve('failed')    

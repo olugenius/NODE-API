@@ -3,7 +3,8 @@ import { HttpStatus } from "../utilities/HttpstatusCode";
 import jwtHandler from "../utilities/jwtHandler";
 
 export  const Authorize = (req:Request,res:Response,next:NextFunction)=>{
-if(req.url === '/api/login' || req.url === '/api/register' || req.url === '/register/sendMail' || req.url === '/register/verify'){
+  
+if(req.url === '/api/login' || req.url === '/api/register' || req.url === '/api/register/sendMail' || req.url === '/api/register/verify'){
    return next()
     
 }

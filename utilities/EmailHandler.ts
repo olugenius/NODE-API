@@ -19,20 +19,22 @@ import SMTPTransport from 'nodemailer/lib/smtp-transport'
             pass:password
         }
     })
-  
+   console.log('Mail TRansport',transport)
     const mailOption:Mail.Options = {
      from: from,
      to:mailTo,
      subject:subject,
      text:message
     }
+    console.log('MailOption is:',mailOption)
     let result = await new Promise<string>((resolve,reject)=>{
     
         transport.sendMail(mailOption,(err,info)=>{
           if(err){
             reject(err)
           }
-          resolve(info.response)
+          console.log('Email Response info is: ',info)
+          resolve(info?.response)
 
         })
     })
