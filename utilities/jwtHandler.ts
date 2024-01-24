@@ -33,6 +33,7 @@ import { HttpStatus } from './HttpstatusCode'
  async function IsValidToken(token:string):Promise<boolean>{
   try{
     let Secret = <string>process.env.JWT_SECRET
+    console.log('token value is:',token)
     let payload = await jwt.verify(token,Secret)
     return payload ? true : false
   }catch(error){
