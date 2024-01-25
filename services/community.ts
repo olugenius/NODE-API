@@ -5,6 +5,16 @@ import communityRepository from '../repository/communityRepository'
 
 export default class Community{
 
+   async GetCommunity():Promise<any>{
+
+      return await new communityRepository().GetCommunity()
+   }
+
+   async GetCommunityById(communityId:string):Promise<any>{
+
+      return await new communityRepository().GetCommunityById(communityId)
+   }
+
     async CreateCommunity(payload:createCommunityModel):Promise<string>{
 
        return await new communityRepository().createCommunity(payload)
@@ -24,7 +34,7 @@ export default class Community{
       return await new communityRepository().getCheckersById(Id)
      }
 
-     async GetAllCheckers(){
+     async GetAllCheckers(): Promise<any>{
       return await new communityRepository().GetAllCheckers()
 
      }
@@ -32,12 +42,10 @@ export default class Community{
      async GetAllSubAdmins(){
       return await new communityRepository().GetAllSubAdmins()
 
-
      }
 
      async GetSubAdminsById(Id:number){
       return await new communityRepository().GetSubAdminsById(Id)
       
-
      }
 }

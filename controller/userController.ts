@@ -135,7 +135,6 @@ router.post('/refreshToken',RefreshTokenValidator,async(req:Request,res:Response
              res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Token Generated Successfully',accessToken:accessToken,refreshToken:refreshToken})
              
   
-  
 
 })
 

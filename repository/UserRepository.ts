@@ -62,8 +62,6 @@ export default class UserRepository{
                         resolve(data)
                        })
         
-
-                   
                     
                     })
             })
@@ -411,7 +409,7 @@ export default class UserRepository{
         
                            if(mailFor === 'EmailVerify'){
                             
-                                connection?.query(`UPDATE Users SET IsVerified = ? where Email=?`,[true,email],(err,data)=>{
+                                connection?.query(`UPDATE Users SET IsVerified = ? where (Email=? or Phone=?)`,[true,email,email],(err,data)=>{
                                     if(err){
                                        console.log('error querying database',err)
                                        resolve('Failed')

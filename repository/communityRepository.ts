@@ -17,6 +17,89 @@ export default class communityRepository{
         
     }
 
+    async GetCommunity():Promise<any>{
+     try{
+
+        const connection =  await this.getConnection()
+        let result = await new Promise<any>((resolve,reject)=>{
+         
+            connection?.getConnection((err,connection)=>{
+                if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                }
+                
+              
+                const query = `SELECT * FROM Community INNER JOIN Checkers ON Community.CommunityId = Checkers.Communityid INNER JOIN SubAdmin ON Community.CommunityId = SubAdmin.Communityid `
+               
+                    connection?.query(query,(err,data)=>{
+                     connection.release()
+                        if(err){
+                            console.log('error querying database',err)
+                           
+                           
+                        }else{
+                            console.log('successfully query',data)
+                            
+                           
+                           
+                        }
+                        resolve(data)
+                     })
+                   
+                })
+
+        })
+        return result
+
+     }
+     catch(error){
+       console.error('Error Getting community',error)
+     }
+
+    }
+
+
+    async GetCommunityById(communityId:string):Promise<any>{
+        try{
+   
+           const connection =  await this.getConnection()
+           let result = await new Promise<any>((resolve,reject)=>{
+            
+               connection?.getConnection((err,connection)=>{
+                   if(err){
+                       console.log('connection error',err)
+                       reject(err)
+                   }
+                   
+                 
+                   const query = `SELECT * FROM Community INNER JOIN Checkers ON Community.CommunityId = Checkers.Communityid INNER JOIN SubAdmin ON vsuredDb.Community.CommunityId = SubAdmin.Communityid where Community.CommunityId = ?`
+                  
+                       connection?.query(query,[communityId],(err,data)=>{
+                        connection.release()
+                           if(err){
+                               console.log('error querying database',err)
+                              
+                              
+                           }else{
+                               console.log('successfully query',data)
+                              
+                           }
+                           resolve(data)
+                        })
+                      
+                   })
+   
+           })
+           return result
+   
+        }
+        catch(error){
+          console.error('Error Getting community',error)
+        }
+        
+       }
+
     async createCommunity(payload:createCommunityModel):Promise<string>{
    
         let response : string = ''
@@ -34,7 +117,7 @@ export default class communityRepository{
                   
                     const query = `INSERT INTO Community(Name,Address,Phone,Email,CommunityId) VALUES(?,?,?,?,?)`
                    
-                        connection?.query(query,[payload.Name,payload.Address,payload.Phone,payload.Email,GenerateUniqueId()],(err,data)=>{
+                        connection?.query(query,[payload.Name,payload.Address,payload.Phone,payload.Email,payload.CommunityId],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)
@@ -130,7 +213,7 @@ export default class communityRepository{
                     }
                     
                   
-                    const query = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint) VALUES(?,?,?,?,?)`
+                    const query = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint) VALUES(?,?,?,?,?,?,?,?,?)`
                    
                         connection?.query(query,[payload.FirstName,payload.LastName,payload.Phone,payload.Email,payload.DOB,payload.Gender,payload.NIN,payload.CommunityId,payload.CheckPoint],(err,data)=>{
                          connection.release()
@@ -201,7 +284,8 @@ export default class communityRepository{
     }
 
 
-    async GetAllCheckers(){
+    async GetAllCheckers():Promise<any>{
+        console.log('Inside GetAll Checkers Query method')
         let result : any
         try{
             const connection =  await this.getConnection()  
@@ -212,13 +296,13 @@ export default class communityRepository{
                     reject(err)
                     }
 
-                    connection?.query(`SELECT * FROM Checkers`,(err,data)=>{
+                    connection?.query('SELECT * FROM checkers',(err,data)=>{
                         connection.release()
                         if(err){
                            console.log('error querying database',err)           
                         }
                         else{
-                           console.log('successfully query',data)
+                           console.log('successfully query checkers',data)
                            
                         }
                         resolve(data)
@@ -233,7 +317,7 @@ export default class communityRepository{
              return result
 
         }catch(error){
-         
+         console.log('An error occurred',error)
         }
 
     }
