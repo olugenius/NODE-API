@@ -1,4 +1,4 @@
 export default interface forgotPasswordVerifyModel{
-    Email:string,
+    Channel:string,
     Token:string
 }

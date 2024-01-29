@@ -1,4 +1,4 @@
 export default interface mailVerifyModel{
-    Email:string,
+    Channel:string,
     Token:string
 }

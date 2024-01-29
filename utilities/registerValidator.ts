@@ -22,7 +22,7 @@ import { ValidationChain, body, validationResult } from 'express-validator'
 
 export const EmailValidator = 
 [
-  body('Email','Email is required').notEmpty().trim().escape(),
+  body('Channel','Channel is required').notEmpty().trim().escape(),
   body('Medium','Medium is required').notEmpty().trim().escape(),
  
 ]
@@ -30,7 +30,7 @@ export const EmailValidator =
 
 export const VerifyEmailValidator = 
 [
-  body('Email','Email is required').notEmpty().trim().escape(),
+  body('Channel','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
   body('Token','Token is required').notEmpty().trim().escape(),
  
 ]
@@ -38,27 +38,27 @@ export const VerifyEmailValidator =
 
 export const ForgotPasswordValidator = 
 [
-  body('Email','Email is required').notEmpty().trim().escape(),
+  body('Channel','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
   body('DOB','Must be date format').isDate().toDate(),
   body('Medium','Medium is required').notEmpty().trim().escape(),
 ]
 
 export const ForgotPasswordVerifyValidator = 
 [
-  body('Email','Email is required').notEmpty().trim().escape(),
+  body('Channel','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
   body('Token','Token is required').notEmpty().trim().escape(),
 ]
 
 export const LoginValidator = 
 [
-  body('Phone','Phone is required').notEmpty().trim().escape(),
+  body('Channel','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
   body('Password','Password is required').notEmpty().trim().escape(),
  
 ]
 
 export const RefreshTokenValidator = 
 [
-  body('Email','Email is required').notEmpty().trim().escape(),
+  body('Channel','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
   body('RefreshToken','RefreshToken is required').notEmpty().trim().escape(),
  
 ]
@@ -66,10 +66,11 @@ export const RefreshTokenValidator =
 
 export const resetPasswordValidator = 
 [
+  body('Channel','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
   body('NewPassword','NewPassword is required').notEmpty().trim().escape(),
   body('ConfirmPassword','ConfirmPassword is required').notEmpty().trim().custom((value,{req})=>{
      if(value !== req.body.NewPassword){
-       throw new Error('Password and Confirm Password')
+       throw new Error('Password and Confirm Password must match')
      }
      return true
   }),

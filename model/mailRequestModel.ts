@@ -1,4 +1,4 @@
 export default interface mailRequestModel{
-    Email:string,
+    Channel:string,
     Medium:string
 }

@@ -1,5 +1,5 @@
 export default interface forgotPasswordRequestmodel{
-    Email:string,
+    Channel:string,
     DOB:Date,
     Medium:string
 }
