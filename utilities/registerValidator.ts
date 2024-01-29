@@ -68,7 +68,7 @@ export const resetPasswordValidator =
 [
   body('NewPassword','NewPassword is required').notEmpty().trim().escape(),
   body('ConfirmPassword','ConfirmPassword is required').notEmpty().trim().custom((value,{req})=>{
-     if(value != req.body.Password){
+     if(value !== req.body.NewPassword){
        throw new Error('Password and Confirm Password')
      }
      return true
