@@ -307,7 +307,7 @@ router.post('/resetPassword',resetPasswordValidator,async(req:Request,res:Respon
     return;
   }
       //Get Token from Db
-  let response = <userToken[]>await new userRepo().GetUserByEmail(reqBody.Email)
+  let response = <userToken[]>await new userRepo().GetUserByEmailOrPhone(reqBody.Email)
   if(response?.length < 1){
      res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
      return;
