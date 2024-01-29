@@ -30,7 +30,7 @@ export default class communityRepository{
                 }
                 
               
-                const query = `SELECT * FROM Community INNER JOIN Checkers ON Community.CommunityId = Checkers.Communityid INNER JOIN SubAdmin ON Community.CommunityId = SubAdmin.Communityid `
+                const query = `SELECT c.*, ck.* FROM Community c LEFT JOIN Checkers ck ON c.CommunityId = ck.CommunityId`
                
                     connection?.query(query,(err,data)=>{
                      connection.release()

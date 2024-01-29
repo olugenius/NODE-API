@@ -26,7 +26,7 @@ router.post('/community/create',async (req,res)=>{
     
 })
 
-router.get('/community/all',async(req,res)=>{
+router.get('/community',async(req,res)=>{
   try{
     var response = await new Community().GetCommunity()
   if(response?.length < 1){
