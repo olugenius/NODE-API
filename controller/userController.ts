@@ -18,6 +18,7 @@ import jwtHandler from '../utilities/jwtHandler'
 import refreshTokenRequestmodel from '../model/refreshTokenRequestModel'
 import { isValid } from 'date-fns'
 import { SendMail } from '../utilities/EmailHandler'
+import SMSHandler from '../utilities/SMSHandler'
 
 const router = express.Router()
 
@@ -187,12 +188,19 @@ router.post('/register/sendMail',EmailValidator,async(req:Request,res:Response)=
       return;
     }
     //Start sending sms or email
-    const mailRes = await SendMail(`${reqBody.Channel}`,`Please Validate your account by using this token ${token.toString()}`)
-    
-    if(!mailRes){
-      res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
+    let emailSMSResult = false
+    const message = `Please use the token sent to you for validation: \\n Token Value is: ${token.toString()}`
+    if(reqBody.Medium.toLowerCase() === 'sms'){
+       emailSMSResult =  await SMSHandler(reqBody.Channel,message)
+
+    }else{
+      emailSMSResult= await SendMail(`${reqBody.Channel}`,message)
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:`Token sent successfully Via ${reqBody.Medium}`,Email:`${reqBody.Channel}`})
+    
+    if(!emailSMSResult){
+      return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
+    }
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:`Token sent successfully Via ${reqBody.Medium}`,Channel:`${reqBody.Channel}`})
 
     
 })
@@ -257,7 +265,19 @@ router.post('/forgotPassword/sendMail',ForgotPasswordValidator,async(req:Request
               }
 
                 //Send Email Implementation
-                res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Email Sent Successfully'})
+                let emailSMSResult = false
+                const message = `Please use the token sent to you for validation: \\n Token Value is: ${token.toString()}`
+                if(reqBody.Medium.toLowerCase() === 'sms'){
+                  emailSMSResult =  await SMSHandler(reqBody.Channel,message)
+
+                }else{
+                  emailSMSResult= await SendMail(`${reqBody.Channel}`,message)
+                }
+                
+                if(!emailSMSResult){
+                  return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
+                }
+                return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Email Sent Successfully'})
 
        
 

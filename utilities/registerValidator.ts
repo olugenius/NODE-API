@@ -22,7 +22,7 @@ import { ValidationChain, body, validationResult } from 'express-validator'
 
 export const EmailValidator = 
 [
-  body('Channel','Channel is required').notEmpty().trim().escape(),
+  body('Channel','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
   body('Medium','Medium is required').notEmpty().trim().escape(),
  
 ]

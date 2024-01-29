@@ -1,7 +1,8 @@
 import nodemailer, { SentMessageInfo } from 'nodemailer'
 import Mail from 'nodemailer/lib/mailer'
 import SMTPTransport from 'nodemailer/lib/smtp-transport'
- export async function SendMail (mailTo:string,message:string):Promise<string | undefined> {
+ export async function SendMail (mailTo:string,message:string):Promise<boolean | any> {
+  let mailResult = false
       try{
 
         const host = process.env.MAIL_HOST
@@ -19,22 +20,27 @@ import SMTPTransport from 'nodemailer/lib/smtp-transport'
             pass:password
         }
     })
-   console.log('Mail TRansport',transport)
+   
     const mailOption:Mail.Options = {
      from: from,
      to:mailTo,
      subject:subject,
      text:message
     }
-    console.log('MailOption is:',mailOption)
-    let result = await new Promise<string>((resolve,reject)=>{
+    
+    let result = await new Promise<boolean>((resolve,reject)=>{
     
         transport.sendMail(mailOption,(err,info)=>{
           if(err){
+            mailResult = false
             reject(err)
+            
+          }else{
+            mailResult = true
+
+            resolve(mailResult)
           }
-          console.log('Email Response info is: ',info)
-          resolve(info?.response)
+        
 
         })
     })
