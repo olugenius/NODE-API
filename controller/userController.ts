@@ -235,7 +235,7 @@ router.post('/forgotPassword/sendMail',ForgotPasswordValidator,async(req:Request
       res.status(HttpStatus.STATUS_400).json(error.array())
     }else{
 
-        let response = <registerModel[]>await new userRepo().GetUserByEmail(reqBody.Email)
+        let response = <registerModel[]>await new userRepo().GetUserByEmailOrPhone(reqBody.Email)
         if(response?.length < 1){
 
             res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Email Address'})
