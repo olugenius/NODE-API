@@ -192,7 +192,7 @@ router.post('/register/sendMail',EmailValidator,async(req:Request,res:Response)=
     if(!mailRes){
       res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:`Token sent successfully Via ${reqBody.Medium}`,Email:`${reqBody.Email}`})
+    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:`Token sent successfully Via ${reqBody.Medium}`,Email:`${reqBody.Channel}`})
 
     
 })
@@ -293,7 +293,7 @@ router.post('/forgotPassword/verify',ForgotPasswordVerifyValidator,async(req:Req
             res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'forgot Password Verification Failed, Please try again'})
             return;
         }
-        res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'forgot Password Verification Successful',Email:reqBody.Email})
+        res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'forgot Password Verification Successful',Email:reqBody.Channel})
        
   
     
