@@ -4,8 +4,23 @@ import createCommunityModel from '../model/createCommunityModel'
 import createSubAdminModel from '../model/createSubAdminModel'
 import createCheckersModel from '../model/createcheckersModel'
 import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
+import {injectable} from 'inversify'
+import 'reflect-metadata'
 
-export default class communityRepository{
+
+interface communityRepository{
+    GetCommunity():Promise<any>
+    GetCommunityById(communityId:string):Promise<any>
+    createCommunity(payload:createCommunityModel):Promise<string>
+    createSubAdmin(payload:createSubAdminModel):Promise<string>
+    createCheckers(payload:createCheckersModel):Promise<string>
+    GetAllCheckers():Promise<any>
+    GetAllSubAdmins():any
+    GetSubAdminsById(Id:number):any
+
+}
+@injectable()
+export default class communityRepositoryImpl implements communityRepository{
 
     private  async getConnection(): Promise<Pool | undefined>{
         try{

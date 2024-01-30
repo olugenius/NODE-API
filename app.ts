@@ -5,6 +5,7 @@ import userController from './controller/userController'
 import { Authorize } from './middleware/authorization';
 import communityRepository from './repository/communityRepository';
 import communityController from './controller/communityController';
+import "reflect-metadata";
 const app = express();
 
 app.use(express.json())

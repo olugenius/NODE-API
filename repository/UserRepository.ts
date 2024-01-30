@@ -9,9 +9,24 @@ import userToken from '../model/DTOs/userToken'
 import { Pool } from 'mysql2/typings/mysql/lib/Pool'
 import { Result } from 'express-validator'
 import { dateFormatter } from '../utilities/dateFormatter'
+import { injectable } from 'inversify'
+import 'reflect-metadata'
 
 
-export default class UserRepository{
+interface UserRepository{
+    GetUserByPhone(Phone:string):Promise<any | null>
+    GetUserByEmailOrPhone(Email:string):Promise<any | null>
+    GetUserByEmail(Email:string):Promise<any | null>
+    AddToken(email:string,mailFor:string,token:string,medium:string):Promise<string>
+    UpdateUserRefreshToken(phone:string,token:string):Promise<any>
+    UpdateUserToken(email:string,mailFor:string):Promise<string>
+    createUser(payload:registerModel):Promise<registerResponseModel>
+    UpdateUserTokenTest(email:string,mailFor:string):Promise<string>
+
+
+}
+@injectable()
+export default class UserRepositoryImpl implements UserRepository{
     connection! : Connection | undefined
    
      private  async getConnection(): Promise<Pool | undefined>{
@@ -439,6 +454,55 @@ export default class UserRepository{
        
          
     }
+
+
+    async UpdateUserTokenTest(email:string,mailFor:string):Promise<string>{
+       
+        let response : string
+        let updatedAt =format(new Date(),'yyy-MM-dd HH:mm:ss')
+       let result =  await new Promise<string>(async(resolve,reject)=>{
+        const connection =  await this.getConnection() 
+        connection?.getConnection((err,connection)=>{
+            try{
+
+                if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+                    
+    
+                       if(mailFor === 'EmailVerify'){
+                        
+                            connection?.query(`UPDATE Users SET IsVerified = ? where (Email=? or Phone=?)`,[true,email,email],(err,data)=>{
+                                if(err){
+                                   console.log('error querying database',err)
+                                   resolve('Failed')
+                   
+                                }
+                                else{
+                                   console.log('successfully query',data)
+                                   resolve('Success')
+                                    
+                                }
+                               })
+    
+                     }
+                     
+
+            }catch(error){
+                
+            }finally{
+                connection.release()
+            }
+           
+            
+            })
+    })
+    return result
+
+   
+     
+}
 
 
 

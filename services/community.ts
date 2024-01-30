@@ -1,51 +1,69 @@
+import { container } from "../Container/appContainer";
 import createCommunityModel from "../model/createCommunityModel";
 import createSubAdminModel from "../model/createSubAdminModel";
 import createCheckersModel from "../model/createcheckersModel";
-import communityRepository from '../repository/communityRepository'
+import {inject, injectable} from 'inversify';
+import communityRepository from "../repository/communityRepository";
+import "reflect-metadata";
 
-export default class Community{
+interface Community{
+   GetCommunity():Promise<any>
+   GetCommunityById(communityId:string):Promise<any>
+   CreateCommunity(payload:createCommunityModel):Promise<string>
+   CreateSubAdmin(payload:createSubAdminModel):Promise<string>
+   CreateCheckers(payload:createCheckersModel):Promise<string>
+   GetCheckersById(Id:number):Promise<any | null>
+   GetAllCheckers(): Promise<any>
+   GetAllSubAdmins():any
+   GetSubAdminsById(Id:number):any
+
+}
+//const communityRepo = container.get<communityRepository>(communityRepository)
+@injectable()
+export default class CommunityImpl implements Community{
+   constructor(@inject(communityRepository) private communityRepo: communityRepository){}
 
    async GetCommunity():Promise<any>{
 
-      return await new communityRepository().GetCommunity()
+      return await this.communityRepo.GetCommunity()
    }
 
    async GetCommunityById(communityId:string):Promise<any>{
 
-      return await new communityRepository().GetCommunityById(communityId)
+      return await this.communityRepo.GetCommunityById(communityId)
    }
 
     async CreateCommunity(payload:createCommunityModel):Promise<string>{
 
-       return await new communityRepository().createCommunity(payload)
+       return await this.communityRepo.createCommunity(payload)
     }
 
     async CreateSubAdmin(payload:createSubAdminModel):Promise<string>{
 
-        return await new communityRepository().createSubAdmin(payload)
+        return await this.communityRepo.createSubAdmin(payload)
      }
 
      async CreateCheckers(payload:createCheckersModel):Promise<string>{
 
-        return await new communityRepository().createCheckers(payload)
+        return await this.communityRepo.createCheckers(payload)
      }
      
      async GetCheckersById(Id:number):Promise<any | null>{
-      return await new communityRepository().getCheckersById(Id)
+      return await this.communityRepo.getCheckersById(Id)
      }
 
      async GetAllCheckers(): Promise<any>{
-      return await new communityRepository().GetAllCheckers()
+      return await  this.communityRepo.GetAllCheckers()
 
      }
 
      async GetAllSubAdmins(){
-      return await new communityRepository().GetAllSubAdmins()
+      return await this.communityRepo.GetAllSubAdmins()
 
      }
 
      async GetSubAdminsById(Id:number){
-      return await new communityRepository().GetSubAdminsById(Id)
+      return await this.communityRepo.GetSubAdminsById(Id)
       
      }
 }
