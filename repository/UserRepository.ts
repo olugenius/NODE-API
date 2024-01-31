@@ -525,7 +525,7 @@ export default class UserRepositoryImpl implements UserRepository{
                   
                     const query = `INSERT INTO Users(FirstName,LastName,DOB,Gender,Address,Phone,Email,PhotoPath,Password,IsVerified,Language,CompanyType) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)`
                    
-                        connection?.query(query,[payload.FirstName,payload.LastName,dateFormat,payload.Gender,payload.Address,payload.Phone,payload.Email,payload.PhotoPath,passwordEncrypt,false,payload.Language,payload.CompanyType],(err,data)=>{
+                        connection?.query(query,[payload.FirstName,payload.LastName,dateFormat,payload.Gender,payload.Address,payload.Phone,payload.Email ?? '',payload.PhotoPath,passwordEncrypt,false,payload.Language,payload.CompanyType],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)

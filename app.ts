@@ -3,13 +3,18 @@ import dotenv from 'dotenv'
 dotenv.config()
 import userController from './controller/userController'
 import { Authorize } from './middleware/authorization';
-import communityRepository from './repository/communityRepository';
 import communityController from './controller/communityController';
 import cors from 'cors';
+import path from 'path'
 import "reflect-metadata";
-const app = express();
+import fs from 'fs'
 
+
+const app = express();
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
+app.use(express.static('public'));
+//app.use(express.static(path.join(__dirname,'public')));
 
 
 app.use(Authorize)

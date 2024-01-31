@@ -11,7 +11,7 @@ export  const Authorize = (req:Request,res:Response,next:NextFunction)=>{
 //    console.log('An error occurred',error)
 //    res.status(HttpStatus.STATUS_403).json({status:HttpStatus.STATUS_FAILED,message:'Request Forbidden, Invalid Token'})
 //   }
-if(req.url === '/api/login' || req.url === '/api/register' || req.url === '/api/register/sendMail' || req.url === '/api/register/verify'){
+if(req.url === '/api/login' || req.url === '/api/register' || req.url === '/api/register/sendMail' || req.url === '/api/register/verify' || req.url.includes('/images')){
     return next()
      
  }

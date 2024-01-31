@@ -31,7 +31,7 @@ const userRepo = container.get<UserRepository>(UserRepository)
 // Set up storage for uploaded files
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/'); // Destination folder for uploaded files
+    cb(null, 'public/images/'); // Destination folder for uploaded files
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + '-' + file.originalname); // Rename the file
@@ -120,10 +120,13 @@ router.post('/refreshToken',RefreshTokenValidator,async(req:Request,res:Response
 })
 
 
-router.post('/register',validator,upload.single('file'),
+router.post('/register',upload.single('file'),validator,
 async (req:any,res:any)=>{
     try{
         const reqBody = <registerModel>req.body
+
+        console.log('file Path',req.protocol + '://' + req.get('host') + req.originalUrl+'/'+req.file.path)
+        reqBody.PhotoPath = req?.file?.path || ''
         const error = validationResult(req)
         if(!error.isEmpty()){
           res.status(HttpStatus.STATUS_400).json(error.array())

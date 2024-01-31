@@ -5,14 +5,14 @@ import { ValidationChain, body, validationResult } from 'express-validator'
 
   export const validator = 
 [
-  body('FirstName','FirstName is required').notEmpty().trim().escape(),
+  body('FirstName').notEmpty().trim().escape().withMessage('FirstName is required'),
   body('LastName','LastName is required').notEmpty().trim().escape(),
   body('Gender','Gender is required').notEmpty().trim().escape(),
   body('Address','Address is required').notEmpty().trim().escape(),
   body('Phone','PhoneNumber is required').notEmpty().trim().escape(),
-  body('PhotoPath').notEmpty().trim().escape(),
+  //body('PhotoPath').notEmpty().trim().escape(),
   body('Password','Password is required').notEmpty().trim().escape(),
-  body('VerifyChannel','Verification channel is required').notEmpty().trim().escape(),
+  //body('VerifyChannel','Verification channel is required').notEmpty().trim().escape(),
   //body('IsVerified').notEmpty().trim().escape(),
   body('Language','Language is required').notEmpty().trim().escape(),
   body('CompanyType','Company type is required').notEmpty().trim().escape(),
