@@ -61,7 +61,7 @@ import multer from 'multer'
 /**
  * @swagger
  * /api/community:
- *   post:
+ *   get:
  *     summary: Get All Communities
  *     security: 
  *      - APIKeyHeader: []
@@ -77,9 +77,16 @@ import multer from 'multer'
 
 /**
  * @swagger
- * /api/community/:Id:
- *   post:
- *     summary: Get Community By Id
+ * /api/community/{communityId}:
+ *   get:
+ *     summary: Get Community By communityId
+ *     parameters:
+ *       - in: path
+ *         name: communityId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the community to get
  *     security: 
  *      - APIKeyHeader: []
  *     tags: [Community]
@@ -89,7 +96,7 @@ import multer from 'multer'
  *         content:
  *           application/json:
  *             example:
- *               message: Verification Successfully
+ *               message: Community is fetch by communityId Successfully
  */
 
 
@@ -160,9 +167,16 @@ import multer from 'multer'
 
 /**
  * @swagger
- * /api/community/checkers:Id:
- *   post:
+ * /api/community/checkers/{Id}:
+ *   get:
  *     summary: Get Checkers by Id
+ *     parameters:
+ *       - in: path
+ *         name: Id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the Checker to get
  *     security: 
  *      - APIKeyHeader: []
  *     tags: [Community]
@@ -238,9 +252,16 @@ import multer from 'multer'
 
 /**
  * @swagger
- * /api/community/subAdmins:Id:
- *   post:
+ * /api/community/subAdmins/{Id}:
+ *   get:
  *     summary: Get SubAdmin by Id
+ *     parameters:
+ *       - in: path
+ *         name: Id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the SubAdmin to get
  *     security: 
  *      - APIKeyHeader: []
  *     tags: [Community]
@@ -256,9 +277,16 @@ import multer from 'multer'
 
 /**
  * @swagger
- * /api/community/subAdmin:communityId:
- *   post:
+ * /api/community/subAdmin/{communityId}:
+ *   get:
  *     summary: Get SubAdmin by communityId
+ *     parameters:
+ *       - in: path
+ *         name: communityId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the SubAdmin to get
  *     security: 
  *      - APIKeyHeader: []
  *     tags: [Community]
@@ -275,8 +303,15 @@ import multer from 'multer'
 /**
  * @swagger
  * /api/community/checkers:communityId:
- *   post:
+ *   get:
  *     summary: Get Checkers by communityId
+ *     parameters:
+ *       - in: path
+ *         name: communityId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the checker to get
  *     security: 
  *      - APIKeyHeader: []
  *     tags: [Community]
@@ -340,9 +375,10 @@ router.get('/community',async(req,res)=>{
   
 })
 
-router.get('/community/:Id',async(req,res)=>{
+router.get('/community/:communityId',async(req,res)=>{
   try{
-  const param = req.params.Id
+  const param = req.params.communityId
+  console.log('param Value is : ',param)
   var response = await community.GetCommunityById(param)
   if(response?.length < 1){
     return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Fetch Communities'})

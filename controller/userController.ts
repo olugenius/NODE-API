@@ -40,8 +40,6 @@ const userRepo = container.get<UserRepository>(UserRepository)
  * /api/login:
  *   post:
  *     summary: Login User
- *     security: 
- *      - APIKeyHeader: []
  *     tags: [User]
  *     requestBody:
  *       required: true

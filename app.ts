@@ -23,6 +23,7 @@ app.use(cors())
 app.use(Authorize)
 let port = process.env.PORT || 3000
 const host = process?.env?.SERVER_HOST ?? 'https://vsured-4c2a3d0f8868.herokuapp.com'
+//const host = process?.env?.SERVER_HOST ?? 'http://localhost'
 // Swagger configuration
 const options:Options = {
     definition: {
@@ -52,7 +53,7 @@ const options:Options = {
       servers: [
         {
           url: `${host}:${port}`,
-          description: 'Development server',
+          description: `${host.includes('localhost') ? 'Development' : 'Production'} server`,
         },
       ],
     },

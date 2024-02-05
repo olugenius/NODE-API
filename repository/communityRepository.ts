@@ -49,7 +49,7 @@ export default class communityRepositoryImpl implements communityRepository{
                 }
                 
               
-                const query = `SELECT c.*, ck.* FROM Community c LEFT JOIN Checkers ck ON c.CommunityId = ck.CommunityId`
+                const query = `SELECT * FROM Community`
                
                     connection?.query(query,(err,data)=>{
                      connection.release()
@@ -92,7 +92,7 @@ export default class communityRepositoryImpl implements communityRepository{
                    }
                    
                  
-                   const query = `SELECT * FROM Community INNER JOIN Checkers ON Community.CommunityId = Checkers.Communityid INNER JOIN SubAdmin ON vsuredDb.Community.CommunityId = SubAdmin.Communityid where Community.CommunityId = ?`
+                   const query = `SELECT * FROM Community where Community.CommunityId = ?`
                   
                        connection?.query(query,[communityId],(err,data)=>{
                         connection.release()
