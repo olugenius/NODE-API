@@ -8,6 +8,8 @@ import { container } from '../Container/appContainer'
 import Community from '../services/community'
 import XLSX from 'xlsx'
 import multer from 'multer'
+import memberModel from '../model/memberModel'
+import createAppointmentModel from '../model/creatAppointmentModel'
 
 
 
@@ -137,6 +139,34 @@ import multer from 'multer'
  *             Channel: john@example.com
  *             DOB: 1993-01-01
  *             Medium: Email
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Checkers created successfully
+ */
+
+
+
+/**
+ * @swagger
+ * /api/community/checkers/createXls:
+ *   post:
+ *     summary: Create checkers by uploading excel file
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Community]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: file
  *     responses:
  *       200:
  *         description: Successful response
@@ -410,12 +440,23 @@ router.post('/community/checkers/create',async(req,res)=>{
 })
 
 
-router.post('/community/checkers/createXls',uploadXls.single('excel'),async(req:any,res:any)=>{
+router.post('/community/checkers/createXls',uploadXls.single('file'),async(req:any,res:any)=>{
   const workbook = XLSX.readFile(req.file.path);
   const sheet_name = workbook.SheetNames[0];
   const sheet = workbook.Sheets[sheet_name];
-  const data = XLSX.utils.sheet_to_json(sheet);
-  console.log('excel Datas:',data)
+  const data = <createCheckersModel[]>XLSX.utils.sheet_to_json(sheet);
+  let successArray:createCheckersModel[] = []
+  for(let req of data){
+    var response = await community.CreateCheckers(req)
+    if(response?.toLowerCase() ===  HttpStatus.STATUS_SUCCESS){
+      successArray.push(req)
+    }
+  }
+  if(successArray.length < 1){
+    return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Checkers'})
+  }
+  res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created the following Checkers',data:successArray})
+
 })
 
 router.get('/community/checkers/all',async(req,res)=>{
@@ -543,6 +584,132 @@ if(response?.length < 1){
    console.error('An Error Occurred',error)
   }
 
+})
+
+router.post('/community/member/create',async(req,res)=>{
+  try{
+    const reqBody = <memberModel>req.body
+    var response = await community.CreateMember(reqBody)
+    if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Member'})
+    }
+    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Member',data:reqBody})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+
+  }
+    
+})
+
+router.post('/community/member/createXLs',async(req:any,res:any)=>{
+  try{
+    const workbook = XLSX.readFile(req.file.path);
+  const sheet_name = workbook.SheetNames[0];
+  const sheet = workbook.Sheets[sheet_name];
+  const data = <memberModel[]>XLSX.utils.sheet_to_json(sheet);
+  let successArray:memberModel[] = []
+  for(let req of data){
+    var response = await community.CreateMember(req)
+    if(response?.toLowerCase() ===  HttpStatus.STATUS_SUCCESS){
+      successArray.push(req)
+    }
+  }
+  if(successArray.length < 1){
+    return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Member'})
+  }
+  res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created the following Member',data:successArray})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+
+  }
+    
+})
+
+router.get('/community/member/:memberId',async(req,res)=>{
+  try{
+const param = req?.params?.memberId
+if(!param){
+  return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Member Id'})
+}
+var response = await community.GetMemberByMemberId(param)
+if(response?.length < 1){
+    res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Member'})
+  }
+  res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Member',data:response[0]})
+
+  }catch(error){
+   console.error('An Error Occurred',error)
+  }
+
+})
+
+router.post('/community/appointment/create',async(req,res)=>{
+  try{
+    const reqBody = <createAppointmentModel>req.body
+    var response = await community.createAppointment(reqBody)
+    if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Appointment'})
+    }
+    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Appointment',data:reqBody})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+
+  }
+    
+})
+
+router.get('/community/appointment/:Id',async(req,res)=>{
+  try{
+const param = req?.params?.Id
+if(!param){
+  return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Appointment Id'})
+}
+var response = await community.GetAppointmentId(Number(param))
+if(response?.length < 1){
+    res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Appointment'})
+  }
+  res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Appointment',data:response[0]})
+
+  }catch(error){
+   console.error('An Error Occurred',error)
+  }
+
+})
+router.get('/community/appointment/:communityId',async(req,res)=>{
+  try{
+const param = req?.params?.communityId
+if(!param){
+  return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Appointment communityId'})
+}
+var response = await community.GetAppointmentCommunityId(param)
+if(response?.length < 1){
+    res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Appointment'})
+  }
+  res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Appointment',data:response[0]})
+
+  }catch(error){
+   console.error('An Error Occurred',error)
+  }
+
+})
+
+router.get('/community/appointment/all',async(req,res)=>{
+  try{
+    console.log('entered checkers endpoint')
+    var response = await community.GetAllAppointment()
+    if(response?.length < 1){
+      res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Appointment '})
+    }
+    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Appointment',data:response})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+
+  }
+    
 })
 
 

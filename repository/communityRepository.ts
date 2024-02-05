@@ -7,6 +7,7 @@ import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
 import {injectable} from 'inversify'
 import 'reflect-metadata'
 import createAppointmentModel from '../model/creatAppointmentModel'
+import memberModel from '../model/memberModel'
 
 
 interface communityRepository{
@@ -17,10 +18,17 @@ interface communityRepository{
     createCheckers(payload:createCheckersModel):Promise<string>
     GetAllCheckers():Promise<any>
     getCheckersById(Id:number):Promise<any | null>
-    getCheckersByCommunityId(communityId:number):Promise<any | null>
-    GetAllSubAdmins():any
+    getCheckersByCommunityId(communityId:string):Promise<any | null>
+    GetAllSubAdmins():Promise<any|null>
     GetSubAdminsById(Id:number):any
-    GetSubAdminsByCommunityId(communityId:number):any
+    GetSubAdminsByCommunityId(communityId:string):any
+    createAppointment(payload:createAppointmentModel):Promise<string>
+    GetAllAppointment():Promise<any>
+    GetAppointmentId(Id:number):Promise<any>
+    GetAppointmentCommunityId(CommunityId:string):Promise<any>
+    createMember(payload:memberModel):Promise<string>
+    GetMemberByMemberId(memberId:string):Promise<any>
+    GetAllMembers():Promise<any>
 
 }
 @injectable()
@@ -303,7 +311,7 @@ export default class communityRepositoryImpl implements communityRepository{
     }
 
 
-    async getCheckersByCommunityId(communityId:number):Promise<any | null>{
+    async getCheckersByCommunityId(communityId:string):Promise<any | null>{
         let result : any
         try{
             const connection =  await this.getConnection()  
@@ -379,7 +387,7 @@ export default class communityRepositoryImpl implements communityRepository{
     }
 
 
-    async GetAllSubAdmins(){
+    async GetAllSubAdmins():Promise<any|null>{
         let result : any
         try{
             const connection =  await this.getConnection()  
@@ -454,7 +462,7 @@ export default class communityRepositoryImpl implements communityRepository{
     }
 
 
-    async GetSubAdminsByCommunityId(communityId:number){
+    async GetSubAdminsByCommunityId(communityId:string){
         let result : any
         try{
             const connection =  await this.getConnection()  
@@ -614,7 +622,7 @@ export default class communityRepositoryImpl implements communityRepository{
     }
 
 
-    async GetAppointmentCommunityId(CommunityId:number):Promise<any>{
+    async GetAppointmentCommunityId(CommunityId:string):Promise<any>{
         let result : any
         try{
             const connection =  await this.getConnection()  
@@ -651,6 +659,127 @@ export default class communityRepositoryImpl implements communityRepository{
 
     }
 
+    async createMember(payload:memberModel):Promise<string>{
+   
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+            let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+                    
+                  
+                    const query = `INSERT INTO Member(MemberId,Name,Email,Phone,HouseNumber) VALUES(?,?,?,?,?)`
+                   
+                        connection?.query(query,[payload.MemberId,payload.Name,payload.Email,payload.Phone,payload.HouseNumber],(err,data)=>{
+                         connection.release()
+                            if(err){
+                                console.log('error querying database',err)
+                                response = 'Failed'
+                               
+                            }else{
+                                console.log('successfully query',data)
+                                response = 'Success'
+                               
+                               
+                            }
+                            resolve(response)
+                         })
+                       
+                    })
+
+            })
+
+           
+                return result
+
+        }
+        catch(error){
+            console.error('Error creating user:', error);
+            return 'Failed'
+        }
+           
+      
+    }
+
+    async GetMemberByMemberId(memberId:string):Promise<any>{
+        let result : any
+        try{
+            const connection =  await this.getConnection()  
+            let result =await new Promise<any>((resolve,reject)=>{
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+
+                    connection?.query(`SELECT * FROM Member where MemberId=?`,[memberId],(err,data)=>{
+                        connection.release()
+                        if(err){
+                           console.log('error querying database',err)           
+                        }
+                        else{
+                           console.log('successfully query',data)
+                           
+                        }
+                        resolve(data)
+                       })
+        
+
+                   
+                    
+                    })
+            })
+    
+             return result
+
+        }catch(error){
+         
+        }
+
+    }
+
+    async GetAllMembers():Promise<any>{
+        let result : any
+        try{
+            const connection =  await this.getConnection()  
+            let result =await new Promise<any>((resolve,reject)=>{
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+
+                    connection?.query('SELECT * FROM Member',(err,data)=>{
+                        connection.release()
+                        if(err){
+                           console.log('error querying database',err)           
+                        }
+                        else{
+                           console.log('successfully query checkers',data)
+                           
+                        }
+                        resolve(data)
+                       })
+        
+
+                   
+                    
+                    })
+            })
+    
+             return result
+
+        }catch(error){
+         console.log('An error occurred',error)
+        }
+
+    }
 
 
 }

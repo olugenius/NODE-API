@@ -5,6 +5,8 @@ import createCheckersModel from "../model/createcheckersModel";
 import {inject, injectable} from 'inversify';
 import communityRepository from "../repository/communityRepository";
 import "reflect-metadata";
+import memberModel from "../model/memberModel";
+import createAppointmentModel from "../model/creatAppointmentModel";
 
 interface Community{
    GetCommunity():Promise<any>
@@ -13,11 +15,19 @@ interface Community{
    CreateSubAdmin(payload:createSubAdminModel):Promise<string>
    CreateCheckers(payload:createCheckersModel):Promise<string>
    GetCheckersById(Id:number):Promise<any | null>
+   GetCheckersByCommunityId(communityId:number):Promise<any | null>
    GetAllCheckers(): Promise<any>
-   GetAllSubAdmins():any
+   GetAllSubAdmins():Promise<any>
    GetSubAdminsById(Id:number):any
    GetCheckersByCommunityId(communityId:number):Promise<any | null>
    GetSubAdminsByCommunityId(communityId:number):Promise<any>
+   CreateMember(payload:memberModel):Promise<string>
+   GetMemberByMemberId(memberId:string):Promise<string>
+   createAppointment(payload:createAppointmentModel):Promise<string>
+   GetAllAppointment():Promise<any>
+   GetAppointmentId(Id:number):Promise<string>
+   GetAppointmentCommunityId(communityId:string):Promise<string>
+   GetAllMembers():Promise<string>
    
 
 }
@@ -64,7 +74,7 @@ export default class CommunityImpl implements Community{
 
      }
 
-     async GetAllSubAdmins(){
+     async GetAllSubAdmins():Promise<any>{
       return await this.communityRepo.GetAllSubAdmins()
 
      }
@@ -79,4 +89,41 @@ export default class CommunityImpl implements Community{
       return await this.communityRepo.GetSubAdminsById(communityId)
       
      }
+
+     async CreateMember(payload:memberModel):Promise<string>{
+
+      return await this.communityRepo.createMember(payload)
+   }
+
+   async GetMemberByMemberId(memberId:string):Promise<string>{
+
+      return await this.communityRepo.GetMemberByMemberId(memberId)
+   }
+
+   async createAppointment(payload:createAppointmentModel):Promise<string>{
+
+      return await this.communityRepo.createAppointment(payload)
+   }
+
+   async GetAllAppointment():Promise<any>{
+
+      return await this.communityRepo.GetAllAppointment()
+   }
+
+   async GetAppointmentId(Id:number):Promise<string>{
+
+      return await this.communityRepo.GetAppointmentId(Id)
+   }
+
+   async GetAppointmentCommunityId(communityId:string):Promise<string>{
+
+      return await this.communityRepo.GetAppointmentCommunityId(communityId)
+   }
+
+   async GetAllMembers():Promise<string>{
+
+      return await this.communityRepo.GetAllMembers()
+   }
+
+
 }
