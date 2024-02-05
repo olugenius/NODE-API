@@ -3,15 +3,8 @@ import { HttpStatus } from "../utilities/HttpstatusCode";
 import jwtHandler from "../utilities/jwtHandler";
 
 export  const Authorize = (req:Request,res:Response,next:NextFunction)=>{
-//   try{
 
-    
-
-//   }catch(error){
-//    console.log('An error occurred',error)
-//    res.status(HttpStatus.STATUS_403).json({status:HttpStatus.STATUS_FAILED,message:'Request Forbidden, Invalid Token'})
-//   }
-if(req.url === '/api/login' || req.url === '/api/register' || req.url === '/api/register/sendMail' || req.url === '/api/register/verify' || req.url.includes('/images')){
+if(req.url === '/api/login' || req.url === '/api/register' || req.url === '/api/register/sendMail' || req.url === '/api/register/verify' || req.url.includes('/images') || req.url.includes('api-docs')){
     return next()
      
  }

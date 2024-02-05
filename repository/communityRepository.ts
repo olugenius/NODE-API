@@ -6,6 +6,7 @@ import createCheckersModel from '../model/createcheckersModel'
 import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
 import {injectable} from 'inversify'
 import 'reflect-metadata'
+import createAppointmentModel from '../model/creatAppointmentModel'
 
 
 interface communityRepository{
@@ -15,8 +16,11 @@ interface communityRepository{
     createSubAdmin(payload:createSubAdminModel):Promise<string>
     createCheckers(payload:createCheckersModel):Promise<string>
     GetAllCheckers():Promise<any>
+    getCheckersById(Id:number):Promise<any | null>
+    getCheckersByCommunityId(communityId:number):Promise<any | null>
     GetAllSubAdmins():any
     GetSubAdminsById(Id:number):any
+    GetSubAdminsByCommunityId(communityId:number):any
 
 }
 @injectable()
@@ -299,6 +303,43 @@ export default class communityRepositoryImpl implements communityRepository{
     }
 
 
+    async getCheckersByCommunityId(communityId:number):Promise<any | null>{
+        let result : any
+        try{
+            const connection =  await this.getConnection()  
+            let result =await new Promise<any>((resolve,reject)=>{
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+
+                    connection?.query(`SELECT * FROM Checkers WHERE CommunityId = ?`,[communityId],(err,data)=>{
+                        connection.release()
+                        if(err){
+                           console.log('error querying database',err)           
+                        }
+                        else{
+                           console.log('successfully query',data)
+                           
+                        }
+                        resolve(data)
+                       })
+        
+
+                   
+                    
+                    })
+            })
+    
+             return result
+
+        }catch(error){
+         
+        }
+    }
+
+
     async GetAllCheckers():Promise<any>{
         console.log('Inside GetAll Checkers Query method')
         let result : any
@@ -387,6 +428,204 @@ export default class communityRepositoryImpl implements communityRepository{
                     }
 
                     connection?.query(`SELECT * FROM SubAdmin where Id=?`,[Id],(err,data)=>{
+                        connection.release()
+                        if(err){
+                           console.log('error querying database',err)           
+                        }
+                        else{
+                           console.log('successfully query',data)
+                           
+                        }
+                        resolve(data)
+                       })
+        
+
+                   
+                    
+                    })
+            })
+    
+             return result
+
+        }catch(error){
+         
+        }
+
+    }
+
+
+    async GetSubAdminsByCommunityId(communityId:number){
+        let result : any
+        try{
+            const connection =  await this.getConnection()  
+            let result =await new Promise<any>((resolve,reject)=>{
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+
+                    connection?.query(`SELECT * FROM SubAdmin where CommunityId=?`,[communityId],(err,data)=>{
+                        connection.release()
+                        if(err){
+                           console.log('error querying database',err)           
+                        }
+                        else{
+                           console.log('successfully query',data)
+                           
+                        }
+                        resolve(data)
+                       })
+        
+
+                   
+                    
+                    })
+            })
+    
+             return result
+
+        }catch(error){
+         
+        }
+
+    }
+
+    async createAppointment(payload:createAppointmentModel):Promise<string>{
+   
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+            let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+                    
+                  
+                    const query = `INSERT INTO Appointment(Title,Date,Time,Venue,Description,PhotoPath,CommunityId) VALUES(?,?,?,?,?,?,?)`
+                   
+                        connection?.query(query,[payload.Title,payload.Date,payload.Time,payload.Venue,payload.Description,payload.PhotoPath,payload.CommunityId],(err,data)=>{
+                         connection.release()
+                            if(err){
+                                console.log('error querying database',err)
+                                response = 'Failed'
+                               
+                            }else{
+                                console.log('successfully query',data)
+                                response = 'Success'
+                               
+                               
+                            }
+                            resolve(response)
+                         })
+                       
+                    })
+
+            })
+
+           
+                return result
+
+        }
+        catch(error){
+            console.error('Error creating user:', error);
+            return 'Failed'
+        }
+           
+      
+    }
+
+    async GetAllAppointment():Promise<any>{
+        let result : any
+        try{
+            const connection =  await this.getConnection()  
+            let result =await new Promise<any>((resolve,reject)=>{
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+
+                    connection?.query(`SELECT * FROM Appointment`,(err,data)=>{
+                        connection.release()
+                        if(err){
+                           console.log('error querying database',err)           
+                        }
+                        else{
+                           console.log('successfully query',data)
+                           
+                        }
+                        resolve(data)
+                       })
+        
+
+                   
+                    
+                    })
+            })
+    
+             return result
+
+        }catch(error){
+         
+        }
+
+    }
+
+    async GetAppointmentId(Id:number):Promise<any>{
+        let result : any
+        try{
+            const connection =  await this.getConnection()  
+            let result =await new Promise<any>((resolve,reject)=>{
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+
+                    connection?.query(`SELECT * FROM Appointment where Id=?`,[Id],(err,data)=>{
+                        connection.release()
+                        if(err){
+                           console.log('error querying database',err)           
+                        }
+                        else{
+                           console.log('successfully query',data)
+                           
+                        }
+                        resolve(data)
+                       })
+        
+
+                   
+                    
+                    })
+            })
+    
+             return result
+
+        }catch(error){
+         
+        }
+
+    }
+
+
+    async GetAppointmentCommunityId(CommunityId:number):Promise<any>{
+        let result : any
+        try{
+            const connection =  await this.getConnection()  
+            let result =await new Promise<any>((resolve,reject)=>{
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+
+                    connection?.query(`SELECT * FROM Appointment where CommunityId=?`,[CommunityId],(err,data)=>{
                         connection.release()
                         if(err){
                            console.log('error querying database',err)           

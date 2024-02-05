@@ -27,8 +27,263 @@ const router = express.Router()
 const userRepo = container.get<UserRepository>(UserRepository)
 
 
+/**
+ * @swagger
+ * tags:
+ *   name: User
+ *   description: Application User
+ */
+
+
+/**
+ * @swagger
+ * /api/login:
+ *   post:
+ *     summary: Login User
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Channel:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *           example:
+ *             Channel: JohnDoe
+ *             Password: john@example.com
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Login Successfuly
+ */
+
+/**
+ * @swagger
+ * /api/register:
+ *   post:
+ *     summary: Register User
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: file
+ *               FirstName:
+ *                 type: string
+ *               LastName:
+ *                 type: string
+ *               Gender:
+ *                 type: string
+ *               Address:
+ *                 type: string
+ *               phone:
+ *                 type: string
+ *               Password:
+ *                 type: string
+ *               Language:
+ *                 type: string
+ *               CompanyType:
+ *                 type: string
+ *               DOB:
+ *                 type: string
+ *           example:
+ *             Channel: JohnDoe
+ *             Password: john@example.com
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Registration Successful
+ */
+
+
+/**
+ * @swagger
+ * /api/register/sendMail:
+ *   post:
+ *     summary: Send Mail /SMS for Validation
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Channel:
+ *                 type: string
+ *               Medium:
+ *                 type: string
+ *           example:
+ *             Channel: john@example.com
+ *             Medium: Email
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Mail/SMS Sent Successfully
+ */
+
+/**
+ * @swagger
+ * /api/register/verify:
+ *   post:
+ *     summary:  Registration Mail /SMS for Token Validation
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Channel:
+ *                 type: string
+ *               Token:
+ *                 type: string
+ *           example:
+ *             Channel: Email
+ *             Token: 000000
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Verification Successfully
+ */
+
+
+/**
+ * @swagger
+ * /api/forgotPassword/sendMail:
+ *   post:
+ *     summary: Send Mail /SMS for forgot password Validation
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Channel:
+ *                 type: string
+ *               DOB:
+ *                 type: string
+ *               Medium:
+ *                 type: string
+ *           example:
+ *             Channel: john@example.com
+ *             DOB: 1993-01-01
+ *             Medium: Email
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Forgot Password Mail/SMS Sent Successfully
+ */
+
+
+/**
+ * @swagger
+ * /api/forgotPassword/verify:
+ *   post:
+ *     summary: forgot password Mail /SMS Token Verification
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Channel:
+ *                 type: string
+ *               Token:
+ *                 type: string
+ *           example:
+ *             Channel: john@example.com
+ *             Token: john@example.com
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Token Verification Successfully
+ */
+
+
+/**
+ * @swagger
+ * /api/refreshToken:
+ *   post:
+ *     summary: Generate New JWT using RefreshToken
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Channel:
+ *                 type: string
+ *               RefreshToken:
+ *                 type: string
+ *           example:
+ *             Channel: john@example.com
+ *             RefreshToken: 0987897373733hhhrfnnnfff
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: JWT Generated Successfully Successfully
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Set up storage for uploaded files
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'public/images/'); // Destination folder for uploaded files
@@ -138,7 +393,7 @@ async (req:any,res:any)=>{
                 return;
             }
 
-         let response = await userRepo.createUser(reqBody)
+          let response = await userRepo.createUser(reqBody)
           if(response?.status?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
             res.status(HttpStatus.STATUS_400).json({status: response.status,message:'Error registering user'})
             return;
@@ -164,7 +419,7 @@ router.post('/register/sendMail',EmailValidator,async(req:Request,res:Response)=
     }
         //store in database
         let token = Math.floor(100000 + Math.random() * 900000);
-    let response = await userRepo.AddToken(reqBody.Channel,'EmailVerify',token.toString(),reqBody.Medium)
+        let response = await userRepo.AddToken(reqBody.Channel,'EmailVerify',token.toString(),reqBody.Medium)
   
     if(response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
       res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})

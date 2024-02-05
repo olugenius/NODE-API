@@ -16,6 +16,9 @@ interface Community{
    GetAllCheckers(): Promise<any>
    GetAllSubAdmins():any
    GetSubAdminsById(Id:number):any
+   GetCheckersByCommunityId(communityId:number):Promise<any | null>
+   GetSubAdminsByCommunityId(communityId:number):Promise<any>
+   
 
 }
 //const communityRepo = container.get<communityRepository>(communityRepository)
@@ -52,6 +55,10 @@ export default class CommunityImpl implements Community{
       return await this.communityRepo.getCheckersById(Id)
      }
 
+     async GetCheckersByCommunityId(communityId:number):Promise<any | null>{
+      return await this.communityRepo.getCheckersById(communityId)
+     }
+
      async GetAllCheckers(): Promise<any>{
       return await  this.communityRepo.GetAllCheckers()
 
@@ -64,6 +71,12 @@ export default class CommunityImpl implements Community{
 
      async GetSubAdminsById(Id:number){
       return await this.communityRepo.GetSubAdminsById(Id)
+      
+     }
+
+
+     async GetSubAdminsByCommunityId(communityId:number):Promise<any>{
+      return await this.communityRepo.GetSubAdminsById(communityId)
       
      }
 }
