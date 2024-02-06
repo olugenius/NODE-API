@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 import userRepo from '../repository/UserRepository'
 import { HttpStatus } from './HttpstatusCode'
   function generateJWT(payload: object):string{
@@ -33,8 +33,19 @@ import { HttpStatus } from './HttpstatusCode'
  async function IsValidToken(token:string):Promise<boolean>{
   try{
     let Secret = <string>process.env.JWT_SECRET
-    let payload = await jwt.verify(token,Secret)
-    return payload ? true : false
+    let result = await new Promise<boolean>((resolve,reject)=>{
+
+      jwt.verify(token,Secret,(error,data)=>{
+         if(error){
+           reject(error)
+         }
+         resolve(true)
+      })
+
+    })
+
+    return result
+    
   }catch(error){
     console.log('Jwt Validation error:',error)
    return false

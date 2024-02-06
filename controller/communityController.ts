@@ -332,7 +332,7 @@ import createAppointmentModel from '../model/creatAppointmentModel'
 
 /**
  * @swagger
- * /api/community/checkers:communityId:
+ * /api/community/checkers/{communityId}:
  *   get:
  *     summary: Get Checkers by communityId
  *     parameters:
@@ -355,8 +355,202 @@ import createAppointmentModel from '../model/creatAppointmentModel'
  */
 
 
+/**
+ * @swagger
+ * /api/community/member/create:
+ *   post:
+ *     summary: Create Member
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Community]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Name:
+ *                 type: string
+ *               Email:
+ *                 type: string
+ *               Phone:
+ *                 type: string
+ *               HouseNumber:
+ *                 type: string
+ *           example:
+ *             Channel: john@example.com
+ *             DOB: 1993-01-01
+ *             Medium: Email
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Member created successfully
+ */
 
 
+
+/**
+ * @swagger
+ * /api/community/member/createXls:
+ *   post:
+ *     summary: Create member by uploading excel file
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Community]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: file
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Member created successfully
+ */
+
+
+/**
+ * @swagger
+ * /api/community/member/{memberId}:
+ *   get:
+ *     summary: Get Member memberId
+ *     parameters:
+ *       - in: path
+ *         name: memberId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the checker to get
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Community]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got Checkers by communityId
+ */
+
+
+/**
+ * @swagger
+ * /api/community/appointment/create:
+ *   post:
+ *     summary: Create Appointment
+ *     tags: [Community]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: file
+ *               Title:
+ *                 type: string
+ *               Date:
+ *                 type: Date
+ *               Time:
+ *                 type: string
+ *               Venue:
+ *                 type: string
+ *               Description:
+ *                 type: string
+ *               CommunityId:
+ *                 type: string
+ *           example:
+ *             Channel: JohnDoe
+ *             Password: john@example.com
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Appointment created Successful
+ */
+
+
+/**
+ * @swagger
+ * /api/community/appointment/{Id}:
+ *   get:
+ *     summary: Get Appointment by Id
+ *     parameters:
+ *       - in: path
+ *         name: Id
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: ID of the Appointment to get
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Community]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got Appointment by Id
+ */
+
+
+/**
+ * @swagger
+ * /api/community/appointment/{communityId}:
+ *   get:
+ *     summary: Get Appointment by communityId
+ *     parameters:
+ *       - in: path
+ *         name: Id
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: communityID of the Appointment to get
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Community]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got Appointment by communityId
+ */
+
+
+/**
+ * @swagger
+ * /api/community/appointment/all:
+ *   get:
+ *     summary: Get All Appointment
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Community]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got All Appointment
+ */
 
 
 
@@ -375,6 +569,11 @@ const community = container.get<Community>(Community)
 let uploadXls = multer({
   dest:'public/XLSUploads'
 })
+
+let AppointmentUploadXls = multer({
+  dest:'public/AppointmentUploads'
+})
+
 router.post('/community/create',async (req,res)=>{
   try{
     const reqBody = <createCommunityModel>req.body
@@ -602,7 +801,7 @@ router.post('/community/member/create',async(req,res)=>{
     
 })
 
-router.post('/community/member/createXLs',async(req:any,res:any)=>{
+router.post('/community/member/createXLs',uploadXls.single('file'),async(req:any,res:any)=>{
   try{
     const workbook = XLSX.readFile(req.file.path);
   const sheet_name = workbook.SheetNames[0];
@@ -645,14 +844,31 @@ if(response?.length < 1){
 
 })
 
-router.post('/community/appointment/create',async(req,res)=>{
+router.post('/community/appointment/create',AppointmentUploadXls.single('file'),async(req,res)=>{
   try{
     const reqBody = <createAppointmentModel>req.body
+    reqBody.PhotoPath = req?.file?.path || ''
     var response = await community.createAppointment(reqBody)
     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Appointment'})
     }
     res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Appointment',data:reqBody})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+
+  }
+    
+})
+
+router.get('/community/appointment/all',async(req,res)=>{
+  try{
+    console.log('entered appointment endpoint')
+    var response = await community.GetAllAppointment()
+    if(response?.length < 1){
+      res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Appointment '})
+    }
+    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Appointment',data:response})
 
   }catch(error){
     console.error('An Error Occurred',error)
@@ -696,21 +912,7 @@ if(response?.length < 1){
 
 })
 
-router.get('/community/appointment/all',async(req,res)=>{
-  try{
-    console.log('entered checkers endpoint')
-    var response = await community.GetAllAppointment()
-    if(response?.length < 1){
-      res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Appointment '})
-    }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Appointment',data:response})
 
-  }catch(error){
-    console.error('An Error Occurred',error)
-
-  }
-    
-})
 
 
 
