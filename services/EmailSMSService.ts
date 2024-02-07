@@ -1,5 +1,5 @@
 import { container } from "../Container/appContainer";
-import UserRepository from "../repository/UserRepository";
+import UserRepository from "../repository/UserRepositoryImpl";
 import { SendMail } from "../utilities/EmailHandler";
 import SMSHandler from "../utilities/SMSHandler";
 

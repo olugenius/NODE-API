@@ -1,5 +1,5 @@
 import loginModel from '../model/loginModel'
-import userRepository from '../repository/UserRepository'
+import userRepository from '../repository/UserRepositoryImpl'
 
 class UserService{
 

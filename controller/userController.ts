@@ -21,10 +21,10 @@ import { SendMail } from '../utilities/EmailHandler'
 import SMSHandler from '../utilities/SMSHandler'
 import {container} from '../Container/appContainer'
 import  multer from 'multer';
-import UserRepository from '../repository/UserRepository'
+import UserRepository from '../repository/Abstraction/UserRepository'
 const router = express.Router()
 
-const userRepo = container.get<UserRepository>(UserRepository)
+const userRepo = container.get<UserRepository>('UserRepository')
 
 
 /**

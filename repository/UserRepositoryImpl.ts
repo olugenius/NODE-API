@@ -1,6 +1,6 @@
 import { Connection } from 'mysql2/typings/mysql/lib/Connection'
 import loginModel from '../model/loginModel'
-import conn from '../repository/dbContext/dbConnection'
+import conn from './dbContext/dbConnection'
 import registerModel from '../model/registerModel'
 import bcrypt from 'bcrypt'
 import { format } from 'date-fns/format'
@@ -11,20 +11,9 @@ import { Result } from 'express-validator'
 import { dateFormatter } from '../utilities/dateFormatter'
 import { injectable } from 'inversify'
 import 'reflect-metadata'
+import UserRepository from './Abstraction/UserRepository'
 
 
-interface UserRepository{
-    GetUserByPhone(Phone:string):Promise<any | null>
-    GetUserByEmailOrPhone(Email:string):Promise<any | null>
-    GetUserByEmail(Email:string):Promise<any | null>
-    AddToken(email:string,mailFor:string,token:string,medium:string):Promise<string>
-    UpdateUserRefreshToken(phone:string,token:string):Promise<any>
-    UpdateUserToken(email:string,mailFor:string):Promise<string>
-    createUser(payload:registerModel):Promise<registerResponseModel>
-    UpdateUserTokenTest(email:string,mailFor:string):Promise<string>
-
-
-}
 @injectable()
 export default class UserRepositoryImpl implements UserRepository{
     connection! : Connection | undefined

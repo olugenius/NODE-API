@@ -1,5 +1,5 @@
 import jwt, { JwtPayload } from 'jsonwebtoken'
-import userRepo from '../repository/UserRepository'
+import userRepo from '../repository/UserRepositoryImpl'
 import { HttpStatus } from './HttpstatusCode'
   function generateJWT(payload: object):string{
     try{
