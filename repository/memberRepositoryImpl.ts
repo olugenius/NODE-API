@@ -4,6 +4,7 @@ import createAppointmentModel from "../model/creatAppointmentModel"
 import memberModel from "../model/memberModel"
 import memberRepository from "./Abstraction/memberRepository"
 import { injectable } from "inversify"
+import { GenerateUniqueId } from "../utilities/GenerateUniqueId"
 
 
 @injectable()
@@ -287,10 +288,10 @@ export default class memberRepositoryImpl implements memberRepository{
                         reject(err)
                     }
                     
-                  
+                    const memberId = `MEM- ${GenerateUniqueId}`
                     const query = `INSERT INTO Member(MemberId,Name,Email,Phone,HouseNumber) VALUES(?,?,?,?,?)`
                    
-                        connection?.query(query,[payload.MemberId,payload.Name,payload.Email,payload.Phone,payload.HouseNumber],(err,data)=>{
+                        connection?.query(query,[memberId,payload.Name,payload.Email,payload.Phone,payload.HouseNumber],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)
