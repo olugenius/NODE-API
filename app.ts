@@ -10,6 +10,7 @@ import swaggerJsdoc, { Options } from 'swagger-jsdoc';
 import swaggerUi from'swagger-ui-express';
 import "reflect-metadata";
 import fs from 'fs';
+import memberController from './controller/memberController';
 //import swaggerDocs from   './utilities/user-swagger-doc'
 
 
@@ -63,14 +64,11 @@ const options:Options = {
   };
 const specs = swaggerJsdoc(options);
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs,{
-    swaggerOptions: {
-        persistAuthorization:true
-    }
-}));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use('/api',userController)
 app.use('/api',communityController)
+app.use('/api',memberController)
 
 //const port = process.env.PORT || 3000
 

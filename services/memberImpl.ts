@@ -9,22 +9,34 @@ import Member from '../services/Abstraction/member'
 @injectable()
 export default class MemberImpl implements Member{
 
-    constructor(@inject(memberRepository) private memberRepo: memberRepository){}
+    constructor(@inject('memberRepository') private memberRepo: memberRepository){}
+
+   async UpdateMember(payload: memberModel): Promise<string> {
+       return await this.memberRepo.updateMember(payload)
+   }
+
+   async DeleteMember(Id:number): Promise<string> {
+      return await this.memberRepo.deleteMember(Id)
+  }
 
     async CreateMember(payload:memberModel):Promise<string>{
-
         return await this.memberRepo.createMember(payload)
      }
   
-     async GetMemberByMemberId(memberId:string):Promise<string>{
-  
+     async GetMemberByMemberId(memberId:string):Promise<string>{  
         return await this.memberRepo.GetMemberByMemberId(memberId)
      }
   
-     async createAppointment(payload:createAppointmentModel):Promise<string>{
-  
+     async CreateAppointment(payload:createAppointmentModel):Promise<string>{  
         return await this.memberRepo.createAppointment(payload)
      }
+
+     async UpdateAppointment(payload:createAppointmentModel):Promise<string>{  
+      return await this.memberRepo.updateAppointment(payload)
+   }
+   async DeleteAppointment(Id:number):Promise<string>{  
+      return await this.memberRepo.deleteAppointment(Id)
+   }
   
      async GetAllAppointment():Promise<any>{
   

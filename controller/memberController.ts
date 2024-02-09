@@ -53,6 +53,69 @@ import XLSX from 'xlsx'
 
 /**
  * @swagger
+ * /api/community/member/update:
+ *   post:
+ *     summary: Update Member
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Member]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Id:
+ *                 type: number
+ *               Name:
+ *                 type: string
+ *               Email:
+ *                 type: string
+ *               Phone:
+ *                 type: string
+ *               HouseNumber:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Member Updated successfully
+ */
+
+
+
+/**
+ * @swagger
+ * /api/community/member/delete/{Id}:
+ *   delete:
+ *     summary: Delete Member using Id
+ *     parameters:
+ *       - in: path
+ *         name: memberId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the member to delete
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Member]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully Delete Member
+ */
+
+
+
+
+/**
+ * @swagger
  * /api/community/member/createXls:
  *   post:
  *     summary: Create member by uploading excel file
@@ -140,6 +203,74 @@ import XLSX from 'xlsx'
  *           application/json:
  *             example:
  *               message: Appointment created Successful
+ */
+
+
+
+/**
+ * @swagger
+ * /api/community/appointment/update:
+ *   put:
+ *     summary: Update Appointment
+ *     tags: [Member]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Id:
+ *                 type: number
+ *               file:
+ *                 type: file
+ *               Title:
+ *                 type: string
+ *               Date:
+ *                 type: Date
+ *               Time:
+ *                 type: string
+ *               Venue:
+ *                 type: string
+ *               Description:
+ *                 type: string
+ *               CommunityId:
+ *                 type: string
+ *           example:
+ *             Channel: JohnDoe
+ *             Password: john@example.com
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Appointment Updated Successful
+ */
+
+
+/**
+ * @swagger
+ * /api/community/appointment/delete/{Id}:
+ *   delete:
+ *     summary: Delete Appointment by Id
+ *     parameters:
+ *       - in: path
+ *         name: Id
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: ID of the Appointment to Delete
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Member]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully Deleted Appointment
  */
 
 
@@ -239,6 +370,38 @@ router.post('/community/member/create',async(req,res)=>{
     }
       
   })
+
+  router.put('/community/member/update',async(req,res)=>{
+    try{
+      const reqBody = <memberModel>req.body
+      var response = await member.UpdateMember(reqBody)
+      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update Member'})
+      }
+      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Update Member',data:reqBody})
+  
+    }catch(error){
+      console.error('An Error Occurred',error)
+  
+    }
+      
+  })
+
+  router.delete('/community/member/delete/:Id',async(req,res)=>{
+    try{
+      const Id = req.params.Id
+      var response = await member.DeleteMember(Number(Id))
+      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Member'})
+      }
+      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deleted Member'})
+  
+    }catch(error){
+      console.error('An Error Occurred',error)
+  
+    }
+      
+  })
   
   router.post('/community/member/createXLs',uploadXls.single('file'),async(req:any,res:any)=>{
     try{
@@ -287,11 +450,44 @@ router.post('/community/member/create',async(req,res)=>{
     try{
       const reqBody = <createAppointmentModel>req.body
       reqBody.PhotoPath = req?.file?.path || ''
-      var response = await member.createAppointment(reqBody)
+      var response = await member.CreateAppointment(reqBody)
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Appointment'})
       }
       res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Appointment',data:reqBody})
+  
+    }catch(error){
+      console.error('An Error Occurred',error)
+  
+    }
+      
+  })
+
+  router.put('/community/appointment/update',AppointmentUploadXls.single('file'),async(req,res)=>{
+    try{
+      const reqBody = <createAppointmentModel>req.body
+      reqBody.PhotoPath = req?.file?.path || ''
+      var response = await member.UpdateAppointment(reqBody)
+      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update Appointment'})
+      }
+      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Update Appointment',data:reqBody})
+  
+    }catch(error){
+      console.error('An Error Occurred',error)
+  
+    }
+      
+  })
+
+  router.delete('/community/appointment/delete/:Id',async(req,res)=>{
+    try{
+      const Id = req.params.Id
+      var response = await member.DeleteAppointment(Number(Id))
+      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Appointment'})
+      }
+      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Delete Appointment'})
   
     }catch(error){
       console.error('An Error Occurred',error)
@@ -350,5 +546,7 @@ router.post('/community/member/create',async(req,res)=>{
     }
   
   })
+
+  export default router
   
   
