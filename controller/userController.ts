@@ -412,7 +412,7 @@ async (req:any,res:any)=>{
     try{
         const reqBody = <registerModel>req.body
 
-        console.log('file Path',req.protocol + '://' + req.get('host') + req.originalUrl+'/'+req.file.path)
+        //console.log('file Path',req.protocol + '://' + req.get('host') + req.originalUrl+'/'+req?.file?.path)
         reqBody.PhotoPath = req?.file?.path || ''
         const error = validationResult(req)
         if(!error.isEmpty()){

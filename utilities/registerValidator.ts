@@ -11,7 +11,7 @@ import { ValidationChain, body, validationResult } from 'express-validator'
   body('Address','Address is required').notEmpty().trim().escape(),
   body('Phone','PhoneNumber is required').notEmpty().trim().escape(),
   //body('PhotoPath').notEmpty().trim().escape(),
-  body('Password','Password is required').notEmpty().trim().escape(),
+  body('Password','Password is required').notEmpty().trim().escape().isLength({min:6}),
   //body('VerifyChannel','Verification channel is required').notEmpty().trim().escape(),
   //body('IsVerified').notEmpty().trim().escape(),
   body('Language','Language is required').notEmpty().trim().escape(),
