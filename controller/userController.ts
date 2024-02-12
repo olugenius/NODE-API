@@ -269,6 +269,38 @@ const userRepo = container.get<UserRepository>('UserRepository')
 
 
 
+/**
+ * @swagger
+ * /api/resetPassword:
+ *   post:
+ *     summary: Reset User Password
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               NewPassword:
+ *                 type: string
+ *               ConfirmPassword:
+ *                 type: string
+  *               Channel:
+ *                 type: string
+ *           example:
+ *             Channel: john@example.com
+ *             RefreshToken: 0987897373733hhhrfnnnfff
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: JWT Generated Successfully Successfully
+ */
 
 
 
@@ -591,7 +623,7 @@ router.post('/resetPassword',resetPasswordValidator,async(req:Request,res:Respon
     res.status(HttpStatus.STATUS_400).json(error.array())
     return;
   }
-      //Get Token from Db
+      
   let response = <userToken[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
   if(response?.length < 1){
      res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
