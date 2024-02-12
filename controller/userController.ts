@@ -85,6 +85,8 @@ const userRepo = container.get<UserRepository>('UserRepository')
  *                 type: string
  *               Gender:
  *                 type: string
+  *               Email:
+ *                 type: string
  *               Address:
  *                 type: string
  *               Phone:
