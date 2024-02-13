@@ -358,7 +358,12 @@ router.post('/login',LoginValidator,async(req:Request,res:Response)=>{
                     return;
                 }
                 //generate jwt Token
-                const accessToken = jwtHandler.generateJWT(response[0])
+                let claims = {
+                  Phone:response[0]?.Phone,
+                  Email: response[0]?.Email,
+                  Name:  response[0].FirstName + ' ' + response[0].LastName
+                }
+                const accessToken = jwtHandler.generateJWT(claims)
                 const refreshToken = await jwtHandler.generateRefreshToken(reqBody.Channel)
                  
                res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Login Successful',accessToken:accessToken,refreshToken:refreshToken})
@@ -443,34 +448,34 @@ async (req:any,res:any)=>{
 })
 
 router.post('/register/sendMail',EmailValidator,async(req:Request,res:Response)=>{
-    var reqBody = <mailRequestModel>req.body
-    const error = validationResult(req)
+     var reqBody = <mailRequestModel>req.body
+     const error = validationResult(req)
     if(!error.isEmpty()){
       res.status(HttpStatus.STATUS_400).json(error.array())
       return;
     }
-        //store in database
-        let token = Math.floor(100000 + Math.random() * 900000);
-        let response = await userRepo.AddToken(reqBody.Channel,'EmailVerify',token.toString(),reqBody.Medium)
+    //     //store in database
+    //     let token = Math.floor(100000 + Math.random() * 900000);
+    //     let response = await userRepo.AddToken(reqBody.Channel,'EmailVerify',token.toString(),reqBody.Medium)
   
-    if(response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
-      res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
-      return;
-    }
-    //Start sending sms or email
-    let emailSMSResult = false
-    const message = `Please use the token sent to you for validation: \\n Token Value is: ${token.toString()}`
-    if(reqBody.Medium.toLowerCase() === 'sms'){
-       emailSMSResult =  await SMSHandler(reqBody.Channel,message)
+    // if(response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+    //   res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
+    //   return;
+    // }
+    // //Start sending sms or email
+    // let emailSMSResult = false
+    // const message = `Please use the token sent to you for validation: \\n Token Value is: ${token.toString()}`
+    // if(reqBody.Medium.toLowerCase() === 'sms'){
+    //    emailSMSResult =  await SMSHandler(reqBody.Channel,message)
 
-    }else{
-      emailSMSResult= await SendMail(`${reqBody.Channel}`,message)
-    }
+    // }else{
+    //   emailSMSResult= await SendMail(`${reqBody.Channel}`,message)
+    // }
     
-    if(!emailSMSResult){
-      return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
-    }
-    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:`Token sent successfully Via ${reqBody.Medium}`,Channel:`${reqBody.Channel}`})
+    // if(!emailSMSResult){
+    //   return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
+    // }
+     return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:`Token sent successfully Via ${reqBody.Medium}`,Channel:`${reqBody.Channel}`})
 
     
 })
@@ -530,40 +535,40 @@ router.post('/forgotPassword/sendMail',ForgotPasswordValidator,async(req:Request
       res.status(HttpStatus.STATUS_400).json(error.array())
     }else{
 
-        let response = <registerModel[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
-        if(response?.length < 1){
+        // let response = <registerModel[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
+        // if(response?.length < 1){
 
-            res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Email Address'})
-            return;
-        }
-        console.log('response DBO',dateFormatter(response[0].DOB))
-        console.log('iNPUT DBO',dateFormatter(reqBody.DOB) )
-          let DOBCheck = dateFormatter(response[0].DOB) === dateFormatter(reqBody.DOB) ? true : false
-          if(!DOBCheck){
+        //     res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Email Address'})
+        //     return;
+        // }
+        // console.log('response DBO',dateFormatter(response[0].DOB))
+        // console.log('iNPUT DBO',dateFormatter(reqBody.DOB) )
+        //   let DOBCheck = dateFormatter(response[0].DOB) === dateFormatter(reqBody.DOB) ? true : false
+        //   if(!DOBCheck){
 
-            res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'invalid Date of Birth'})
-            return;
-          }
-          let token = Math.floor(100000 + Math.random() * 900000);
-            let result = await userRepo.AddToken(reqBody.Channel,'ForgotPassword',token.toString(),reqBody.Medium)
-            if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
-                res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
-                return;
-              }
+        //     res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'invalid Date of Birth'})
+        //     return;
+        //   }
+        //   let token = Math.floor(100000 + Math.random() * 900000);
+        //     let result = await userRepo.AddToken(reqBody.Channel,'ForgotPassword',token.toString(),reqBody.Medium)
+        //     if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+        //         res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
+        //         return;
+        //       }
 
-                //Send Email Implementation
-                let emailSMSResult = false
-                const message = `Please use the token sent to you for validation: \\n Token Value is: ${token.toString()}`
-                if(reqBody.Medium.toLowerCase() === 'sms'){
-                  emailSMSResult =  await SMSHandler(reqBody.Channel,message)
+        //         //Send Email Implementation
+        //         let emailSMSResult = false
+        //         const message = `Please use the token sent to you for validation: \\n Token Value is: ${token.toString()}`
+        //         if(reqBody.Medium.toLowerCase() === 'sms'){
+        //           emailSMSResult =  await SMSHandler(reqBody.Channel,message)
 
-                }else{
-                  emailSMSResult= await SendMail(`${reqBody.Channel}`,message)
-                }
+        //         }else{
+        //           emailSMSResult= await SendMail(`${reqBody.Channel}`,message)
+        //         }
                 
-                if(!emailSMSResult){
-                  return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
-                }
+        //         if(!emailSMSResult){
+        //           return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
+        //         }
                 return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Email Sent Successfully'})
 
        

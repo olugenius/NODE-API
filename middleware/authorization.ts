@@ -3,7 +3,7 @@ import { HttpStatus } from "../utilities/HttpstatusCode";
 import jwtHandler from "../utilities/jwtHandler";
 import { isValid } from "date-fns";
 
-export  const Authorize = async(req:Request,res:Response,next:NextFunction)=>{
+export  const Authorize = async(req:any,res:Response,next:NextFunction)=>{
 
 if(req.url === '/api/login' || req.url === '/api/register' || req.url === '/api/register/sendMail' || req.url === '/api/register/verify' || req.url.includes('/images') || req.url.includes('api-docs')){
     return next()
@@ -15,11 +15,12 @@ if(req.url === '/api/login' || req.url === '/api/register' || req.url === '/api/
      res.status(HttpStatus.STATUS_401).json({status:HttpStatus.STATUS_FAILED,message:'Request UnAuthorized'})
      return;
  }
- let IsValid = await jwtHandler.IsValidToken(token)
- if(!IsValid){
+ let IsValidJwt = await jwtHandler.IsValidToken(token)
+ if(!IsValidJwt[0]){
      res.status(HttpStatus.STATUS_403).json({status:HttpStatus.STATUS_FAILED,message:'Request Forbidden, Invalid Token'})
      return;
  }
+ req.authValue = IsValidJwt[1]
  return next()
 
 

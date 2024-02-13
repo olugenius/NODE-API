@@ -30,16 +30,16 @@ import { HttpStatus } from './HttpstatusCode'
     
 }
 
- async function IsValidToken(token:string):Promise<boolean>{
+ async function IsValidToken(token:string):Promise<[boolean,any]>{
   try{
     let Secret = <string>process.env.JWT_SECRET
-    let result = await new Promise<boolean>((resolve,reject)=>{
+    let result = await new Promise<[boolean,any]>((resolve,reject)=>{
 
       jwt.verify(token,Secret,(error,data)=>{
          if(error){
            reject(error)
          }
-         resolve(true)
+         resolve([true,data])
       })
 
     })
@@ -48,7 +48,7 @@ import { HttpStatus } from './HttpstatusCode'
     
   }catch(error){
     console.log('Jwt Validation error:',error)
-   return false
+   return [false,null]
   }
    
 }

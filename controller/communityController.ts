@@ -384,7 +384,7 @@ router.post('/community/create',async (req,res)=>{
     
 })
 
-router.get('/community',async(req,res)=>{
+router.get('/community',async(req:any,res)=>{
   try{
     var response = await community.GetCommunity()
   if(response?.length < 1){
