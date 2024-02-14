@@ -12,6 +12,7 @@ export default interface registerModel{
         IsVerified : boolean  
         Language : string
         CompanyType : string
+        UserRole:string
         RefreshToken:string
 
     }

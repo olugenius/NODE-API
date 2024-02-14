@@ -20,7 +20,7 @@ export default class UserRepositoryImpl implements UserRepository{
    
      private  async getConnection(): Promise<Pool | undefined>{
         try{
-            return  await new conn().getConnect()
+            return  await conn.getConnect()
         }
         catch(error){
          console.log('error getting  connection to MySql Server',error)
@@ -28,18 +28,18 @@ export default class UserRepositoryImpl implements UserRepository{
         
     }
 
-    async getAllUsers(loginModel:loginModel){
-        this.connection?.connect((err)=>{
-            if(err){
-            console.log('connection error',err)
-            }
+    // async getAllUsers(loginModel:loginModel){
+    //     this.connection?.connect((err)=>{
+    //         if(err){
+    //         console.log('connection error',err)
+    //         }
             
-            })
+    //         })
         
-            this.connection?.query('',(err,data)=>{
+    //         this.connection?.query('',(err,data)=>{
 
-            })
-    }
+    //         })
+    // }
 
 
 
@@ -512,9 +512,9 @@ export default class UserRepositoryImpl implements UserRepository{
                     }
                     
                   
-                    const query = `INSERT INTO Users(FirstName,LastName,DOB,Gender,Address,Phone,Email,PhotoPath,Password,IsVerified,Language,CompanyType) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)`
+                    const query = `INSERT INTO Users(FirstName,LastName,DOB,Gender,Address,Phone,Email,PhotoPath,Password,IsVerified,Language,CompanyType,UserRole) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`
                    
-                        connection?.query(query,[payload.FirstName,payload.LastName,dateFormat,payload.Gender,payload.Address,payload.Phone,payload.Email ?? '',payload.PhotoPath,passwordEncrypt,false,payload.Language,payload.CompanyType],(err,data)=>{
+                        connection?.query(query,[payload.FirstName,payload.LastName,dateFormat,payload.Gender,payload.Address,payload.Phone,payload.Email ?? '',payload.PhotoPath,passwordEncrypt,false,payload.Language,payload.CompanyType,payload.UserRole],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)

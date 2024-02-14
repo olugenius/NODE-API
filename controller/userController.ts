@@ -22,6 +22,7 @@ import SMSHandler from '../utilities/SMSHandler'
 import {container} from '../Container/appContainer'
 import  multer from 'multer';
 import UserRepository from '../repository/Abstraction/UserRepository'
+import { RolesEnum } from '../utilities/RolesEnum'
 const router = express.Router()
 
 const userRepo = container.get<UserRepository>('UserRepository')
@@ -98,6 +99,8 @@ const userRepo = container.get<UserRepository>('UserRepository')
  *               CompanyType:
  *                 type: string
  *               DOB:
+ *                 type: string
+ *               UserRole:
  *                 type: string
  *           example:
  *             Channel: JohnDoe
@@ -424,16 +427,19 @@ async (req:any,res:any)=>{
           res.status(HttpStatus.STATUS_400).json(error.array())
           return;
         }
+          // if(!(reqBody.UserRole.toUpperCase() in RolesEnum)){
+          //   return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Invalid role passed'})
+          // }
             let userData = <registerModel[]>await userRepo.GetUserByPhone(reqBody.Phone)
             if(userData.length > 0){
-                res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'User with this Phone number already exist'})
-                return;
+                return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'User with this Phone number already exist'})
+                
             }
 
           let response = await userRepo.createUser(reqBody)
           if(response?.status?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
-            res.status(HttpStatus.STATUS_400).json({status: response.status,message:'Error registering user'})
-            return;
+            return res.status(HttpStatus.STATUS_400).json({status: response.status,message:'Error registering user'})
+            
           }
           res.status(HttpStatus.STATUS_200).json({status:response.status,message:'Successfully registered user',data:reqBody})
 
