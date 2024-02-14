@@ -28,18 +28,18 @@ export default class UserRepositoryImpl implements UserRepository{
         
     }
 
-    // async getAllUsers(loginModel:loginModel){
-    //     this.connection?.connect((err)=>{
-    //         if(err){
-    //         console.log('connection error',err)
-    //         }
+    async getAllUsers(loginModel:loginModel){
+        this.connection?.connect((err)=>{
+            if(err){
+            console.log('connection error',err)
+            }
             
-    //         })
+            })
         
-    //         this.connection?.query('',(err,data)=>{
+            this.connection?.query('',(err,data)=>{
 
-    //         })
-    // }
+            })
+    }
 
 
 

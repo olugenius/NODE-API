@@ -17,7 +17,7 @@ export default class communityRepositoryImpl implements communityRepository{
 
     private  async getConnection(): Promise<Pool | undefined>{
         try{
-            return  await new conn().getConnect()
+            return  await conn.getConnect()
         }
         catch(error){
          console.log('error getting  connection to MySql Server',error)
