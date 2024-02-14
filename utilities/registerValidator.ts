@@ -17,7 +17,7 @@ import { ValidationChain, body, validationResult } from 'express-validator'
   body('Language','Language is required').notEmpty().trim().escape(),
   body('CompanyType','Company type is required').notEmpty().trim().escape(),
   body('DOB','Date of Birth is required').isDate().toDate(),
-  //body('UserRole','Please Pass the User Role').notEmpty().trim().escape(),
+  body('UserRole','Please Pass the User Role').notEmpty().trim().escape(),
   //body('Email','A valid email is required').isEmail().normalizeEmail(),
 ]
 

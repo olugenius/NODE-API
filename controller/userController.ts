@@ -427,9 +427,9 @@ async (req:any,res:any)=>{
           res.status(HttpStatus.STATUS_400).json(error.array())
           return;
         }
-          // if(!(reqBody.UserRole.toUpperCase() in RolesEnum)){
-          //   return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Invalid role passed'})
-          // }
+          if(!(reqBody.UserRole.toUpperCase() in RolesEnum)){
+            return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Invalid role passed'})
+          }
             let userData = <registerModel[]>await userRepo.GetUserByPhone(reqBody.Phone)
             if(userData.length > 0){
                 return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'User with this Phone number already exist'})
