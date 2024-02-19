@@ -287,11 +287,8 @@ const userRepo = container.get<UserRepository>('UserRepository')
  *                 type: string
  *               ConfirmPassword:
  *                 type: string
-  *               Channel:
+ *               Channel:
  *                 type: string
- *           example:
- *             Channel: john@example.com
- *             RefreshToken: 0987897373733hhhrfnnnfff
  *     responses:
  *       200:
  *         description: Successful response
