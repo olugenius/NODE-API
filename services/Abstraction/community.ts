@@ -15,6 +15,9 @@ export default interface Community{
     GetSubAdminsById(Id:number):any
     GetCheckersByCommunityId(communityId:number):Promise<any | null>
     GetSubAdminsByCommunityId(communityId:number):Promise<any>
+    DeleteCommunity(Id:number):Promise<any | null>
+    DeactivateCommunity(Id:number):Promise<any | null>
+    ActivateCommunity(Id:number):Promise<any | null>
     
     
  

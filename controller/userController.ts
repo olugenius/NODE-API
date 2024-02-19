@@ -179,8 +179,6 @@ const userRepo = container.get<UserRepository>('UserRepository')
  * /api/forgotPassword/sendMail:
  *   post:
  *     summary: Send Mail /SMS for forgot password Validation
- *     security: 
- *      - APIKeyHeader: []
  *     tags: [User]
  *     requestBody:
  *       required: true
@@ -214,8 +212,6 @@ const userRepo = container.get<UserRepository>('UserRepository')
  * /api/forgotPassword/verify:
  *   post:
  *     summary: forgot password Mail /SMS Token Verification
- *     security: 
- *      - APIKeyHeader: []
  *     tags: [User]
  *     requestBody:
  *       required: true
@@ -279,8 +275,6 @@ const userRepo = container.get<UserRepository>('UserRepository')
  * /api/resetPassword:
  *   post:
  *     summary: Reset User Password
- *     security: 
- *      - APIKeyHeader: []
  *     tags: [User]
  *     requestBody:
  *       required: true
@@ -364,7 +358,8 @@ router.post('/login',LoginValidator,async(req:Request,res:Response)=>{
                 let claims = {
                   Phone:response[0]?.Phone,
                   Email: response[0]?.Email,
-                  Name:  response[0].FirstName + ' ' + response[0].LastName
+                  Name:  response[0].FirstName + ' ' + response[0].LastName,
+                  Role: response[0].UserRole
                 }
                 const accessToken = jwtHandler.generateJWT(claims)
                 const refreshToken = await jwtHandler.generateRefreshToken(reqBody.Channel)

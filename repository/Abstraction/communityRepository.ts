@@ -14,6 +14,9 @@ export default interface communityRepository{
     GetAllSubAdmins():Promise<any|null>
     GetSubAdminsById(Id:number):any
     GetSubAdminsByCommunityId(communityId:string):any
+    ActivateCommunity(Id:number):Promise<any | null>
+    DeactivateCommunity(Id:number):Promise<any | null>
+    DeleteCommunity(Id:number):Promise<any | null>
     
 
 }

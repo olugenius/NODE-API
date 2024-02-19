@@ -1,10 +1,11 @@
-import { inject } from "inversify";
+import { inject, injectable } from "inversify";
 import bulkAccessCodeModel from "../model/bulkAccessCodeModel";
 import singleAccessCodeModel from "../model/singleAccessCodeModel";
 import staticAccessCodeModel from "../model/staticAccessCodeModel";
 import BaseRepository from "../repository/Abstraction/baseRepository";
 import BaseService from "./Abstraction/BaseService";
 
+@injectable()
 export default class BaseServiceimpl implements BaseService{
     constructor(@inject('BaseRepository') private baseRepo:BaseRepository){}
     async CreateSingleCode(payload:singleAccessCodeModel): Promise<string>{

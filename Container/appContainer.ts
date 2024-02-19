@@ -23,8 +23,8 @@ container.bind<Community>('Community').to(CommunityImpl)
 container.bind<communityRepository>('communityRepository').to(communityRepositoryImpl)
 container.bind<memberRepository>('memberRepository').to(memberRepositoryImpl)
 container.bind<Member>('Member').to(MemberImpl)
-container.bind<BaseRepository>('baseRepository').to(baseRepositoryImpl)
-container.bind<BaseService>('baseService').to(BaseServiceimpl)
+container.bind<BaseRepository>('BaseRepository').to(baseRepositoryImpl)
+container.bind<BaseService>('BaseService').to(BaseServiceimpl)
 
 
 

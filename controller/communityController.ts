@@ -416,21 +416,53 @@ router.get('/community/:communityId',async(req,res)=>{
 
 })
 
-// router.delete('/community/delete/:Id',async(req,res)=>{
-//   try{
-//     const Id = req.params.Id
-//     var response = await community.DeleteCommunity(Number(Id))
-//     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
-//        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Member'})
-//     }
-//     res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deleted Member'})
+router.delete('/community/delete/:Id',async(req,res)=>{
+  try{
+    const Id = req.params.Id
+    var response = await community.DeleteCommunity(Number(Id))
+    if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Member'})
+    }
+    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deleted Member'})
 
-//   }catch(error){
-//     console.error('An Error Occurred',error)
+  }catch(error){
+    console.error('An Error Occurred',error)
 
-//   }
+  }
     
-// })
+})
+
+router.patch('/community/activate/:Id',async(req,res)=>{
+  try{
+    const Id = req.params.Id
+    var response = await community.ActivateCommunity(Number(Id))
+    if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Member'})
+    }
+    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deleted Member'})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+
+  }
+    
+})
+
+router.patch('/community/deactivate/:Id',async(req,res)=>{
+  try{
+    const Id = req.params.Id
+    var response = await community.DeactivateCommunity(Number(Id))
+    if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Member'})
+    }
+    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deleted Member'})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+
+  }
+    
+})
 
 router.post('/community/checkers/create',async(req,res)=>{
   try{

@@ -6,9 +6,6 @@ import { HttpStatus } from '../utilities/HttpstatusCode'
 import staticAccessCodeModel from '../model/staticAccessCodeModel'
 import bulkAccessCodeModel from '../model/bulkAccessCodeModel'
 
-const router = express.Router()
-
-const baseService = container.get<BaseService>('baseservice')
 
 /**
  * @swagger
@@ -95,7 +92,7 @@ const baseService = container.get<BaseService>('baseservice')
 
 /**
  * @swagger
- * /api/accessCode/static/create:
+ * /api/accessCode/bulk/create:
  *   post:
  *     summary: Create Bulk Access Code
  *     security: 
@@ -179,6 +176,9 @@ const baseService = container.get<BaseService>('baseservice')
  */
 
 
+const router = express.Router()
+
+const baseService = container.get<BaseService>('BaseService')
 
 router.post('/accessCode/single/create',async(req,res)=>{
     try{

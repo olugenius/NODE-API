@@ -11,6 +11,7 @@ import swaggerUi from'swagger-ui-express';
 import "reflect-metadata";
 import fs from 'fs';
 import memberController from './controller/memberController';
+import BaseController from './controller/BaseController';
 //import swaggerDocs from   './utilities/user-swagger-doc'
 
 
@@ -78,6 +79,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use('/api',userController)
 app.use('/api',communityController)
 app.use('/api',memberController)
+app.use('/api',BaseController)
 
 //const port = process.env.PORT || 3000
 

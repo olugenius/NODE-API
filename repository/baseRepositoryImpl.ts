@@ -34,7 +34,7 @@ export default class baseRepositoryImpl implements BaseRepository{
                         reject(err)
                     }
                     
-                    var AccessCode = `Access- ${GenerateUniqueId}`
+                    var AccessCode = `Access- ${GenerateUniqueId()}`
                     const query = `INSERT INTO AccessCode(CodeType,Code,Purpose,StartTime,EndTime,Name,Date,Phone,Email) VALUES(?,?,?,?,?,?,?,?,?)`
                    
                         connection?.query(query,['Single',AccessCode,payload.PurposeCode,payload.StartTime,payload.EndTime,payload.Name,payload.Date,payload.Phone,payload.Email],(err,data)=>{
@@ -82,7 +82,7 @@ export default class baseRepositoryImpl implements BaseRepository{
                         reject(err)
                     }
                     
-                    var AccessCode = `Access- ${GenerateUniqueId}`
+                    var AccessCode = `Access- ${GenerateUniqueId()}`
                     const query = `INSERT INTO AccessCode(CodeType,Code,DateRange,Frequency,Name,Phone,Email,Category) VALUES(?,?,?,?,?,?,?,?)`
                    
                         connection?.query(query,['Static',AccessCode,payload.DateRange,payload.Frequency,payload.Name,payload.Phone,payload.Email,payload.Category],(err,data)=>{
@@ -129,7 +129,7 @@ export default class baseRepositoryImpl implements BaseRepository{
                         reject(err)
                     }
                     
-                    var AccessCode = `Access- ${GenerateUniqueId}`
+                    var AccessCode = `Access- ${GenerateUniqueId()}`
                     const query = `INSERT INTO AccessCode(CodeType,Code,Date,StartTime,EndTime,Frequency,AppointmentTitle,Phone,Email,NoOfParticipants) VALUES(?,?,?,?,?,?,?,?,?,?)`
                    
                         connection?.query(query,['Bulk',AccessCode,payload.Date,payload.StartTime,payload.EndTime,payload.Frequency,payload.AppointmentTitle,payload.phone,payload.Email,payload.NoOfParticipants],(err,data)=>{

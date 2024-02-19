@@ -123,9 +123,9 @@ export default class communityRepositoryImpl implements communityRepository{
                     }
                     
                   
-                    const query = `INSERT INTO Community(Name,Address,Phone,Email,CommunityId) VALUES(?,?,?,?,?)`
+                    const query = `INSERT INTO Community(Name,Address,Phone,Email,CommunityId,IActive) VALUES(?,?,?,?,?,?)`
                    
-                        connection?.query(query,[payload.Name,payload.Address,payload.Phone,payload.Email,payload.CommunityId],(err,data)=>{
+                        connection?.query(query,[payload.Name,payload.Address,payload.Phone,payload.Email,payload.CommunityId,1],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)
@@ -156,6 +156,141 @@ export default class communityRepositoryImpl implements communityRepository{
       
     }
 
+    async DeleteCommunity(Id:number):Promise<any | null>{
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+            let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+                    
+                  
+                    const query = `DELETE FROM Community WHERE Id = ?`
+                   
+                        connection?.query(query,[Id],(err,data)=>{
+                         connection.release()
+                            if(err){
+                                console.log('error querying database',err)
+                                response = 'Failed'
+                               
+                            }else{
+                                console.log('successfully query',data)
+                                response = 'Success'
+                               
+                               
+                            }
+                            resolve(response)
+                         })
+                       
+                    })
+
+            })
+
+           
+                return result
+
+        }
+        catch(error){
+            console.error('Error Deleting community:', error);
+            return 'Failed'
+        }
+       }
+  
+    async DeactivateCommunity(Id:number):Promise<any | null>{
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+            let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+                    
+                  
+                    const query = `UPDATE Community SET IsActive = ? WHERE Id = ?`
+                   
+                        connection?.query(query,[0,Id],(err,data)=>{
+                         connection.release()
+                            if(err){
+                                console.log('error querying database',err)
+                                response = 'Failed'
+                               
+                            }else{
+                                console.log('successfully query',data)
+                                response = 'Success'
+                               
+                               
+                            }
+                            resolve(response)
+                         })
+                       
+                    })
+
+            })
+
+           
+                return result
+
+        }
+        catch(error){
+            console.error('Error Deactivate community:', error);
+            return 'Failed'
+        }
+
+       }
+  
+    async ActivateCommunity(Id:number):Promise<any | null>{
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+            let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+                    
+                  
+                    const query = `UPDATE Community SET IsActive = ? WHERE Id = ?`
+                   
+                        connection?.query(query,[1,Id],(err,data)=>{
+                         connection.release()
+                            if(err){
+                                console.log('error querying database',err)
+                                response = 'Failed'
+                               
+                            }else{
+                                console.log('successfully query',data)
+                                response = 'Success'
+                               
+                               
+                            }
+                            resolve(response)
+                         })
+                       
+                    })
+
+            })
+
+           
+                return result
+
+        }
+        catch(error){
+            console.error('Error Activate community:', error);
+            return 'Failed'
+        }
+       }
 
     async createSubAdmin(payload:createSubAdminModel):Promise<string>{
    
