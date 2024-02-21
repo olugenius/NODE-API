@@ -4,7 +4,7 @@ export default interface bulkAccessCodeModel{
     EndTime:Date,
     Frequency:string,
     AppointmentTitle:string,
-    phone:string,
+    Phone:string,
     Email:string
     NoOfParticipants: string
 }

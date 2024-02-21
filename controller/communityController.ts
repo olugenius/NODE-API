@@ -212,7 +212,7 @@ import { CreateCheckerValidator, CreateCommunityValidator, CreateSubAdminValidat
  *                 type: string
  *               CommunityId:
  *                 type: string
- *               Checkpoint:
+ *               CheckPoint:
  *                 type: string
  *     responses:
  *       200:
@@ -576,8 +576,8 @@ router.post('/community/checkers/createXls',uploadXls.single('file'),async(req:a
   const sheet = workbook.Sheets[sheet_name];
   const data = <createCheckersModel[]>XLSX.utils.sheet_to_json(sheet);
   let successArray:createCheckersModel[] = []
-  for(let req of data){
-    var response = await community.CreateCheckers(req)
+  for(let reqFile of data){
+    var response = await community.CreateCheckers(reqFile)
     if(response?.toLowerCase() ===  HttpStatus.STATUS_SUCCESS){
       successArray.push(req)
     }

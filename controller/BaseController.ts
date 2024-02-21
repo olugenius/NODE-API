@@ -5,6 +5,8 @@ import singleAccessCodeModel from '../model/singleAccessCodeModel'
 import { HttpStatus } from '../utilities/HttpstatusCode'
 import staticAccessCodeModel from '../model/staticAccessCodeModel'
 import bulkAccessCodeModel from '../model/bulkAccessCodeModel'
+import { BulkAccessCodeModelValidator, SingleAccessCodeModelValidator, StaticAccessCodeModelValidator } from '../utilities/BaseValidator'
+import { validationResult } from 'express-validator'
 
 
 /**
@@ -180,9 +182,14 @@ const router = express.Router()
 
 const baseService = container.get<BaseService>('BaseService')
 
-router.post('/accessCode/single/create',async(req,res)=>{
+router.post('/accessCode/single/create',SingleAccessCodeModelValidator,async(req:any,res:any)=>{
     try{
         const reqBody = <singleAccessCodeModel>req.body
+        const error = validationResult(req)
+        if(!error.isEmpty()){
+          res.status(HttpStatus.STATUS_400).json(error.array())
+          return;
+        }
         var response = await baseService.CreateSingleCode(reqBody)
         if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
            return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Static Code'})
@@ -195,9 +202,14 @@ router.post('/accessCode/single/create',async(req,res)=>{
       }
 })
 
-router.post('/accessCode/static/create',async(req,res)=>{
+router.post('/accessCode/static/create',StaticAccessCodeModelValidator,async(req:any,res:any)=>{
     try{
         const reqBody = <staticAccessCodeModel>req.body
+        const error = validationResult(req)
+        if(!error.isEmpty()){
+          res.status(HttpStatus.STATUS_400).json(error.array())
+          return;
+        }
         var response = await baseService.CreateStaticCode(reqBody)
         if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
            return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Static Code'})
@@ -210,9 +222,14 @@ router.post('/accessCode/static/create',async(req,res)=>{
       }
 })
 
-router.post('/accessCode/bulk/create',async(req,res)=>{
+router.post('/accessCode/bulk/create',BulkAccessCodeModelValidator,async(req:any,res:any)=>{
     try{
         const reqBody = <bulkAccessCodeModel>req.body
+        const error = validationResult(req)
+        if(!error.isEmpty()){
+          res.status(HttpStatus.STATUS_400).json(error.array())
+          return;
+        }
         var response = await baseService.CreateBulkCode(reqBody)
         if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
            return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create bulk Code'})

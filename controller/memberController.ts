@@ -7,6 +7,8 @@ import { HttpStatus } from '../utilities/HttpstatusCode'
 import createAppointmentModel from '../model/creatAppointmentModel'
 import multer from 'multer'
 import XLSX from 'xlsx'
+import { CreateAppointmentValidator } from '../utilities/MembersValidator'
+import { validationResult } from 'express-validator'
 
 
 /**
@@ -446,9 +448,14 @@ router.post('/community/member/create',async(req,res)=>{
   
   })
   
-  router.post('/community/appointment/create',AppointmentUploadXls.single('file'),async(req,res)=>{
+  router.post('/community/appointment/create',CreateAppointmentValidator,AppointmentUploadXls.single('file'),async(req:any,res:any)=>{
     try{
       const reqBody = <createAppointmentModel>req.body
+      const error = validationResult(req)
+      if(!error.isEmpty()){
+        res.status(HttpStatus.STATUS_400).json(error.array())
+        return;
+      }
       reqBody.PhotoPath = req?.file?.path || ''
       var response = await member.CreateAppointment(reqBody)
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
