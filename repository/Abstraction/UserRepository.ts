@@ -11,5 +11,6 @@ export default interface UserRepository{
     createUser(payload:registerModel):Promise<registerResponseModel>
     UpdateUserTokenTest(email:string,mailFor:string):Promise<string>
     UpdateUserPassword(newPassword:string,email:string):Promise<any>
+    GetUserToken(email:string,mailFor:string):Promise<any>
 
 }

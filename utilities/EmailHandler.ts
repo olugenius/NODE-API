@@ -5,12 +5,12 @@ import SMTPTransport from 'nodemailer/lib/smtp-transport'
   let mailResult = false
       try{
 
-        const host = process.env.MAIL_HOST
+    const host = process.env.MAIL_HOST
     const port =process.env.MAIL_PORT
     const user = process.env.MAIL_USER
     const password = process.env.MAIL_PASSWORD
     const from = process.env.MAIL_FROM
-    const subject = process.env.MAIL_SUBJECT
+    const subject = process.env.MAIL_SUBJECT || 'Testing Email for OTP sending'
     const transport = nodemailer.createTransport({
         host:host,
         port:Number(port),
@@ -25,7 +25,7 @@ import SMTPTransport from 'nodemailer/lib/smtp-transport'
      from: from,
      to:mailTo,
      subject:subject,
-     text:message
+     html:message
     }
     
     let result = await new Promise<boolean>((resolve,reject)=>{

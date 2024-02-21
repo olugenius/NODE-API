@@ -104,6 +104,83 @@ import Community from '../services/Abstraction/community'
 
 /**
  * @swagger
+ * /api/community/delete/{Id}:
+ *   delete:
+ *     summary: Delete Community By Id
+ *     parameters:
+ *       - in: path
+ *         name: communityId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the community to Delete
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Community]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Community is Delete Successfully
+ */
+
+
+
+/**
+ * @swagger
+ * /api/community/deactivate/{Id}:
+ *   patch:
+ *     summary: Deactivate Community By Id
+ *     parameters:
+ *       - in: path
+ *         name: communityId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the community to Deactivate
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Community]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Community is Deactivated Successfully
+ */
+
+
+/**
+ * @swagger
+ * /api/community/activate/{Id}:
+ *   patch:
+ *     summary: Activate Community By Id
+ *     parameters:
+ *       - in: path
+ *         name: communityId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the community to Activate
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Community]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Community is Activated Successfully
+ */
+
+
+
+/**
+ * @swagger
  * /api/community/checkers/create:
  *   post:
  *     summary: Create checkers
@@ -421,9 +498,9 @@ router.delete('/community/delete/:Id',async(req,res)=>{
     const Id = req.params.Id
     var response = await community.DeleteCommunity(Number(Id))
     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
-       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Member'})
+       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Community'})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deleted Member'})
+    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deleted Community'})
 
   }catch(error){
     console.error('An Error Occurred',error)
@@ -437,9 +514,9 @@ router.patch('/community/activate/:Id',async(req,res)=>{
     const Id = req.params.Id
     var response = await community.ActivateCommunity(Number(Id))
     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
-       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Member'})
+       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Activate Community'})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deleted Member'})
+    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Activate Community'})
 
   }catch(error){
     console.error('An Error Occurred',error)
@@ -453,9 +530,9 @@ router.patch('/community/deactivate/:Id',async(req,res)=>{
     const Id = req.params.Id
     var response = await community.DeactivateCommunity(Number(Id))
     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
-       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Member'})
+       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Deactivate Community'})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deleted Member'})
+    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deactivate Community'})
 
   }catch(error){
     console.error('An Error Occurred',error)

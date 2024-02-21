@@ -452,27 +452,29 @@ router.post('/register/sendMail',EmailValidator,async(req:Request,res:Response)=
       res.status(HttpStatus.STATUS_400).json(error.array())
       return;
     }
-    //     //store in database
-    //     let token = Math.floor(100000 + Math.random() * 900000);
-    //     let response = await userRepo.AddToken(reqBody.Channel,'EmailVerify',token.toString(),reqBody.Medium)
+        //store in database
+        let token = Math.floor(100000 + Math.random() * 900000);
+        let response = await userRepo.AddToken(reqBody.Channel,'EmailVerify',token.toString(),reqBody.Medium)
   
-    // if(response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
-    //   res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
-    //   return;
-    // }
-    // //Start sending sms or email
-    // let emailSMSResult = false
-    // const message = `Please use the token sent to you for validation: \\n Token Value is: ${token.toString()}`
-    // if(reqBody.Medium.toLowerCase() === 'sms'){
-    //    emailSMSResult =  await SMSHandler(reqBody.Channel,message)
+    if(response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+      res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
+      return;
+    }
+    //Start sending sms or email
+    let emailSMSResult = false
+    const message = `Please use the token sent to you for validation: \n Token Value is: ${token.toString()}`
+    if(reqBody.Medium.toLowerCase() === 'sms'){
+       emailSMSResult =  await SMSHandler(reqBody.Channel,message)
 
-    // }else{
-    //   emailSMSResult= await SendMail(`${reqBody.Channel}`,message)
-    // }
+    }else{
+      
+      const emailMessage = `<!DOCTYPE html><html><body><h2>Dear Customer</h2><p><b>A token request was sent using your Email address. Please ignore if not requested by you </b></p><p class="demo">Please use the token below to complete your verify. <br><br> <b>Token:</b> ${token}</p></body></html>`;
+      emailSMSResult= await SendMail(`${reqBody.Channel}`,emailMessage)
+    }
     
-    // if(!emailSMSResult){
-    //   return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
-    // }
+    if(!emailSMSResult){
+      return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
+    }
      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:`Token sent successfully Via ${reqBody.Medium}`,Channel:`${reqBody.Channel}`})
 
     
@@ -487,41 +489,41 @@ router.post('/register/verify',VerifyEmailValidator,async(req:Request,res:Respon
     }
         //Get Token from Db
 
-    // let response = <userToken[]>await userRepo.GetUserToken(reqBody.Channel,'EmailVerify')
-    // if(response?.length < 1){
-    //    res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
-    //    return;
-    // }
-    //    let tokenRes = response?.find(c=>c.Token === reqBody.Token && c.Used == false)
-    //    console.log('token response',tokenRes)
-    //      //verify token
-    // if(!tokenRes){
-    //     res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Token Verification Failed'})
-    //     return;
-    // }
+    let response = <userToken[]>await userRepo.GetUserToken(reqBody.Channel,'EmailVerify')
+    if(response?.length < 1){
+       res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
+       return;
+    }
+       let tokenRes = response?.find(c=>c.Token === reqBody.Token && c.Used == false)
+       console.log('token response',tokenRes)
+         //verify token
+    if(!tokenRes){
+        res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Token Verification Failed'})
+        return;
+    }
    
 
-        //let result = await  userRepo.UpdateUserToken(reqBody.Channel,'EmailVerify')
-        // if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
-        //     res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
-        //     return;
-        // }
-        // res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Email Verification Successful, please proceed to login'})
-       
-
-        
-         //comment this when going to production environment
-        if(reqBody.Token === '000000'){
-          let result = await  userRepo.UpdateUserTokenTest(reqBody.Channel,'EmailVerify')
-          if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+        let result = await  userRepo.UpdateUserToken(reqBody.Channel,'EmailVerify')
+        if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
             res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
             return;
         }
         res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Email Verification Successful, please proceed to login'})
        
-        }else{
-          res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
-        }
+
+        
+         //comment this when going to production environment
+        // if(reqBody.Token === '000000'){
+        //   let result = await  userRepo.UpdateUserTokenTest(reqBody.Channel,'EmailVerify')
+        //   if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+        //     res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
+        //     return;
+        // }
+        // res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Email Verification Successful, please proceed to login'})
+       
+        // }else{
+        //   res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
+        // }
    
     
 })
@@ -533,40 +535,40 @@ router.post('/forgotPassword/sendMail',ForgotPasswordValidator,async(req:Request
       res.status(HttpStatus.STATUS_400).json(error.array())
     }else{
 
-        // let response = <registerModel[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
-        // if(response?.length < 1){
+        let response = <registerModel[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
+        if(response?.length < 1){
 
-        //     res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Email Address'})
-        //     return;
-        // }
-        // console.log('response DBO',dateFormatter(response[0].DOB))
-        // console.log('iNPUT DBO',dateFormatter(reqBody.DOB) )
-        //   let DOBCheck = dateFormatter(response[0].DOB) === dateFormatter(reqBody.DOB) ? true : false
-        //   if(!DOBCheck){
+            res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Email Address'})
+            return;
+        }
+        console.log('response DBO',dateFormatter(response[0].DOB))
+        console.log('iNPUT DBO',dateFormatter(reqBody.DOB) )
+          let DOBCheck = dateFormatter(response[0].DOB) === dateFormatter(reqBody.DOB) ? true : false
+          if(!DOBCheck){
 
-        //     res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'invalid Date of Birth'})
-        //     return;
-        //   }
-        //   let token = Math.floor(100000 + Math.random() * 900000);
-        //     let result = await userRepo.AddToken(reqBody.Channel,'ForgotPassword',token.toString(),reqBody.Medium)
-        //     if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
-        //         res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
-        //         return;
-        //       }
+            res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'invalid Date of Birth'})
+            return;
+          }
+          let token = Math.floor(100000 + Math.random() * 900000);
+            let result = await userRepo.AddToken(reqBody.Channel,'ForgotPassword',token.toString(),reqBody.Medium)
+            if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+                res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
+                return;
+              }
 
-        //         //Send Email Implementation
-        //         let emailSMSResult = false
-        //         const message = `Please use the token sent to you for validation: \\n Token Value is: ${token.toString()}`
-        //         if(reqBody.Medium.toLowerCase() === 'sms'){
-        //           emailSMSResult =  await SMSHandler(reqBody.Channel,message)
+                //Send Email Implementation
+                let emailSMSResult = false
+                const message = `Please use the token sent to you for validation: \\n Token Value is: ${token.toString()}`
+                if(reqBody.Medium.toLowerCase() === 'sms'){
+                  emailSMSResult =  await SMSHandler(reqBody.Channel,message)
 
-        //         }else{
-        //           emailSMSResult= await SendMail(`${reqBody.Channel}`,message)
-        //         }
+                }else{
+                  emailSMSResult= await SendMail(`${reqBody.Channel}`,message)
+                }
                 
-        //         if(!emailSMSResult){
-        //           return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
-        //         }
+                if(!emailSMSResult){
+                  return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
+                }
                 return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Email Sent Successfully'})
 
        
@@ -583,41 +585,41 @@ router.post('/forgotPassword/verify',ForgotPasswordVerifyValidator,async(req:Req
       return;
     }
         //Get Token from Db
-    // let response = <userToken[]>await userRepo.GetUserToken(reqBody.Channel,'ForgotPassword')
-    // if(response?.length < 1){
-    //    res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
-    //    return;
-    // }
-    // let tokenRes = response.find(c=>c.Token === reqBody.Token && c.Used == false)
-    // console.log('token response value',tokenRes)
-    //     //verify token
-    // if(!tokenRes){
+    let response = <userToken[]>await userRepo.GetUserToken(reqBody.Channel,'ForgotPassword')
+    if(response?.length < 1){
+       res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
+       return;
+    }
+    let tokenRes = response.find(c=>c.Token === reqBody.Token && c.Used == false)
+    console.log('token response value',tokenRes)
+        //verify token
+    if(!tokenRes){
 
-    //     res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Token Verification Failed'})
-    //     return;
-    // }
-    //     let result = await userRepo.UpdateUserToken(reqBody.Channel,'ForgotPassword')
-    //     console.log('token update result:',tokenRes)
-    //     if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+        res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Token Verification Failed'})
+        return;
+    }
+        let result = await userRepo.UpdateUserToken(reqBody.Channel,'ForgotPassword')
+        console.log('token update result:',tokenRes)
+        if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
 
-    //         res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'forgot Password Verification Failed, Please try again'})
-    //         return;
-    //     }
-    //     res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'forgot Password Verification Successful',Email:reqBody.Channel})
-       
-  
-         //comment this when going to production environment
-         if(reqBody.Token === '000000'){
-          let result = await  userRepo.UpdateUserTokenTest(reqBody.Channel,'EmailVerify')
-          if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
-            res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
+            res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'forgot Password Verification Failed, Please try again'})
             return;
         }
-        res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Email Verification Successful, please proceed to login'})
+        res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'forgot Password Verification Successful',Email:reqBody.Channel})
        
-        }else{
-          res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
-        }
+  
+        //  //comment this when going to production environment
+        //  if(reqBody.Token === '000000'){
+        //   let result = await  userRepo.UpdateUserTokenTest(reqBody.Channel,'EmailVerify')
+        //   if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+        //     res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
+        //     return;
+        // }
+        // res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Email Verification Successful, please proceed to login'})
+       
+        // }else{
+        //   res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
+        // }
     
 })
 
