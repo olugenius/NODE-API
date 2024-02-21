@@ -330,13 +330,13 @@ router.post('/login',LoginValidator,async(req:Request,res:Response)=>{
     const reqBody = <loginModel>req.body
     const error = validationResult(req)
         if(!error.isEmpty()){
-          res.status(HttpStatus.STATUS_200).json(error.array())
+          res.status(HttpStatus.STATUS_400).json(error.array())
           return;
         }
             let response = <registerModel[]> await  userRepo.GetUserByEmailOrPhone(reqBody.Channel)
             if(response?.length < 1){
 
-                res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'invalid Phone Number or Password'})
+                res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'invalid Phone Number or Password'})
                 return;
 
             }
@@ -373,7 +373,7 @@ router.post('/refreshToken',RefreshTokenValidator,async(req:Request,res:Response
   const reqBody = <refreshTokenRequestmodel>req.body
   const error = validationResult(req)
       if(!error.isEmpty()){
-        res.status(HttpStatus.STATUS_200).json(error.array())
+        res.status(HttpStatus.STATUS_400).json(error.array())
         return;
       }
           let response = <registerModel[]> await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
@@ -452,6 +452,13 @@ router.post('/register/sendMail',EmailValidator,async(req:Request,res:Response)=
       res.status(HttpStatus.STATUS_400).json(error.array())
       return;
     }
+      //check if user exist
+      let userRes = <registerModel[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
+      if(userRes?.length < 1){
+
+          res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Channel passed'})
+          return;
+      }
         //store in database
         let token = Math.floor(100000 + Math.random() * 900000);
         let response = await userRepo.AddToken(reqBody.Channel,'EmailVerify',token.toString(),reqBody.Medium)
@@ -487,6 +494,13 @@ router.post('/register/verify',VerifyEmailValidator,async(req:Request,res:Respon
       res.status(HttpStatus.STATUS_400).json(error.array())
       return;
     }
+      //check if user exist
+      let userRes = <registerModel[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
+      if(userRes?.length < 1){
+
+          res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Channel passed'})
+          return;
+      }
         //Get Token from Db
 
     let response = <userToken[]>await userRepo.GetUserToken(reqBody.Channel,'EmailVerify')
@@ -538,7 +552,7 @@ router.post('/forgotPassword/sendMail',ForgotPasswordValidator,async(req:Request
         let response = <registerModel[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
         if(response?.length < 1){
 
-            res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Email Address'})
+            res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Channel passed'})
             return;
         }
         console.log('response DBO',dateFormatter(response[0].DOB))
@@ -584,6 +598,13 @@ router.post('/forgotPassword/verify',ForgotPasswordVerifyValidator,async(req:Req
       res.status(HttpStatus.STATUS_400).json(error.array())
       return;
     }
+    //check if user exist
+    let userRes = <registerModel[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
+        if(userRes?.length < 1){
+
+            res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Channel passed'})
+            return;
+        }
         //Get Token from Db
     let response = <userToken[]>await userRepo.GetUserToken(reqBody.Channel,'ForgotPassword')
     if(response?.length < 1){

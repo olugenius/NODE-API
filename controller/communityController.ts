@@ -10,6 +10,8 @@ import multer from 'multer'
 import memberModel from '../model/memberModel'
 import createAppointmentModel from '../model/creatAppointmentModel'
 import Community from '../services/Abstraction/community'
+import { validationResult } from 'express-validator'
+import { CreateCheckerValidator, CreateCommunityValidator, CreateSubAdminValidator } from '../utilities/CommunityValidator'
 
 
 
@@ -445,9 +447,14 @@ let AppointmentUploadXls = multer({
   dest:'public/AppointmentUploads'
 })
 
-router.post('/community/create',async (req,res)=>{
+router.post('/community/create',CreateCommunityValidator,async (req:any,res:any)=>{
   try{
     const reqBody = <createCommunityModel>req.body
+    const error = validationResult(req)
+        if(!error.isEmpty()){
+          res.status(HttpStatus.STATUS_400).json(error.array())
+          return;
+        }
     reqBody.CommunityId = GenerateUniqueId()
     var response = await community.CreateCommunity(reqBody)
     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
@@ -541,9 +548,14 @@ router.patch('/community/deactivate/:Id',async(req,res)=>{
     
 })
 
-router.post('/community/checkers/create',async(req,res)=>{
+router.post('/community/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
   try{
     const reqBody = <createCheckersModel>req.body
+    const error = validationResult(req)
+        if(!error.isEmpty()){
+          res.status(HttpStatus.STATUS_400).json(error.array())
+          return;
+        }
     var response = await community.CreateCheckers(reqBody)
     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Community'})
@@ -635,10 +647,15 @@ router.get('/community/checkers/:communityId',async(req,res)=>{
     
 })
 
-router.post('/community/subAdmin/create',async(req,res)=>{
+router.post('/community/subAdmin/create',CreateSubAdminValidator,async(req:any,res:any)=>{
   try{
 
     const reqBody = <createSubAdminModel>req.body
+    const error = validationResult(req)
+        if(!error.isEmpty()){
+          res.status(HttpStatus.STATUS_400).json(error.array())
+          return;
+        }
     var response = await community.CreateSubAdmin(reqBody)
     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Community'})
