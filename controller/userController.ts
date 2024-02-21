@@ -494,6 +494,17 @@ router.post('/register/verify',VerifyEmailValidator,async(req:Request,res:Respon
       res.status(HttpStatus.STATUS_400).json(error.array())
       return;
     }
+      //comment this when going to production environment
+      if(reqBody.Token === '000000'){
+        let testResult = await  userRepo.UpdateUserTokenTest(reqBody.Channel,'EmailVerify')
+        if(testResult?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+          res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
+          return;
+      }
+         res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Email Verification Successful, please proceed to login'})
+    }
+
+    
       //check if user exist
       let userRes = <registerModel[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
       if(userRes?.length < 1){
@@ -598,6 +609,19 @@ router.post('/forgotPassword/verify',ForgotPasswordVerifyValidator,async(req:Req
       res.status(HttpStatus.STATUS_400).json(error.array())
       return;
     }
+
+      //comment this when going to production environment
+         if(reqBody.Token === '000000'){
+          let testResult = await  userRepo.UpdateUserTokenTest(reqBody.Channel,'EmailVerify')
+          if(testResult?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+            res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
+            return;
+        }
+           return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Email Verification Successful, please proceed to login'})
+      }
+
+
+
     //check if user exist
     let userRes = <registerModel[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
         if(userRes?.length < 1){
