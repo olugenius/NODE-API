@@ -8,6 +8,7 @@ import memberModel from "../model/memberModel";
 import createAppointmentModel from "../model/creatAppointmentModel";
 import Community from "./Abstraction/community";
 import communityRepository from "../repository/Abstraction/communityRepository";
+import OrganizationModel from "../model/OrganizationModel";
 
 
 //const communityRepo = container.get<communityRepository>(communityRepository)
@@ -80,6 +81,11 @@ export default class CommunityImpl implements Community{
       return await this.communityRepo.GetSubAdminsById(communityId)
       
      }
+
+
+    async CreateOrganization(payload:OrganizationModel):Promise<string>{
+      return await this.communityRepo.CreateOrganization(payload) 
+    }
 
  
 

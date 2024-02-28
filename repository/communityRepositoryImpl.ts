@@ -9,6 +9,7 @@ import 'reflect-metadata'
 import createAppointmentModel from '../model/creatAppointmentModel'
 import memberModel from '../model/memberModel'
 import communityRepository from './Abstraction/communityRepository'
+import OrganizationModel from '../model/OrganizationModel'
 
 
 
@@ -170,9 +171,9 @@ export default class communityRepositoryImpl implements communityRepository{
                     }
                     
                   
-                    const query = `DELETE FROM Community WHERE Id = ?`
+                    const query = `UPDATE Community SET IsActive = ? WHERE Id = ?`
                    
-                        connection?.query(query,[Id],(err,data)=>{
+                        connection?.query(query,[3,Id],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)
@@ -217,7 +218,7 @@ export default class communityRepositoryImpl implements communityRepository{
                   
                     const query = `UPDATE Community SET IsActive = ? WHERE Id = ?`
                    
-                        connection?.query(query,[0,Id],(err,data)=>{
+                        connection?.query(query,[2,Id],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)
@@ -613,6 +614,54 @@ export default class communityRepositoryImpl implements communityRepository{
          
         }
 
+    }
+
+    async CreateOrganization(payload:OrganizationModel):Promise<string>{
+   
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+            let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+                    
+                  
+                    const query = `INSERT INTO Organization(CreatorPhone,Name,CACNo,Phone,Email,NatureOfBusiness,Address,PhotoPath) VALUES(?,?,?,?,?,?,?,?)`
+                   
+                        connection?.query(query,[payload.CreatorPhone,payload.Name,payload.CACNo,payload.Phone,payload.Email,payload.NatureOfBusiness,payload.Address,payload.PhotoPath],(err,data)=>{
+                         connection.release()
+                            if(err){
+                                console.log('error querying database',err)
+                                response = 'Failed'
+                               
+                            }else{
+                                console.log('successfully query',data)
+                                response = 'Success'
+                               
+                               
+                            }
+                            resolve(response)
+                         })
+                       
+                    })
+
+            })
+
+           
+                return result
+
+        }
+        catch(error){
+            console.error('Error creating user:', error);
+            return 'Failed'
+        }
+           
+      
     }
 
     

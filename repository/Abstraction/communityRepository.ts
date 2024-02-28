@@ -1,3 +1,4 @@
+import OrganizationModel from "../../model/OrganizationModel"
 import createCommunityModel from "../../model/createCommunityModel"
 import createSubAdminModel from "../../model/createSubAdminModel"
 import createCheckersModel from "../../model/createcheckersModel"
@@ -17,6 +18,7 @@ export default interface communityRepository{
     ActivateCommunity(Id:number):Promise<any | null>
     DeactivateCommunity(Id:number):Promise<any | null>
     DeleteCommunity(Id:number):Promise<any | null>
+    CreateOrganization(payload:OrganizationModel):Promise<string>
     
 
 }

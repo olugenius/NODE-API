@@ -4,6 +4,9 @@ import singleAccessCodeModel from "../model/singleAccessCodeModel";
 import staticAccessCodeModel from "../model/staticAccessCodeModel";
 import BaseRepository from "../repository/Abstraction/baseRepository";
 import BaseService from "./Abstraction/BaseService";
+import CreateForumModel from "../model/CreateForumModel";
+import PostModel from "../model/PostModel";
+import CommentModel from "../model/CommentModel";
 
 @injectable()
 export default class BaseServiceimpl implements BaseService{
@@ -31,4 +34,51 @@ export default class BaseServiceimpl implements BaseService{
     async GetAccessCodeByid(Id:number): Promise<any>{
         return await this.baseRepo.getAccessCodeByid(Id)
     }
+
+    async CreateForum(payload:CreateForumModel): Promise<string>{
+        return await this.baseRepo.CreateForum(payload);
+    }
+     async UpdateForum(Id:string,payload:CreateForumModel): Promise<string>{
+        return await this.baseRepo.UpdateForum(Id,payload);
+     }
+     async DeleteForum(Id:string): Promise<string>{
+        return await this.baseRepo.DeleteForum(Id);
+     }
+     async ActivateForum(Id:string): Promise<string>{
+        return await this.baseRepo.ActivateForum(Id);
+     }
+     async DeactivateForum(Id:string): Promise<string>{
+        return await this.baseRepo.DeactivateForum(Id);
+     }
+     async GetAllForum():Promise<any>{
+        return await this.baseRepo.GetAllForum();
+     }
+     async GetForumByForumId(Id:string):Promise<any>{
+        return await this.baseRepo.GetForumByForumId(Id);
+     }
+     async CreatePost(payload:PostModel):Promise<string>{
+        return await this.baseRepo.CreatePost(payload);
+     }
+     async GetAllPost():Promise<any>{
+        return await this.baseRepo.GetAllPost();
+     }
+     async GetPostById(PostId:number):Promise<any>{
+        return await this.baseRepo.GetPostById(PostId);
+     }
+     async CreateComment(payload:CommentModel):Promise<string>{
+        return await this.baseRepo.CreateComment(payload);
+     }
+     async UpdateComment(Id:number,payload:CommentModel):Promise<string>{
+        return await this.baseRepo.UpdateComment(Id,payload);
+     }
+     async DeleteComment(Id:number):Promise<string>{
+        return await this.baseRepo.DeleteComment(Id);
+     }
+     async GetAllComments():Promise<any>{
+        return await this.baseRepo.GetAllComments();
+     }
+     async GetCommentById(Id:number):Promise<any>{
+        return await this.baseRepo.GetCommentById(Id);
+     }
+     
 }

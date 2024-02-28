@@ -12,6 +12,7 @@ import createAppointmentModel from '../model/creatAppointmentModel'
 import Community from '../services/Abstraction/community'
 import { validationResult } from 'express-validator'
 import { CreateCheckerValidator, CreateCommunityValidator, CreateSubAdminValidator } from '../utilities/CommunityValidator'
+import OrganizationModel from '../model/OrganizationModel'
 
 
 
@@ -428,6 +429,48 @@ import { CreateCheckerValidator, CreateCommunityValidator, CreateSubAdminValidat
 
 
 
+/**
+ * @swagger
+ * /api/organization/create:
+ *   post:
+ *     summary: Create Organization
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: file
+ *               CreatorPhone:
+ *                 type: string
+ *               Name:
+ *                 type: string
+ *               CACNo:
+ *                 type: string
+ *               Phone:
+ *                 type: string
+ *               Email:
+ *                 type: string
+ *               DateIncoporated:
+ *                 type: Date
+ *               NatureOfBusiness:
+ *                 type: string
+ *               Address:
+ *                 type: Date
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Registration Successful
+ */
+
 
 
 
@@ -445,6 +488,10 @@ let uploadXls = multer({
 
 let AppointmentUploadXls = multer({
   dest:'public/AppointmentUploads'
+})
+
+let OrganizationUpload = multer({
+  dest:'public/OrganizationUploads'
 })
 
 router.post('/community/create',CreateCommunityValidator,async (req:any,res:any)=>{
@@ -719,6 +766,29 @@ if(response?.length < 1){
    console.error('An Error Occurred',error)
   }
 
+})
+
+router.post('/organization/create',OrganizationUpload.single('file'),async(req:any,res:any)=>{
+  try{
+
+    const reqBody = <OrganizationModel>req.body
+    // const error = validationResult(req)
+    //     if(!error.isEmpty()){
+    //       res.status(HttpStatus.STATUS_400).json(error.array())
+    //       return;
+    //     }
+    reqBody.PhotoPath = req?.file?.path || ''
+    var response = await community.CreateOrganization(reqBody)
+    if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Organization'})
+    }
+    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Organization'})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+
+  }
+    
 })
 
 

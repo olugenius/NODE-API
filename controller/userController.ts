@@ -163,7 +163,7 @@ const userRepo = container.get<UserRepository>('UserRepository')
  *                 type: string
  *           example:
  *             Channel: Email
- *             Token: 000000
+ *             Token: '000000'
  *     responses:
  *       200:
  *         description: Successful response
@@ -488,6 +488,7 @@ router.post('/register/sendMail',EmailValidator,async(req:Request,res:Response)=
 })
 
 router.post('/register/verify',VerifyEmailValidator,async(req:Request,res:Response)=>{
+  try{
     var reqBody = <mailVerifyModel>req.body
     const error = validationResult(req)
     if(!error.isEmpty()){
@@ -550,10 +551,16 @@ router.post('/register/verify',VerifyEmailValidator,async(req:Request,res:Respon
         //   res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
         // }
    
+
+  }catch(err){
+    console.log('An error occurred verifying token',err)
+  }
+   
     
 })
 
 router.post('/forgotPassword/sendMail',ForgotPasswordValidator,async(req:Request,res:Response)=>{
+  try{
     var reqBody = <forgotPasswordRequestmodel>req.body
     const error = validationResult(req)
     if(!error.isEmpty()){
@@ -596,13 +603,18 @@ router.post('/forgotPassword/sendMail',ForgotPasswordValidator,async(req:Request
                 }
                 return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Email Sent Successfully'})
 
-       
-
     }
+
+  }catch(err){
+    console.log('An error occurred sending mail/sms',err)
+  }
+   
    
 })
 
 router.post('/forgotPassword/verify',ForgotPasswordVerifyValidator,async(req:Request,res:Response)=>{
+  try{
+
     var reqBody = <forgotPasswordVerifyModel>req.body
     const error = validationResult(req)
     if(!error.isEmpty()){
@@ -666,31 +678,43 @@ router.post('/forgotPassword/verify',ForgotPasswordVerifyValidator,async(req:Req
         //   res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
         // }
     
+
+  }catch(err){
+    console.log('An error occurred verifying token',err)
+  }
+   
 })
 
 router.post('/resetPassword',resetPasswordValidator,async(req:Request,res:Response)=>{
-  var reqBody = <resetPasswordRequestModel>req.body
-  const error = validationResult(req)
-  if(!error.isEmpty()){
-    res.status(HttpStatus.STATUS_400).json(error.array())
-    return;
-  }
-      
-  let response = <userToken[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
-  if(response?.length < 1){
-     res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
-     return;
+  try{
+
+    var reqBody = <resetPasswordRequestModel>req.body
+    const error = validationResult(req)
+    if(!error.isEmpty()){
+      res.status(HttpStatus.STATUS_400).json(error.array())
+      return;
+    }
+        
+    let response = <userToken[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
+    if(response?.length < 1){
+       res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
+       return;
+    }
+   
+        let result = await userRepo.UpdateUserPassword(reqBody.NewPassword,reqBody.Channel)
+        if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+  
+            res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Reset Password Failed, Please try again'})
+            return;
+        }
+        res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Password Reset Successful, Please proceed to login'})
+       
+  
+
+  }catch(err){
+    console.log('An error occurred resetting password',err)
   }
  
-      let result = await userRepo.UpdateUserPassword(reqBody.NewPassword,reqBody.Channel)
-      if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
-
-          res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Reset Password Failed, Please try again'})
-          return;
-      }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Password Reset Successful, Please proceed to login'})
-     
-
   
 })
 
