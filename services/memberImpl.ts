@@ -57,5 +57,9 @@ export default class MemberImpl implements Member{
   
         return await this.memberRepo.GetAllMembers()
      }
+
+     async GetMemberByPhoneOrEmail(channel:string):Promise<any>{
+       return await this.memberRepo.GetMemberByPhoneOrEmail(channel)
+     }
   
 }

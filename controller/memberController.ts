@@ -448,6 +448,7 @@ router.post('/community/member/create',async(req,res)=>{
   
   })
   
+  
   router.post('/community/appointment/create',CreateAppointmentValidator,AppointmentUploadXls.single('file'),async(req:any,res:any)=>{
     try{
       const reqBody = <createAppointmentModel>req.body

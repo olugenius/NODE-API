@@ -427,6 +427,42 @@ export default class communityRepositoryImpl implements communityRepository{
         }
     }
 
+    async getCheckersByPhoneOrEmail(channel:string):Promise<any | null>{
+        let result : any
+        try{
+            const connection =  await this.getConnection()  
+            let result =await new Promise<any>((resolve,reject)=>{
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+
+                    connection?.query(`SELECT * FROM Checkers WHERE (Email = ? or Phone =?`,[channel,channel],(err,data)=>{
+                        connection.release()
+                        if(err){
+                           console.log('error querying database',err)           
+                        }
+                        else{
+                           console.log('successfully query',data)
+                           
+                        }
+                        resolve(data)
+                       })
+        
+
+                   
+                    
+                    })
+            })
+    
+             return result
+
+        }catch(error){
+         
+        }
+    }
+
 
     async getCheckersByCommunityId(communityId:string):Promise<any | null>{
         let result : any
@@ -631,9 +667,9 @@ export default class communityRepositoryImpl implements communityRepository{
                     }
                     
                   
-                    const query = `INSERT INTO Organization(CreatorPhone,Name,CACNo,Phone,Email,NatureOfBusiness,Address,PhotoPath) VALUES(?,?,?,?,?,?,?,?)`
+                    const query = `INSERT INTO Organization(CreatorPhone,Name,CACNo,Phone,Email,DateIncoporated,NatureOfBusiness,Address,PhotoPath) VALUES(?,?,?,?,?,?,?,?,?)`
                    
-                        connection?.query(query,[payload.CreatorPhone,payload.Name,payload.CACNo,payload.Phone,payload.Email,payload.NatureOfBusiness,payload.Address,payload.PhotoPath],(err,data)=>{
+                        connection?.query(query,[payload.CreatorPhone,payload.Name,payload.CACNo,payload.Phone,payload.Email,payload.DateIncoporated,payload.NatureOfBusiness,payload.Address,payload.PhotoPath],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)

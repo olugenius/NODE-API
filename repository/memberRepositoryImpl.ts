@@ -288,7 +288,7 @@ export default class memberRepositoryImpl implements memberRepository{
                         reject(err)
                     }
                     
-                    const memberId = `MEM- ${GenerateUniqueId}`
+                    const memberId = `MEM- ${GenerateUniqueId()}`
                     const query = `INSERT INTO Member(MemberId,Name,Email,Phone,HouseNumber) VALUES(?,?,?,?,?)`
                    
                         connection?.query(query,[memberId,payload.Name,payload.Email,payload.Phone,payload.HouseNumber],(err,data)=>{
@@ -430,6 +430,43 @@ export default class memberRepositoryImpl implements memberRepository{
                     }
 
                     connection?.query(`SELECT * FROM Member where MemberId=?`,[memberId],(err,data)=>{
+                        connection.release()
+                        if(err){
+                           console.log('error querying database',err)           
+                        }
+                        else{
+                           console.log('successfully query',data)
+                           
+                        }
+                        resolve(data)
+                       })
+        
+
+                   
+                    
+                    })
+            })
+    
+             return result
+
+        }catch(error){
+         
+        }
+
+    }
+
+    async GetMemberByPhoneOrEmail(channel:string):Promise<any>{
+        let result : any
+        try{
+            const connection =  await this.getConnection()  
+            let result =await new Promise<any>((resolve,reject)=>{
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+
+                    connection?.query(`SELECT * FROM Member WHERE (Email = ? or Phone =?)`,[channel,channel],(err,data)=>{
                         connection.release()
                         if(err){
                            console.log('error querying database',err)           

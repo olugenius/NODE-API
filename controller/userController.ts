@@ -23,9 +23,14 @@ import {container} from '../Container/appContainer'
 import  multer from 'multer';
 import UserRepository from '../repository/Abstraction/UserRepository'
 import { RolesEnum } from '../utilities/RolesEnum'
+import memberRepository from '../repository/Abstraction/memberRepository'
+import communityRepository from '../repository/Abstraction/communityRepository'
+import Dependant from '../services/Abstraction/Dependant'
+import Community from '../services/Abstraction/community'
+import Member from '../services/Abstraction/member'
 const router = express.Router()
 
-const userRepo = container.get<UserRepository>('UserRepository')
+
 
 
 /**
@@ -306,7 +311,10 @@ const userRepo = container.get<UserRepository>('UserRepository')
 
 
 
-
+const userRepo = container.get<UserRepository>('UserRepository')
+const memberRepo = container.get<Member>('Member')
+const communityRepo = container.get<Community>('Community')
+const dependantRepo = container.get<Dependant>('Dependant')
 
 // Set up storage for uploaded files
 
@@ -427,6 +435,41 @@ async (req:any,res:any)=>{
                 return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'User with this Phone number already exist'})
                 
             }
+            //start switch case
+            switch(reqBody.UserRole.toUpperCase()){
+              case RolesEnum.CHECKER:
+               let checker = await  communityRepo.getCheckersByPhoneOrEmail(reqBody.Phone)
+               if(checker.length < 1){
+                return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Checker is not yet created. Please contact Admin'})
+                }
+                
+                break;
+              
+              case RolesEnum.COMMUNITY_ADMIN:
+                
+                break;
+
+              case RolesEnum.MEMBER:
+                let member = await  memberRepo.GetMemberByPhoneOrEmail(reqBody.Phone)
+               if(member.length < 1){
+                return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Member is not yet created. Please contact Admin'})
+                }
+                break;
+              
+              case RolesEnum.SUB_ADMIN:
+                
+                break;
+
+              case RolesEnum.DEPENDANT:
+                let dependant = await  dependantRepo.GetDependantByPhoneOrEmail(reqBody.Phone)
+               if(dependant.length < 1){
+                return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Checker is not yet created. Please contact Admin'})
+                }
+                break;
+
+            }
+
+            //end switch case
 
           let response = await userRepo.createUser(reqBody)
           if(response?.status?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){

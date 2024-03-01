@@ -13,5 +13,6 @@ export default interface memberRepository{
     deleteMember(Id:number):Promise<string>
     GetMemberByMemberId(memberId:string):Promise<any>
     GetAllMembers():Promise<any>
+    GetMemberByPhoneOrEmail(channel:string):Promise<any>
     
 }

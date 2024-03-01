@@ -20,6 +20,7 @@ export default interface Community{
     DeactivateCommunity(Id:number):Promise<any | null>
     ActivateCommunity(Id:number):Promise<any | null>
     CreateOrganization(payload:OrganizationModel):Promise<string>
+    getCheckersByPhoneOrEmail(channel:string):Promise<any | null>
     
     
  

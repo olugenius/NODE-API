@@ -478,7 +478,7 @@ import CommentModel from '../model/CommentModel'
  *             type: object
  *             properties:
  *               PostId:
- *                 type: string
+ *                 type: number
  *               Comment:
  *                 type: string
  *               UserId:

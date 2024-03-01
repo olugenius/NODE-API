@@ -2,7 +2,9 @@ import { Pool } from "mysql2";
 import CreateDependantmodel from "../model/CreateDependantModel";
 import DependantRepository from "./Abstraction/DependantRepository";
 import conn from './dbContext/dbConnection'
+import { injectable } from "inversify";
 
+@injectable()
 export default class DependantRepositoryImpl implements DependantRepository{
     private  async getConnection(): Promise<Pool | undefined>{
         try{
@@ -57,5 +59,42 @@ export default class DependantRepositoryImpl implements DependantRepository{
             console.error('Error creating user:', error);
             return 'Failed'
         }
+    }
+
+    async GetDependantByPhoneOrEmail(channel:string):Promise<any>{
+        let result : any
+        try{
+            const connection =  await this.getConnection()  
+            let result =await new Promise<any>((resolve,reject)=>{
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+
+                    connection?.query(`SELECT * FROM Dependant WHERE (FirstDependantEmail = ? or FirstDependantPhone =?)`,[channel,channel],(err,data)=>{
+                        connection.release()
+                        if(err){
+                           console.log('error querying database',err)           
+                        }
+                        else{
+                           console.log('successfully query',data)
+                           
+                        }
+                        resolve(data)
+                       })
+        
+
+                   
+                    
+                    })
+            })
+    
+             return result
+
+        }catch(error){
+         
+        }
+
     }
 }
