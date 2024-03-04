@@ -12,6 +12,7 @@ import { dateFormatter } from '../utilities/dateFormatter'
 import { injectable } from 'inversify'
 import 'reflect-metadata'
 import UserRepository from './Abstraction/UserRepository'
+import { createPasswordRequestModel } from '../model/resetPasswordRequestModel'
 
 
 @injectable()
@@ -549,5 +550,48 @@ export default class UserRepositoryImpl implements UserRepository{
 
                  
         
+    }
+
+
+    async CreatePassword(payload:createPasswordRequestModel):Promise<any>{
+        const saltRound = 10
+        const passwordEncrypt = await bcrypt.hash(payload.Password,saltRound)
+        let resValue:string = ''
+        try{
+            const connection =  await this.getConnection() 
+       let result =  await new Promise<any>((resolve,reject)=>{
+            connection?.getConnection((err,connection)=>{
+                if(err){
+                console.log('connection error',err)
+                reject(err)
+                }
+
+                 connection?.query(`UPDATE Users SET Password=? WHERE (Phone = ? or Email=?)`,[passwordEncrypt,payload.Channel],(err,data)=>{
+                connection.release()
+                if(err){
+                   console.log('error querying database',err)   
+                   resValue = 'Failed'
+                }
+                else{
+                   console.log('successfully query',data)
+                   resValue = 'Success'
+                   
+                }
+                resolve(resValue)
+               })
+                
+                
+                })
+        })
+
+        return result
+       
+
+        }catch(error){
+         
+        }
+        
+
+       
     }
 }

@@ -2,7 +2,7 @@ import express, { Request,Response } from 'express'
 import loginModel from '../model/loginModel'
 //import userRepo from '../repository/UserRepository'
 import registerModel from '../model/registerModel'
-import  { EmailValidator, ForgotPasswordValidator, ForgotPasswordVerifyValidator, LoginValidator, RefreshTokenValidator, VerifyEmailValidator, resetPasswordValidator, validate,validator } from '../utilities/registerValidator'
+import  { EmailValidator, ForgotPasswordValidator, ForgotPasswordVerifyValidator, LoginValidator, RefreshTokenValidator, VerifyEmailValidator, createPasswordValidator, resetPasswordValidator, validate,validator } from '../utilities/registerValidator'
 import { body, validationResult } from 'express-validator'
 import mailRequestModel from '../model/mailRequestModel'
 import mailVerifyModel from '../model/MailVerifyModel'
@@ -13,7 +13,7 @@ import { HttpStatus } from '../utilities/HttpstatusCode'
 import userToken from '../model/DTOs/userToken'
 import { format } from 'date-fns/format'
 import { dateFormatter } from '../utilities/dateFormatter'
-import resetPasswordRequestModel from '../model/resetPasswordRequestModel'
+import {createPasswordRequestModel, resetPasswordRequestModel} from '../model/resetPasswordRequestModel'
 import jwtHandler from '../utilities/jwtHandler'
 import refreshTokenRequestmodel from '../model/refreshTokenRequestModel'
 import { isValid } from 'date-fns'
@@ -305,6 +305,34 @@ const router = express.Router()
 
 
 
+/**
+ * @swagger
+ * /api/superAdmin/createPassword:
+ *   post:
+ *     summary: Create Super Admin Password
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Password:
+ *                 type: string
+ *               ConfirmPassword:
+ *                 type: string
+ *               Channel:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Super Admin Password created  Successfully
+ */
+
 
 
 
@@ -460,10 +488,11 @@ async (req:any,res:any)=>{
                 
                 break;
 
+
               case RolesEnum.DEPENDANT:
                 let dependant = await  dependantRepo.GetDependantByPhoneOrEmail(reqBody.Phone)
                if(dependant.length < 1){
-                return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Checker is not yet created. Please contact Admin'})
+                return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Dependant is not yet created. Please contact Admin'})
                 }
                 break;
 
@@ -752,6 +781,41 @@ router.post('/resetPassword',resetPasswordValidator,async(req:Request,res:Respon
         }
         res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Password Reset Successful, Please proceed to login'})
        
+  
+
+  }catch(err){
+    console.log('An error occurred resetting password',err)
+  }
+ 
+  
+})
+
+
+router.post('/superAdmin/createPassword',createPasswordValidator,async(req:Request,res:Response)=>{
+  try{
+
+    var reqBody = <createPasswordRequestModel>req.body
+    const error = validationResult(req)
+    if(!error.isEmpty()){
+      res.status(HttpStatus.STATUS_400).json(error.array())
+      return;
+    }
+        
+    let response = <registerModel[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
+    if(response?.length > 0 && response[0].UserRole.toUpperCase() === RolesEnum.SUPER_ADMIN){
+      let result = await userRepo.UpdateUserPassword(reqBody.Password,reqBody.Channel)
+      if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+
+          res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Error creating password for Super Admin'})
+          return;
+      }
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Super Admin Password Created Successful, Please proceed to login'})
+     
+    }
+    res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Super Admin is not created yet'})
+
+   
+        
   
 
   }catch(err){

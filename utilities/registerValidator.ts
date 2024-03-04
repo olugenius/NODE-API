@@ -79,6 +79,20 @@ export const resetPasswordValidator =
 ]
 
 
+export const createPasswordValidator = 
+[
+  body('Channel','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
+  body('Password','NewPassword is required').notEmpty().trim().escape(),
+  body('ConfirmPassword','ConfirmPassword is required').notEmpty().trim().custom((value,{req})=>{
+     if(value !== req.body.NewPassword){
+       throw new Error('Password and Confirm Password must match')
+     }
+     return true
+  }),
+ 
+]
+
+
 
 
 export const validate = (req:Request, res:Response, next:any) => {
