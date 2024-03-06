@@ -7,6 +7,7 @@ import BaseService from "./Abstraction/BaseService";
 import CreateForumModel from "../model/CreateForumModel";
 import PostModel from "../model/PostModel";
 import CommentModel from "../model/CommentModel";
+import createAppointmentModel from "../model/creatAppointmentModel";
 
 @injectable()
 export default class BaseServiceimpl implements BaseService{
@@ -80,5 +81,31 @@ export default class BaseServiceimpl implements BaseService{
      async GetCommentById(Id:number):Promise<any>{
         return await this.baseRepo.GetCommentById(Id);
      }
+
+     async CreateAppointment(payload:createAppointmentModel):Promise<string>{  
+      return await this.baseRepo.createAppointment(payload)
+   }
+
+   async UpdateAppointment(payload:createAppointmentModel):Promise<string>{  
+    return await this.baseRepo.updateAppointment(payload)
+ }
+ async DeleteAppointment(Id:number):Promise<string>{  
+    return await this.baseRepo.deleteAppointment(Id)
+ }
+
+   async GetAllAppointment():Promise<any>{
+
+      return await this.baseRepo.GetAllAppointment()
+   }
+
+   async GetAppointmentId(Id:number):Promise<string>{
+
+      return await this.baseRepo.GetAppointmentId(Id)
+   }
+
+   async GetAppointmentCommunityId(communityId:string):Promise<string>{
+
+      return await this.baseRepo.GetAppointmentCommunityId(communityId)
+   }
      
 }

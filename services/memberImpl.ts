@@ -27,31 +27,31 @@ export default class MemberImpl implements Member{
         return await this.memberRepo.GetMemberByMemberId(memberId)
      }
   
-     async CreateAppointment(payload:createAppointmentModel):Promise<string>{  
-        return await this.memberRepo.createAppointment(payload)
-     }
+   //   async CreateAppointment(payload:createAppointmentModel):Promise<string>{  
+   //      return await this.memberRepo.createAppointment(payload)
+   //   }
 
-     async UpdateAppointment(payload:createAppointmentModel):Promise<string>{  
-      return await this.memberRepo.updateAppointment(payload)
-   }
-   async DeleteAppointment(Id:number):Promise<string>{  
-      return await this.memberRepo.deleteAppointment(Id)
-   }
+   //   async UpdateAppointment(payload:createAppointmentModel):Promise<string>{  
+   //    return await this.memberRepo.updateAppointment(payload)
+   // }
+   // async DeleteAppointment(Id:number):Promise<string>{  
+   //    return await this.memberRepo.deleteAppointment(Id)
+   // }
   
-     async GetAllAppointment():Promise<any>{
+   //   async GetAllAppointment():Promise<any>{
   
-        return await this.memberRepo.GetAllAppointment()
-     }
+   //      return await this.memberRepo.GetAllAppointment()
+   //   }
   
-     async GetAppointmentId(Id:number):Promise<string>{
+   //   async GetAppointmentId(Id:number):Promise<string>{
   
-        return await this.memberRepo.GetAppointmentId(Id)
-     }
+   //      return await this.memberRepo.GetAppointmentId(Id)
+   //   }
   
-     async GetAppointmentCommunityId(communityId:string):Promise<string>{
+   //   async GetAppointmentCommunityId(communityId:string):Promise<string>{
   
-        return await this.memberRepo.GetAppointmentCommunityId(communityId)
-     }
+   //      return await this.memberRepo.GetAppointmentCommunityId(communityId)
+   //   }
   
      async GetAllMembers():Promise<string>{
   

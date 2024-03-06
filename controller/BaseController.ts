@@ -10,6 +10,9 @@ import { validationResult } from 'express-validator'
 import CreateForumModel from '../model/CreateForumModel'
 import PostModel from '../model/PostModel'
 import CommentModel from '../model/CommentModel'
+import createAppointmentModel from '../model/creatAppointmentModel'
+import multer from 'multer'
+import { CreateAppointmentValidator } from '../utilities/MembersValidator'
 
 
 /**
@@ -600,7 +603,186 @@ import CommentModel from '../model/CommentModel'
  */
 
 
+/**
+ * @swagger
+ * /api/appointment/create:
+ *   post:
+ *     summary: Create Appointment
+ *     tags: [Member]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: file
+ *               Title:
+ *                 type: string
+ *               Date:
+ *                 type: Date
+ *               Time:
+ *                 type: string
+ *               Venue:
+ *                 type: string
+ *               Description:
+ *                 type: string
+ *               CommunityId:
+ *                 type: string
+ *           example:
+ *             Channel: JohnDoe
+ *             Password: john@example.com
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Appointment created Successful
+ */
+
+
+
+/**
+ * @swagger
+ * /api/appointment/update:
+ *   put:
+ *     summary: Update Appointment
+ *     tags: [Member]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Id:
+ *                 type: number
+ *               file:
+ *                 type: file
+ *               Title:
+ *                 type: string
+ *               Date:
+ *                 type: Date
+ *               Time:
+ *                 type: string
+ *               Venue:
+ *                 type: string
+ *               Description:
+ *                 type: string
+ *               CommunityId:
+ *                 type: string
+ *           example:
+ *             Channel: JohnDoe
+ *             Password: john@example.com
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Appointment Updated Successful
+ */
+
+
+/**
+ * @swagger
+ * /api/appointment/delete/{Id}:
+ *   delete:
+ *     summary: Delete Appointment by Id
+ *     parameters:
+ *       - in: path
+ *         name: Id
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: ID of the Appointment to Delete
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Member]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully Deleted Appointment
+ */
+
+
+/**
+ * @swagger
+ * /api/appointment/{Id}:
+ *   get:
+ *     summary: Get Appointment by Id
+ *     parameters:
+ *       - in: path
+ *         name: Id
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: ID of the Appointment to get
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Member]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got Appointment by Id
+ */
+
+
+/**
+ * @swagger
+ * /api/appointment/{communityId}:
+ *   get:
+ *     summary: Get Appointment by communityId
+ *     parameters:
+ *       - in: path
+ *         name: Id
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: communityID of the Appointment to get
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Member]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got Appointment by communityId
+ */
+
+
+/**
+ * @swagger
+ * /api/appointment/all:
+ *   get:
+ *     summary: Get All Appointment
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Member]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got All Appointment
+ */
+
+
 const router = express.Router()
+let AppointmentUploadXls = multer({
+  dest:'public/AppointmentUploads'
+})
 
 const baseService = container.get<BaseService>('BaseService')
 
@@ -982,6 +1164,113 @@ router.get('/comment/:Id',async(req,res)=>{
     return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Comment'})
   }
     
+})
+
+
+router.post('/appointment/create',CreateAppointmentValidator,AppointmentUploadXls.single('file'),async(req:any,res:any)=>{
+  try{
+    const reqBody = <createAppointmentModel>req.body
+    const error = validationResult(req)
+    if(!error.isEmpty()){
+      res.status(HttpStatus.STATUS_400).json(error.array())
+      return;
+    }
+    reqBody.PhotoPath = req?.file?.path || ''
+    var response = await baseService.CreateAppointment(reqBody)
+    if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Appointment'})
+    }
+    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Appointment',data:reqBody})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+
+  }
+    
+})
+
+router.put('/appointment/update',AppointmentUploadXls.single('file'),async(req,res)=>{
+  try{
+    const reqBody = <createAppointmentModel>req.body
+    reqBody.PhotoPath = req?.file?.path || ''
+    var response = await baseService.UpdateAppointment(reqBody)
+    if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update Appointment'})
+    }
+    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Update Appointment',data:reqBody})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+
+  }
+    
+})
+
+router.delete('/appointment/delete/:Id',async(req,res)=>{
+  try{
+    const Id = req.params.Id
+    var response = await baseService.DeleteAppointment(Number(Id))
+    if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Appointment'})
+    }
+    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Delete Appointment'})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+
+  }
+    
+})
+
+router.get('/appointment/all',async(req,res)=>{
+  try{
+    console.log('entered appointment endpoint')
+    var response = await baseService.GetAllAppointment()
+    if(response?.length < 1){
+      res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Appointment '})
+    }
+    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Appointment',data:response})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+
+  }
+    
+})
+
+router.get('/appointment/:Id',async(req,res)=>{
+  try{
+const param = req?.params?.Id
+if(!param){
+  return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Appointment Id'})
+}
+var response = await baseService.GetAppointmentId(Number(param))
+if(response?.length < 1){
+    res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Appointment'})
+  }
+  res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Appointment',data:response[0]})
+
+  }catch(error){
+   console.error('An Error Occurred',error)
+  }
+
+})
+router.get('/appointment/:communityId',async(req,res)=>{
+  try{
+const param = req?.params?.communityId
+if(!param){
+  return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Appointment communityId'})
+}
+var response = await baseService.GetAppointmentCommunityId(param)
+if(response?.length < 1){
+    res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Appointment'})
+  }
+  res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Appointment',data:response[0]})
+
+  }catch(error){
+   console.error('An Error Occurred',error)
+  }
+
 })
 
 export default router

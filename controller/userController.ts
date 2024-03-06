@@ -28,6 +28,7 @@ import communityRepository from '../repository/Abstraction/communityRepository'
 import Dependant from '../services/Abstraction/Dependant'
 import Community from '../services/Abstraction/community'
 import Member from '../services/Abstraction/member'
+import checker from '../services/Abstraction/checker'
 const router = express.Router()
 
 
@@ -343,6 +344,7 @@ const userRepo = container.get<UserRepository>('UserRepository')
 const memberRepo = container.get<Member>('Member')
 const communityRepo = container.get<Community>('Community')
 const dependantRepo = container.get<Dependant>('Dependant')
+const checkerRepo = container.get<checker>('checker')
 
 // Set up storage for uploaded files
 
@@ -466,7 +468,7 @@ async (req:any,res:any)=>{
             //start switch case
             switch(reqBody.UserRole.toUpperCase()){
               case RolesEnum.CHECKER:
-               let checker = await  communityRepo.getCheckersByPhoneOrEmail(reqBody.Phone)
+               let checker = await  checkerRepo.getCheckersByPhoneOrEmail(reqBody.Phone)
                if(checker.length < 1){
                 return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Checker is not yet created. Please contact Admin'})
                 }

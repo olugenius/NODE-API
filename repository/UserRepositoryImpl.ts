@@ -300,7 +300,7 @@ export default class UserRepositoryImpl implements UserRepository{
     }
 
 
-    async UpdateUserPassword(newPassword:string,email:string):Promise<any>{
+    async UpdateUserPassword(newPassword:string,channel:string):Promise<any>{
         let tokenValue : userToken | any
         let resValue:string = ''
         try{
@@ -314,7 +314,7 @@ export default class UserRepositoryImpl implements UserRepository{
                 reject(err)
                 }
 
-                 connection?.query(`UPDATE Users SET Password=? WHERE (Email = ? or Phone=?)`,[passwordEncrypt,email,email],(err,data)=>{
+                 connection?.query(`UPDATE Users SET Password=? WHERE (Email = ? or Phone=?)`,[passwordEncrypt,channel,channel],(err,data)=>{
                 connection.release()
                 if(err){
                    console.log('error querying database',err)   

@@ -15,13 +15,13 @@ import { validationResult } from 'express-validator'
  * @swagger
  * tags:
  *   name: Member
- *   description: Community Member Flow
+ *   description: Member Flow
  */
 
 
 /**
  * @swagger
- * /api/community/member/create:
+ * /api/member/create:
  *   post:
  *     summary: Create Member
  *     security: 
@@ -55,7 +55,7 @@ import { validationResult } from 'express-validator'
 
 /**
  * @swagger
- * /api/community/member/update:
+ * /api/member/update:
  *   post:
  *     summary: Update Member
  *     security: 
@@ -91,7 +91,7 @@ import { validationResult } from 'express-validator'
 
 /**
  * @swagger
- * /api/community/member/delete/{Id}:
+ * /api/member/delete/{Id}:
  *   delete:
  *     summary: Delete Member using Id
  *     parameters:
@@ -118,7 +118,7 @@ import { validationResult } from 'express-validator'
 
 /**
  * @swagger
- * /api/community/member/createXls:
+ * /api/member/createXls:
  *   post:
  *     summary: Create member by uploading excel file
  *     security: 
@@ -145,7 +145,7 @@ import { validationResult } from 'express-validator'
 
 /**
  * @swagger
- * /api/community/member/{memberId}:
+ * /api/member/{memberId}:
  *   get:
  *     summary: Get Member memberId
  *     parameters:
@@ -168,180 +168,6 @@ import { validationResult } from 'express-validator'
  */
 
 
-/**
- * @swagger
- * /api/community/appointment/create:
- *   post:
- *     summary: Create Appointment
- *     tags: [Member]
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             type: object
- *             properties:
- *               file:
- *                 type: file
- *               Title:
- *                 type: string
- *               Date:
- *                 type: Date
- *               Time:
- *                 type: string
- *               Venue:
- *                 type: string
- *               Description:
- *                 type: string
- *               CommunityId:
- *                 type: string
- *           example:
- *             Channel: JohnDoe
- *             Password: john@example.com
- *     responses:
- *       200:
- *         description: Successful response
- *         content:
- *           application/json:
- *             example:
- *               message: Appointment created Successful
- */
-
-
-
-/**
- * @swagger
- * /api/community/appointment/update:
- *   put:
- *     summary: Update Appointment
- *     tags: [Member]
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             type: object
- *             properties:
- *               Id:
- *                 type: number
- *               file:
- *                 type: file
- *               Title:
- *                 type: string
- *               Date:
- *                 type: Date
- *               Time:
- *                 type: string
- *               Venue:
- *                 type: string
- *               Description:
- *                 type: string
- *               CommunityId:
- *                 type: string
- *           example:
- *             Channel: JohnDoe
- *             Password: john@example.com
- *     responses:
- *       200:
- *         description: Successful response
- *         content:
- *           application/json:
- *             example:
- *               message: Appointment Updated Successful
- */
-
-
-/**
- * @swagger
- * /api/community/appointment/delete/{Id}:
- *   delete:
- *     summary: Delete Appointment by Id
- *     parameters:
- *       - in: path
- *         name: Id
- *         required: true
- *         schema:
- *           type: number
- *         description: ID of the Appointment to Delete
- *     security: 
- *      - APIKeyHeader: []
- *     tags: [Member]
- *     responses:
- *       200:
- *         description: Successful response
- *         content:
- *           application/json:
- *             example:
- *               message:  Successfully Deleted Appointment
- */
-
-
-/**
- * @swagger
- * /api/community/appointment/{Id}:
- *   get:
- *     summary: Get Appointment by Id
- *     parameters:
- *       - in: path
- *         name: Id
- *         required: true
- *         schema:
- *           type: number
- *         description: ID of the Appointment to get
- *     security: 
- *      - APIKeyHeader: []
- *     tags: [Member]
- *     responses:
- *       200:
- *         description: Successful response
- *         content:
- *           application/json:
- *             example:
- *               message:  Successfully got Appointment by Id
- */
-
-
-/**
- * @swagger
- * /api/community/appointment/{communityId}:
- *   get:
- *     summary: Get Appointment by communityId
- *     parameters:
- *       - in: path
- *         name: Id
- *         required: true
- *         schema:
- *           type: number
- *         description: communityID of the Appointment to get
- *     security: 
- *      - APIKeyHeader: []
- *     tags: [Member]
- *     responses:
- *       200:
- *         description: Successful response
- *         content:
- *           application/json:
- *             example:
- *               message:  Successfully got Appointment by communityId
- */
-
-
-/**
- * @swagger
- * /api/community/appointment/all:
- *   get:
- *     summary: Get All Appointment
- *     security: 
- *      - APIKeyHeader: []
- *     tags: [Member]
- *     responses:
- *       200:
- *         description: Successful response
- *         content:
- *           application/json:
- *             example:
- *               message:  Successfully got All Appointment
- */
 
 
 
@@ -357,7 +183,7 @@ let uploadXls = multer({
     dest:'public/AppointmentUploads'
   })
 
-router.post('/community/member/create',async(req,res)=>{
+router.post('/member/create',async(req,res)=>{
     try{
       const reqBody = <memberModel>req.body
       var response = await member.CreateMember(reqBody)
@@ -373,7 +199,7 @@ router.post('/community/member/create',async(req,res)=>{
       
   })
 
-  router.put('/community/member/update',async(req,res)=>{
+  router.put('/member/update',async(req,res)=>{
     try{
       const reqBody = <memberModel>req.body
       var response = await member.UpdateMember(reqBody)
@@ -389,7 +215,7 @@ router.post('/community/member/create',async(req,res)=>{
       
   })
 
-  router.delete('/community/member/delete/:Id',async(req,res)=>{
+  router.delete('/member/delete/:Id',async(req,res)=>{
     try{
       const Id = req.params.Id
       var response = await member.DeleteMember(Number(Id))
@@ -405,7 +231,7 @@ router.post('/community/member/create',async(req,res)=>{
       
   })
   
-  router.post('/community/member/createXLs',uploadXls.single('file'),async(req:any,res:any)=>{
+  router.post('/member/createXLs',uploadXls.single('file'),async(req:any,res:any)=>{
     try{
       const workbook = XLSX.readFile(req.file.path);
     const sheet_name = workbook.SheetNames[0];
@@ -430,7 +256,7 @@ router.post('/community/member/create',async(req,res)=>{
       
   })
   
-  router.get('/community/member/:memberId',async(req,res)=>{
+  router.get('/member/:memberId',async(req,res)=>{
     try{
   const param = req?.params?.memberId
   if(!param){
@@ -449,111 +275,111 @@ router.post('/community/member/create',async(req,res)=>{
   })
   
   
-  router.post('/community/appointment/create',CreateAppointmentValidator,AppointmentUploadXls.single('file'),async(req:any,res:any)=>{
-    try{
-      const reqBody = <createAppointmentModel>req.body
-      const error = validationResult(req)
-      if(!error.isEmpty()){
-        res.status(HttpStatus.STATUS_400).json(error.array())
-        return;
-      }
-      reqBody.PhotoPath = req?.file?.path || ''
-      var response = await member.CreateAppointment(reqBody)
-      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
-         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Appointment'})
-      }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Appointment',data:reqBody})
+  // router.post('/community/appointment/create',CreateAppointmentValidator,AppointmentUploadXls.single('file'),async(req:any,res:any)=>{
+  //   try{
+  //     const reqBody = <createAppointmentModel>req.body
+  //     const error = validationResult(req)
+  //     if(!error.isEmpty()){
+  //       res.status(HttpStatus.STATUS_400).json(error.array())
+  //       return;
+  //     }
+  //     reqBody.PhotoPath = req?.file?.path || ''
+  //     var response = await member.CreateAppointment(reqBody)
+  //     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+  //        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Appointment'})
+  //     }
+  //     res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Appointment',data:reqBody})
   
-    }catch(error){
-      console.error('An Error Occurred',error)
+  //   }catch(error){
+  //     console.error('An Error Occurred',error)
   
-    }
+  //   }
       
-  })
+  // })
 
-  router.put('/community/appointment/update',AppointmentUploadXls.single('file'),async(req,res)=>{
-    try{
-      const reqBody = <createAppointmentModel>req.body
-      reqBody.PhotoPath = req?.file?.path || ''
-      var response = await member.UpdateAppointment(reqBody)
-      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
-         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update Appointment'})
-      }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Update Appointment',data:reqBody})
+  // router.put('/community/appointment/update',AppointmentUploadXls.single('file'),async(req,res)=>{
+  //   try{
+  //     const reqBody = <createAppointmentModel>req.body
+  //     reqBody.PhotoPath = req?.file?.path || ''
+  //     var response = await member.UpdateAppointment(reqBody)
+  //     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+  //        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update Appointment'})
+  //     }
+  //     res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Update Appointment',data:reqBody})
   
-    }catch(error){
-      console.error('An Error Occurred',error)
+  //   }catch(error){
+  //     console.error('An Error Occurred',error)
   
-    }
+  //   }
       
-  })
+  // })
 
-  router.delete('/community/appointment/delete/:Id',async(req,res)=>{
-    try{
-      const Id = req.params.Id
-      var response = await member.DeleteAppointment(Number(Id))
-      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
-         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Appointment'})
-      }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Delete Appointment'})
+  // router.delete('/community/appointment/delete/:Id',async(req,res)=>{
+  //   try{
+  //     const Id = req.params.Id
+  //     var response = await member.DeleteAppointment(Number(Id))
+  //     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+  //        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Appointment'})
+  //     }
+  //     res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Delete Appointment'})
   
-    }catch(error){
-      console.error('An Error Occurred',error)
+  //   }catch(error){
+  //     console.error('An Error Occurred',error)
   
-    }
+  //   }
       
-  })
+  // })
   
-  router.get('/community/appointment/all',async(req,res)=>{
-    try{
-      console.log('entered appointment endpoint')
-      var response = await member.GetAllAppointment()
-      if(response?.length < 1){
-        res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Appointment '})
-      }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Appointment',data:response})
+  // router.get('/community/appointment/all',async(req,res)=>{
+  //   try{
+  //     console.log('entered appointment endpoint')
+  //     var response = await member.GetAllAppointment()
+  //     if(response?.length < 1){
+  //       res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Appointment '})
+  //     }
+  //     res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Appointment',data:response})
   
-    }catch(error){
-      console.error('An Error Occurred',error)
+  //   }catch(error){
+  //     console.error('An Error Occurred',error)
   
-    }
+  //   }
       
-  })
+  // })
   
-  router.get('/community/appointment/:Id',async(req,res)=>{
-    try{
-  const param = req?.params?.Id
-  if(!param){
-    return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Appointment Id'})
-  }
-  var response = await member.GetAppointmentId(Number(param))
-  if(response?.length < 1){
-      res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Appointment'})
-    }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Appointment',data:response[0]})
+  // router.get('/community/appointment/:Id',async(req,res)=>{
+  //   try{
+  // const param = req?.params?.Id
+  // if(!param){
+  //   return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Appointment Id'})
+  // }
+  // var response = await member.GetAppointmentId(Number(param))
+  // if(response?.length < 1){
+  //     res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Appointment'})
+  //   }
+  //   res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Appointment',data:response[0]})
   
-    }catch(error){
-     console.error('An Error Occurred',error)
-    }
+  //   }catch(error){
+  //    console.error('An Error Occurred',error)
+  //   }
   
-  })
-  router.get('/community/appointment/:communityId',async(req,res)=>{
-    try{
-  const param = req?.params?.communityId
-  if(!param){
-    return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Appointment communityId'})
-  }
-  var response = await member.GetAppointmentCommunityId(param)
-  if(response?.length < 1){
-      res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Appointment'})
-    }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Appointment',data:response[0]})
+  // })
+  // router.get('/community/appointment/:communityId',async(req,res)=>{
+  //   try{
+  // const param = req?.params?.communityId
+  // if(!param){
+  //   return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Appointment communityId'})
+  // }
+  // var response = await member.GetAppointmentCommunityId(param)
+  // if(response?.length < 1){
+  //     res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Appointment'})
+  //   }
+  //   res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Appointment',data:response[0]})
   
-    }catch(error){
-     console.error('An Error Occurred',error)
-    }
+  //   }catch(error){
+  //    console.error('An Error Occurred',error)
+  //   }
   
-  })
+  // })
 
   export default router
   

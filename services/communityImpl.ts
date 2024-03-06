@@ -42,54 +42,57 @@ export default class CommunityImpl implements Community{
      async ActivateCommunity(Id:number):Promise<any | null>{
       return await this.communityRepo.ActivateCommunity(Id)
      }
+     async GetCommunityAdminProfile(Phone:string):Promise<any>{
+      return await this.communityRepo.GetCommunityAdminProfile(Phone) 
+  }
 
-    async CreateSubAdmin(payload:createSubAdminModel):Promise<string>{
+   //  async CreateSubAdmin(payload:createSubAdminModel):Promise<string>{
 
-        return await this.communityRepo.createSubAdmin(payload)
-     }
+   //      return await this.communityRepo.createSubAdmin(payload)
+   //   }
 
-     async CreateCheckers(payload:createCheckersModel):Promise<string>{
+   //   async CreateCheckers(payload:createCheckersModel):Promise<string>{
 
-        return await this.communityRepo.createCheckers(payload)
-     }
+   //      return await this.communityRepo.createCheckers(payload)
+   //   }
      
-     async GetCheckersById(Id:number):Promise<any | null>{
-      return await this.communityRepo.getCheckersById(Id)
-     }
+   //   async GetCheckersById(Id:number):Promise<any | null>{
+   //    return await this.communityRepo.getCheckersById(Id)
+   //   }
 
-     async GetCheckersByCommunityId(communityId:number):Promise<any | null>{
-      return await this.communityRepo.getCheckersById(communityId)
-     }
+   //   async GetCheckersByCommunityId(communityId:number):Promise<any | null>{
+   //    return await this.communityRepo.getCheckersById(communityId)
+   //   }
 
-     async GetAllCheckers(): Promise<any>{
-      return await  this.communityRepo.GetAllCheckers()
+   //   async GetAllCheckers(): Promise<any>{
+   //    return await  this.communityRepo.GetAllCheckers()
 
-     }
+   //   }
 
-     async GetAllSubAdmins():Promise<any>{
-      return await this.communityRepo.GetAllSubAdmins()
+   //   async GetAllSubAdmins():Promise<any>{
+   //    return await this.communityRepo.GetAllSubAdmins()
 
-     }
+   //   }
 
-     async GetSubAdminsById(Id:number){
-      return await this.communityRepo.GetSubAdminsById(Id)
+   //   async GetSubAdminsById(Id:number){
+   //    return await this.communityRepo.GetSubAdminsById(Id)
       
-     }
+   //   }
 
 
-     async GetSubAdminsByCommunityId(communityId:number):Promise<any>{
-      return await this.communityRepo.GetSubAdminsById(communityId)
+   //   async GetSubAdminsByCommunityId(communityId:number):Promise<any>{
+   //    return await this.communityRepo.GetSubAdminsById(communityId)
       
-     }
+   //   }
 
 
     async CreateOrganization(payload:OrganizationModel):Promise<string>{
       return await this.communityRepo.CreateOrganization(payload) 
     }
 
-    async getCheckersByPhoneOrEmail(channel:string):Promise<any | null>{
-     return await this.communityRepo.getCheckersByPhoneOrEmail(channel)
-    }
+   //  async getCheckersByPhoneOrEmail(channel:string):Promise<any | null>{
+   //   return await this.communityRepo.getCheckersByPhoneOrEmail(channel)
+   //  }
 
  
 

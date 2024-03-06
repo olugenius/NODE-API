@@ -18,6 +18,14 @@ import DependantRepository from '../repository/Abstraction/DependantRepository'
 import DependantRepositoryImpl from '../repository/DependantRepositoryImpl'
 import Dependant from '../services/Abstraction/Dependant'
 import DependantImpl from '../services/DependantImpl'
+import checker from '../services/Abstraction/checker'
+import checkerImpl from '../services/checkerImpl'
+import subAdmin from '../services/Abstraction/subAdmin'
+import subAdminImpl from '../services/subAdminImpl'
+import checkerRepo from '../repository/Abstraction/checkerRepo'
+import checkerRepoImpl from '../repository/checkerRepoImpl'
+import subAdminRepo from '../repository/Abstraction/subAdminRepo'
+import subAdminRepoimpl from '../repository/subAdminRepoImpl'
 
 
 export const container = new Container()
@@ -31,6 +39,10 @@ container.bind<BaseRepository>('BaseRepository').to(baseRepositoryImpl)
 container.bind<BaseService>('BaseService').to(BaseServiceimpl)
 container.bind<DependantRepository>('DependantRepository').to(DependantRepositoryImpl)
 container.bind<Dependant>('Dependant').to(DependantImpl)
+container.bind<checker>('checker').to(checkerImpl)
+container.bind<subAdmin>('subAdmin').to(subAdminImpl)
+container.bind<checkerRepo>('checkerRepo').to(checkerRepoImpl)
+container.bind<subAdminRepo>('subAdminRepo').to(subAdminRepoimpl)
 
 
 

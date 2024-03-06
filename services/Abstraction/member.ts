@@ -6,12 +6,12 @@ export default interface Member{
     UpdateMember(payload:memberModel):Promise<string>
     DeleteMember(Id: number): Promise<string> 
    GetMemberByMemberId(memberId:string):Promise<string>
-   CreateAppointment(payload:createAppointmentModel):Promise<string>
-   UpdateAppointment(payload:createAppointmentModel):Promise<string>
-   DeleteAppointment(Id:number):Promise<string>
-   GetAllAppointment():Promise<any>
-   GetAppointmentId(Id:number):Promise<string>
-   GetAppointmentCommunityId(communityId:string):Promise<string>
+//    CreateAppointment(payload:createAppointmentModel):Promise<string>
+//    UpdateAppointment(payload:createAppointmentModel):Promise<string>
+//    DeleteAppointment(Id:number):Promise<string>
+//    GetAllAppointment():Promise<any>
+//    GetAppointmentId(Id:number):Promise<string>
+//    GetAppointmentCommunityId(communityId:string):Promise<string>
    GetAllMembers():Promise<string>
    GetMemberByPhoneOrEmail(channel:string):Promise<any>
    

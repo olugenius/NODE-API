@@ -7,20 +7,21 @@ export default interface Community{
     GetCommunity():Promise<any>
     GetCommunityById(communityId:string):Promise<any>
     CreateCommunity(payload:createCommunityModel):Promise<string>
-    CreateSubAdmin(payload:createSubAdminModel):Promise<string>
-    CreateCheckers(payload:createCheckersModel):Promise<string>
-    GetCheckersById(Id:number):Promise<any | null>
-    GetCheckersByCommunityId(communityId:number):Promise<any | null>
-    GetAllCheckers(): Promise<any>
-    GetAllSubAdmins():Promise<any>
-    GetSubAdminsById(Id:number):any
-    GetCheckersByCommunityId(communityId:number):Promise<any | null>
-    GetSubAdminsByCommunityId(communityId:number):Promise<any>
+    // CreateSubAdmin(payload:createSubAdminModel):Promise<string>
+    // CreateCheckers(payload:createCheckersModel):Promise<string>
+    // GetCheckersById(Id:number):Promise<any | null>
+    // GetCheckersByCommunityId(communityId:number):Promise<any | null>
+    // GetAllCheckers(): Promise<any>
+    // GetAllSubAdmins():Promise<any>
+    // GetSubAdminsById(Id:number):Promise<any>
+    // GetCheckersByCommunityId(communityId:number):Promise<any | null>
+    // GetSubAdminsByCommunityId(communityId:string):Promise<any>
     DeleteCommunity(Id:number):Promise<any | null>
     DeactivateCommunity(Id:number):Promise<any | null>
     ActivateCommunity(Id:number):Promise<any | null>
     CreateOrganization(payload:OrganizationModel):Promise<string>
-    getCheckersByPhoneOrEmail(channel:string):Promise<any | null>
+    GetCommunityAdminProfile(Phone:string):Promise<any>
+    // getCheckersByPhoneOrEmail(channel:string):Promise<any | null>
     
     
  

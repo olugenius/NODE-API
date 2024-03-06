@@ -2,6 +2,7 @@ import CommentModel from "../../model/CommentModel"
 import CreateForumModel from "../../model/CreateForumModel"
 import PostModel from "../../model/PostModel"
 import bulkAccessCodeModel from "../../model/bulkAccessCodeModel"
+import createAppointmentModel from "../../model/creatAppointmentModel"
 import singleAccessCodeModel from "../../model/singleAccessCodeModel"
 import staticAccessCodeModel from "../../model/staticAccessCodeModel"
 
@@ -26,5 +27,11 @@ export default interface BaseService{
      DeleteComment(Id:number):Promise<string>
      GetAllComments():Promise<any>
      GetCommentById(Id:number):Promise<any>
-       
+     CreateAppointment(payload:createAppointmentModel):Promise<string>
+    UpdateAppointment(payload:createAppointmentModel):Promise<string>
+    DeleteAppointment(Id:number):Promise<string>
+    GetAllAppointment():Promise<any>
+    GetAppointmentId(Id:number):Promise<string>
+    GetAppointmentCommunityId(communityId:string):Promise<string>
+        
 }
