@@ -12,6 +12,8 @@ import "reflect-metadata";
 import fs from 'fs';
 import memberController from './controller/memberController';
 import BaseController from './controller/BaseController';
+import CheckersController from './controller/CheckersController';
+import subAdminController from './controller/subAdminController';
 //import swaggerDocs from   './utilities/user-swagger-doc'
 
 
@@ -80,6 +82,8 @@ app.use('/api',userController)
 app.use('/api',communityController)
 app.use('/api',memberController)
 app.use('/api',BaseController)
+app.use('/api',CheckersController)
+app.use('/api',subAdminController)
 
 //const port = process.env.PORT || 3000
 
