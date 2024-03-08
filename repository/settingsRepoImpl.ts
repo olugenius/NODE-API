@@ -2,6 +2,11 @@ import { Pool } from 'mysql2'
 import conn from './dbContext/dbConnection'
 import settingsRepo from './Abstraction/settingsRepo'
 import UpdateDependantModel from '../model/UpdateDependantModel'
+import Dependant from '../services/Abstraction/Dependant'
+import CreateDependantmodel from '../model/CreateDependantModel'
+import checker from '../services/Abstraction/checker'
+import createCheckersModel from '../model/createcheckersModel'
+import createSubAdminModel from '../model/createSubAdminModel'
 
 export default class settingsRepoImpl implements settingsRepo{
     private  async getConnection(): Promise<Pool | undefined>{
@@ -55,46 +60,46 @@ export default class settingsRepoImpl implements settingsRepo{
     //      }
     // }
 
-    async GetMemberProfile(Phone:string):Promise<any>{
-        try{
+    // async GetMemberProfile(Phone:string):Promise<any>{
+    //     try{
 
-            const connection =  await this.getConnection()
-            let result = await new Promise<any>((resolve,reject)=>{
+    //         const connection =  await this.getConnection()
+    //         let result = await new Promise<any>((resolve,reject)=>{
              
-                connection?.getConnection((err,connection)=>{
-                    if(err){
-                        console.log('connection error',err)
-                        reject(err)
-                    }
+    //             connection?.getConnection((err,connection)=>{
+    //                 if(err){
+    //                     console.log('connection error',err)
+    //                     reject(err)
+    //                 }
                     
                   
-                    const query = `SELECT * FROM Member WHERE Phone=?`
+    //                 const query = `SELECT * FROM Member WHERE Phone=?`
                    
-                        connection?.query(query,[Phone],(err,data)=>{
-                         connection.release()
-                            if(err){
-                                console.log('error querying database',err)
+    //                     connection?.query(query,[Phone],(err,data)=>{
+    //                      connection.release()
+    //                         if(err){
+    //                             console.log('error querying database',err)
                                
                                
-                            }else{
-                                console.log('successfully query',data)
+    //                         }else{
+    //                             console.log('successfully query',data)
                                 
                                
                                
-                            }
-                            resolve(data)
-                         })
+    //                         }
+    //                         resolve(data)
+    //                      })
                        
-                    })
+    //                 })
     
-            })
-            return result
+    //         })
+    //         return result
     
-         }
-         catch(error){
-           console.error('Error Getting community',error)
-         }
-    }
+    //      }
+    //      catch(error){
+    //        console.error('Error Getting community',error)
+    //      }
+    // }
 
     // async GetDependantProfile(Phone:string,CreatorPhone:string):Promise<any>{
     //     try{
@@ -516,42 +521,184 @@ export default class settingsRepoImpl implements settingsRepo{
 
     // }
 
-    async GetSubAdminById(Id:number):Promise<any>{
-        let result : any
-        try{
-            const connection =  await this.getConnection()  
-            let result =await new Promise<any>((resolve,reject)=>{
-                connection?.getConnection((err,connection)=>{
-                    if(err){
-                    console.log('connection error',err)
-                    reject(err)
-                    }
+    // async GetSubAdminById(Id:number):Promise<any>{
+    //     let result : any
+    //     try{
+    //         const connection =  await this.getConnection()  
+    //         let result =await new Promise<any>((resolve,reject)=>{
+    //             connection?.getConnection((err,connection)=>{
+    //                 if(err){
+    //                 console.log('connection error',err)
+    //                 reject(err)
+    //                 }
 
-                    connection?.query(`SELECT * FROM SubAdmin where Id=?`,[Id],(err,data)=>{
-                        connection.release()
-                        if(err){
-                           console.log('error querying database',err)           
-                        }
-                        else{
-                           console.log('successfully query',data)
+    //                 connection?.query(`SELECT * FROM SubAdmin where Id=?`,[Id],(err,data)=>{
+    //                     connection.release()
+    //                     if(err){
+    //                        console.log('error querying database',err)           
+    //                     }
+    //                     else{
+    //                        console.log('successfully query',data)
                            
-                        }
-                        resolve(data)
-                       })
+    //                     }
+    //                     resolve(data)
+    //                    })
         
 
                    
                     
-                    })
-            })
+    //                 })
+    //         })
     
-             return result
+    //          return result
 
-        }catch(error){
-         console.log('An error occurred',error)
+    //     }catch(error){
+    //      console.log('An error occurred',error)
+    //     }
+
+    // }
+
+
+
+    async UpdateDependantNotificationStatus(Id:number,payload:CreateDependantmodel){
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+            let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+                    
+                  
+                    const query = `UPDATE Dependant SET AllowPushNotification=?,AllowEmailNotification=?,AllowSMSNotification=? WHERE Id=?`
+                   
+                        connection?.query(query,[payload.AllowPushNotification,payload.AllowEmailNotification,payload.AllowSMSNotification,Id],(err,data)=>{
+                         connection.release()
+                            if(err){
+                                console.log('error querying database',err)
+                                response = 'Failed'
+                               
+                            }else{
+                                console.log('successfully query',data)
+                                response = 'Success'
+                               
+                               
+                            }
+                            resolve(response)
+                         })
+                       
+                    })
+
+            })
+
+           
+                return result
+
         }
-
+        catch(error){
+            console.error('Error creating user:', error);
+            return 'Failed'
+        }
+           
     }
+
+    async UpdateCheckerNotificationStatus(Id:number,payload:createCheckersModel){
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+            let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+                    
+                  
+                    const query = `UPDATE checkers SET AllowPushNotification=?,AllowEmailNotification=?,AllowSMSNotification=? WHERE Id=?`
+                   
+                        connection?.query(query,[payload.AllowPushNotification,payload.AllowEmailNotification,payload.AllowSMSNotification,Id],(err,data)=>{
+                         connection.release()
+                            if(err){
+                                console.log('error querying database',err)
+                                response = 'Failed'
+                               
+                            }else{
+                                console.log('successfully query',data)
+                                response = 'Success'
+                               
+                               
+                            }
+                            resolve(response)
+                         })
+                       
+                    })
+
+            })
+
+           
+                return result
+
+        }
+        catch(error){
+            console.error('Error creating user:', error);
+            return 'Failed'
+        }
+           
+    }
+
+    async UpdateSubAdminNotificationStatus(Id:number,payload:createSubAdminModel){
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+            let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+                    
+                  
+                    const query = `UPDATE SubAdmin SET AllowPushNotification=?,AllowEmailNotification=?,AllowSMSNotification=? WHERE Id=?`
+                   
+                        connection?.query(query,[payload.AllowPushNotification,payload.AllowEmailNotification,payload.AllowSMSNotification,Id],(err,data)=>{
+                         connection.release()
+                            if(err){
+                                console.log('error querying database',err)
+                                response = 'Failed'
+                               
+                            }else{
+                                console.log('successfully query',data)
+                                response = 'Success'
+                               
+                               
+                            }
+                            resolve(response)
+                         })
+                       
+                    })
+
+            })
+
+           
+                return result
+
+        }
+        catch(error){
+            console.error('Error creating user:', error);
+            return 'Failed'
+        }
+           
+    }
+
+
   
 
     

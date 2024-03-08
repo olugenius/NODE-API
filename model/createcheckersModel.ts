@@ -7,5 +7,8 @@ export default interface createCheckersModel{
     Gender:string,
     NIN:string,
     CommunityId:string,
-    CheckPoint:string
+    CheckPoint:string,
+    AllowPushNotification:Boolean,
+    AllowEmailNotification:Boolean,
+    AllowSMSNotification:Boolean
 }

@@ -114,7 +114,7 @@ export default class checkerRepoImpl implements checkerRepo{
                     reject(err)
                     }
 
-                    connection?.query(`SELECT * FROM Checkers WHERE (Email = ? or Phone =?`,[channel,channel],(err,data)=>{
+                    connection?.query(`SELECT * FROM Checkers WHERE (Email = ? or Phone =?)`,[channel,channel],(err,data)=>{
                         connection.release()
                         if(err){
                            console.log('error querying database',err)           

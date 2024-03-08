@@ -13,10 +13,12 @@ export default class settingsImpl implements settings{
     // async GetCommunityAdminProfile(Phone:string):Promise<any>{
     //     return await this.settingsRepo.GetCommunityAdminProfile(Phone) 
     // }
-    async GetMemberProfile(Phone:string):Promise<any>{
-        return await this.settingsRepo.GetMemberProfile(Phone) 
 
-    }
+    // async GetMemberProfile(Phone:string):Promise<any>{
+    //     return await this.settingsRepo.GetMemberProfile(Phone) 
+
+    // }
+
     // async GetAllDependantProfile(Phone: string,CreatorPhone:string): Promise<any>{
     //     return await this.settingsRepo.GetDependantProfile(Phone,CreatorPhone) 
 
@@ -33,6 +35,8 @@ export default class settingsImpl implements settings{
     //     return await this.settingsRepo.DeleteDependant(Phone,CreatorPhone) 
 
     // }
+
+
 
 
 }

@@ -4,5 +4,8 @@ export default interface createSubAdminModel{
     Phone:string,
     Email:string,
     PhotoPath:string,
-    CommunityId:string
+    CommunityId:string,
+    AllowPushNotification:Boolean,
+    AllowEmailNotification:Boolean,
+    AllowSMSNotification:Boolean
 }
