@@ -802,8 +802,7 @@ router.post('/accessCode/single/create',SingleAccessCodeModelValidator,async(req
     
       }catch(error){
         console.error('An Error Occurred',error)
-    
-      }
+        return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})        }
 })
 
 router.post('/accessCode/static/create',StaticAccessCodeModelValidator,async(req:any,res:any)=>{
@@ -822,8 +821,7 @@ router.post('/accessCode/static/create',StaticAccessCodeModelValidator,async(req
     
       }catch(error){
         console.error('An Error Occurred',error)
-        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Static Code'})
-      }
+        return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})        }
 })
 
 router.post('/accessCode/bulk/create',BulkAccessCodeModelValidator,async(req:any,res:any)=>{
@@ -842,9 +840,7 @@ router.post('/accessCode/bulk/create',BulkAccessCodeModelValidator,async(req:any
     
       }catch(error){
         console.error('An Error Occurred',error)
-        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create bulk Code'})
-    
-      }
+        return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})        }
 })
 
 router.get('/accessCode/all',async(req,res)=>{
@@ -857,8 +853,8 @@ router.get('/accessCode/all',async(req,res)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-      res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Access Codes '})
-    }
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})   
+     }
       
   })
 
@@ -877,8 +873,7 @@ router.get('/accessCode/all',async(req,res)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Access code'})
-    }
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
       
   })
 
@@ -898,8 +893,7 @@ router.post('/forum/create',async(req:any,res:any)=>{
     
       }catch(error){
         console.error('An Error Occurred',error)
-        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Forum'})
-      }
+        return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})        }
 })
 
 router.put('/forum/update/:forumId',async(req:any,res:any)=>{
@@ -919,8 +913,7 @@ router.put('/forum/update/:forumId',async(req:any,res:any)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update Forum'})
-    }
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
 })
 
 router.delete('/forum/delete/:forumId',async(req:any,res:any)=>{
@@ -939,8 +932,7 @@ router.delete('/forum/delete/:forumId',async(req:any,res:any)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Forum'})
-    }
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
 })
 
 router.post('/forum/activate/:forumId',async(req:any,res:any)=>{
@@ -959,8 +951,7 @@ router.post('/forum/activate/:forumId',async(req:any,res:any)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Activate Forum'})
-    }
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
 })
 
 router.post('/forum/deactivate/:forumId',async(req:any,res:any)=>{
@@ -979,8 +970,7 @@ router.post('/forum/deactivate/:forumId',async(req:any,res:any)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Deactivate Forum'})
-    }
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
 })
 
 router.get('/forum/all',async(req,res)=>{
@@ -993,8 +983,7 @@ router.get('/forum/all',async(req,res)=>{
 
   }catch(error){
     console.error('An Error Occurred',error)
-    res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Forums '})
-  }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
     
 })
 
@@ -1012,8 +1001,7 @@ router.get('/forum/:forumId',async(req,res)=>{
 
   }catch(error){
     console.error('An Error Occurred',error)
-    return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Forum'})
-  }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
     
 })
 
@@ -1033,8 +1021,7 @@ router.post('/post/create',async(req:any,res:any)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Post'})
-    }
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
 })
 
 router.get('/post/all',async(req,res)=>{
@@ -1047,8 +1034,7 @@ router.get('/post/all',async(req,res)=>{
 
   }catch(error){
     console.error('An Error Occurred',error)
-    res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Posts '})
-  }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
     
 })
 
@@ -1066,8 +1052,7 @@ router.get('/post/:Id',async(req,res)=>{
 
   }catch(error){
     console.error('An Error Occurred',error)
-    return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Forum'})
-  }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
     
 })
 
@@ -1087,8 +1072,7 @@ router.post('/comment/create',async(req:any,res:any)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Comment'})
-    }
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
 })
 
 router.put('/comment/update/:Id',async(req:any,res:any)=>{
@@ -1108,8 +1092,7 @@ router.put('/comment/update/:Id',async(req:any,res:any)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update Comment'})
-    }
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
 })
 
 router.delete('/comment/delete/:Id',async(req:any,res:any)=>{
@@ -1128,8 +1111,7 @@ router.delete('/comment/delete/:Id',async(req:any,res:any)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Comment'})
-    }
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
 })
 
 router.get('/comment/all',async(req,res)=>{
@@ -1142,8 +1124,7 @@ router.get('/comment/all',async(req,res)=>{
 
   }catch(error){
     console.error('An Error Occurred',error)
-    res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Comments '})
-  }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
     
 })
 
@@ -1161,8 +1142,7 @@ router.get('/comment/:Id',async(req,res)=>{
 
   }catch(error){
     console.error('An Error Occurred',error)
-    return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Comment'})
-  }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
     
 })
 
@@ -1184,7 +1164,7 @@ router.post('/appointment/create',CreateAppointmentValidator,AppointmentUploadXl
 
   }catch(error){
     console.error('An Error Occurred',error)
-
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
   }
     
 })
@@ -1201,7 +1181,7 @@ router.put('/appointment/update',AppointmentUploadXls.single('file'),async(req,r
 
   }catch(error){
     console.error('An Error Occurred',error)
-
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
   }
     
 })
@@ -1217,7 +1197,7 @@ router.delete('/appointment/delete/:Id',async(req,res)=>{
 
   }catch(error){
     console.error('An Error Occurred',error)
-
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
   }
     
 })
@@ -1233,7 +1213,7 @@ router.get('/appointment/all',async(req,res)=>{
 
   }catch(error){
     console.error('An Error Occurred',error)
-
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
   }
     
 })
@@ -1252,6 +1232,7 @@ if(response?.length < 1){
 
   }catch(error){
    console.error('An Error Occurred',error)
+   return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
   }
 
 })
@@ -1269,6 +1250,7 @@ if(response?.length < 1){
 
   }catch(error){
    console.error('An Error Occurred',error)
+   return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
   }
 
 })

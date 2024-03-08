@@ -140,8 +140,7 @@ router.post('/subAdmin/create',CreateSubAdminValidator,async(req:any,res:any)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-  
-    }
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
       
   })
   
@@ -155,8 +154,7 @@ router.post('/subAdmin/create',CreateSubAdminValidator,async(req:any,res:any)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-  
-    }
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
       
   })
   
@@ -174,7 +172,7 @@ router.post('/subAdmin/create',CreateSubAdminValidator,async(req:any,res:any)=>{
   
     }catch(error){
      console.error('An Error Occurred',error)
-    }
+     return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
   
   })
   
@@ -193,7 +191,7 @@ router.post('/subAdmin/create',CreateSubAdminValidator,async(req:any,res:any)=>{
   
     }catch(error){
      console.error('An Error Occurred',error)
-    }
+     return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
   
   })
   

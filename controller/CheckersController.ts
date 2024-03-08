@@ -178,14 +178,15 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-  
-    }
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
       
   })
   
   
   router.post('/checkers/createXls',uploadXls.single('file'),async(req:any,res:any)=>{
-    const workbook = XLSX.readFile(req.file.path);
+    try{
+
+      const workbook = XLSX.readFile(req.file.path);
     const sheet_name = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheet_name];
     const data = <createCheckersModel[]>XLSX.utils.sheet_to_json(sheet);
@@ -201,6 +202,11 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
     }
     res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created the following Checkers',data:successArray})
   
+
+    }catch(err){
+      console.error('An Error Occurred',err)
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
+    
   })
   
   router.get('/checkers/all',async(req,res)=>{
@@ -214,8 +220,7 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-  
-    }
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
       
   })
   
@@ -236,8 +241,7 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-  
-    }
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
       
   })
   
@@ -256,8 +260,7 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-  
-    }
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
       
   })
 

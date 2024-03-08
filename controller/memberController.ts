@@ -211,7 +211,7 @@ router.post('/member/create',async(req,res)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-  
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    
     }
       
   })
@@ -227,7 +227,7 @@ router.post('/member/create',async(req,res)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-  
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    
     }
       
   })
@@ -243,7 +243,7 @@ router.post('/member/create',async(req,res)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-  
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    
     }
       
   })
@@ -268,7 +268,7 @@ router.post('/member/create',async(req,res)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-  
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    
     }
       
   })
@@ -287,7 +287,7 @@ router.post('/member/create',async(req,res)=>{
   
     }catch(error){
      console.error('An Error Occurred',error)
-    }
+     return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
   
   })
   

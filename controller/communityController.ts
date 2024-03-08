@@ -292,7 +292,7 @@ router.post('/community/create',CreateCommunityValidator,async (req:any,res:any)
 
   }catch(error){
    console.error('An Error Occurred during create Community',error)
-  }
+   return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
     
 })
 
@@ -306,7 +306,7 @@ router.get('/community',async(req:any,res)=>{
 
   }catch(error){
     console.error('An Error Occurred',error)
-  }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
   
 })
 
@@ -323,8 +323,7 @@ router.get('/community/:communityId',async(req,res)=>{
 
   }catch(error){
     console.error('An Error Occurred',error)
-
-  }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
 
 })
 
@@ -341,8 +340,7 @@ router.get('/community/admin/profile/:phone',async(req,res)=>{
 
   }catch(error){
     console.error('An Error Occurred',error)
-
-  }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
 
 })
 
@@ -357,8 +355,7 @@ router.delete('/community/delete/:Id',async(req,res)=>{
 
   }catch(error){
     console.error('An Error Occurred',error)
-
-  }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
     
 })
 
@@ -373,8 +370,7 @@ router.patch('/community/activate/:Id',async(req,res)=>{
 
   }catch(error){
     console.error('An Error Occurred',error)
-
-  }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
     
 })
 
@@ -389,8 +385,7 @@ router.patch('/community/deactivate/:Id',async(req,res)=>{
 
   }catch(error){
     console.error('An Error Occurred',error)
-
-  }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
     
 })
 
@@ -585,7 +580,7 @@ router.post('/organization/create',OrganizationUpload.single('file'),async(req:a
 
   }catch(error){
     console.error('An Error Occurred',error)
-
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
   }
     
 })

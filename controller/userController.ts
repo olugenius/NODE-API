@@ -365,6 +365,8 @@ router.get('',(req,res)=>{
 })
 
 router.post('/login',LoginValidator,async(req:Request,res:Response)=>{
+  try{
+
     const reqBody = <loginModel>req.body
     const error = validationResult(req)
         if(!error.isEmpty()){
@@ -404,11 +406,19 @@ router.post('/login',LoginValidator,async(req:Request,res:Response)=>{
     
     
 
+  }catch(err){
+    console.log('An error occured',err)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
+  }
+   
+
 })
 
 
 router.post('/refreshToken',RefreshTokenValidator,async(req:Request,res:Response)=>{
-  const reqBody = <refreshTokenRequestmodel>req.body
+  try{
+
+    const reqBody = <refreshTokenRequestmodel>req.body
   const error = validationResult(req)
       if(!error.isEmpty()){
         res.status(HttpStatus.STATUS_400).json(error.array())
@@ -440,6 +450,12 @@ router.post('/refreshToken',RefreshTokenValidator,async(req:Request,res:Response
                const refreshToken = await jwtHandler.generateRefreshToken(response[0].Phone)
              res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Token Generated Successfully',accessToken:accessToken,refreshToken:refreshToken})
              
+  
+
+  }catch(err){
+    console.log('An error occured',err)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
+  }
   
 
 })
@@ -514,50 +530,58 @@ async (req:any,res:any)=>{
     }
     catch(err){
         console.log('error creating user at controller side',err)
-    }
+        return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
    
 
 })
 
 router.post('/register/sendMail',EmailValidator,async(req:Request,res:Response)=>{
-     var reqBody = <mailRequestModel>req.body
-     const error = validationResult(req)
-    if(!error.isEmpty()){
-      res.status(HttpStatus.STATUS_400).json(error.array())
-      return;
-    }
-      //check if user exist
-      let userRes = <registerModel[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
-      if(userRes?.length < 1){
+  try{
 
-          res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Channel passed'})
-          return;
-      }
-        //store in database
-        let token = Math.floor(100000 + Math.random() * 900000);
-        let response = await userRepo.AddToken(reqBody.Channel,'EmailVerify',token.toString(),reqBody.Medium)
-  
-    if(response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
-      res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
-      return;
-    }
-    //Start sending sms or email
-    let emailSMSResult = false
-    const message = `Please use the token sent to you for validation: \n Token Value is: ${token.toString()}`
-    if(reqBody.Medium.toLowerCase() === 'sms'){
-       emailSMSResult =  await SMSHandler(reqBody.Channel,message)
+    var reqBody = <mailRequestModel>req.body
+    const error = validationResult(req)
+   if(!error.isEmpty()){
+     res.status(HttpStatus.STATUS_400).json(error.array())
+     return;
+   }
+     //check if user exist
+     let userRes = <registerModel[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
+     if(userRes?.length < 1){
 
-    }else{
-      
-      const emailMessage = `<!DOCTYPE html><html><body><h2>Dear Customer</h2><p><b>A token request was sent using your Email address. Please ignore if not requested by you </b></p><p class="demo">Please use the token below to complete your verify. <br><br> <b>Token:</b> ${token}</p></body></html>`;
-      emailSMSResult= await SendMail(`${reqBody.Channel}`,emailMessage)
-    }
+         res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Channel passed'})
+         return;
+     }
+       //store in database
+       let token = Math.floor(100000 + Math.random() * 900000);
+       let response = await userRepo.AddToken(reqBody.Channel,'EmailVerify',token.toString(),reqBody.Medium)
+ 
+   if(response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+     res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
+     return;
+   }
+   //Start sending sms or email
+   let emailSMSResult = false
+   const message = `Please use the token sent to you for validation: \n Token Value is: ${token.toString()}`
+   if(reqBody.Medium.toLowerCase() === 'sms'){
+      emailSMSResult =  await SMSHandler(reqBody.Channel,message)
+
+   }else{
+     
+     const emailMessage = `<!DOCTYPE html><html><body><h2>Dear Customer</h2><p><b>A token request was sent using your Email address. Please ignore if not requested by you </b></p><p class="demo">Please use the token below to complete your verify. <br><br> <b>Token:</b> ${token}</p></body></html>`;
+     emailSMSResult= await SendMail(`${reqBody.Channel}`,emailMessage)
+   }
+   
+   if(!emailSMSResult){
+     return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
+   }
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:`Token sent successfully Via ${reqBody.Medium}`,Channel:`${reqBody.Channel}`})
+
+
+  }
+  catch(err){
+    console.log('error creating user at controller side',err)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
     
-    if(!emailSMSResult){
-      return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
-    }
-     return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:`Token sent successfully Via ${reqBody.Medium}`,Channel:`${reqBody.Channel}`})
-
     
 })
 
@@ -628,7 +652,7 @@ router.post('/register/verify',VerifyEmailValidator,async(req:Request,res:Respon
 
   }catch(err){
     console.log('An error occurred verifying token',err)
-  }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
    
     
 })
@@ -681,7 +705,7 @@ router.post('/forgotPassword/sendMail',ForgotPasswordValidator,async(req:Request
 
   }catch(err){
     console.log('An error occurred sending mail/sms',err)
-  }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
    
    
 })
@@ -755,7 +779,7 @@ router.post('/forgotPassword/verify',ForgotPasswordVerifyValidator,async(req:Req
 
   }catch(err){
     console.log('An error occurred verifying token',err)
-  }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
    
 })
 
@@ -787,7 +811,7 @@ router.post('/resetPassword',resetPasswordValidator,async(req:Request,res:Respon
 
   }catch(err){
     console.log('An error occurred resetting password',err)
-  }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
  
   
 })
@@ -822,7 +846,7 @@ router.post('/superAdmin/createPassword',createPasswordValidator,async(req:Reque
 
   }catch(err){
     console.log('An error occurred resetting password',err)
-  }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
  
   
 })
