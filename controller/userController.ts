@@ -457,11 +457,11 @@ async (req:any,res:any)=>{
           res.status(HttpStatus.STATUS_400).json(error.array())
           return;
         }
-          if(!(reqBody.UserRole.toUpperCase() in RolesEnum)){
+          if(!(reqBody?.UserRole?.toUpperCase() in RolesEnum)){
             return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Invalid role passed'})
           }
             let userData = <registerModel[]>await userRepo.GetUserByPhone(reqBody.Phone)
-            if(userData.length > 0){
+            if(userData?.length > 0){
                 return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'User with this Phone number already exist'})
                 
             }
@@ -469,7 +469,7 @@ async (req:any,res:any)=>{
             switch(reqBody.UserRole.toUpperCase()){
               case RolesEnum.CHECKER:
                let checker = await  checkerRepo.getCheckersByPhoneOrEmail(reqBody.Phone)
-               if(checker.length < 1){
+               if(checker?.length < 1){
                 return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Checker is not yet created. Please contact Admin'})
                 }
                 
@@ -481,7 +481,7 @@ async (req:any,res:any)=>{
 
               case RolesEnum.MEMBER:
                 let member = await  memberRepo.GetMemberByPhoneOrEmail(reqBody.Phone)
-               if(member.length < 1){
+               if(member?.length < 1){
                 return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Member is not yet created. Please contact Admin'})
                 }
                 break;
@@ -493,7 +493,7 @@ async (req:any,res:any)=>{
 
               case RolesEnum.DEPENDANT:
                 let dependant = await  dependantRepo.GetDependantByPhoneOrEmail(reqBody.Phone)
-               if(dependant.length < 1){
+               if(dependant?.length < 1){
                 return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Dependant is not yet created. Please contact Admin'})
                 }
                 break;
