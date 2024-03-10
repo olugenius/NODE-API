@@ -8,6 +8,7 @@ import CreateForumModel from "../model/CreateForumModel";
 import PostModel from "../model/PostModel";
 import CommentModel from "../model/CommentModel";
 import createAppointmentModel from "../model/creatAppointmentModel";
+import TransactionModel from "../model/TransactionModel";
 
 @injectable()
 export default class BaseServiceimpl implements BaseService{
@@ -106,6 +107,19 @@ export default class BaseServiceimpl implements BaseService{
    async GetAppointmentCommunityId(communityId:string):Promise<string>{
 
       return await this.baseRepo.GetAppointmentCommunityId(communityId)
+   }
+
+   async CreateTransaction(payload:TransactionModel):Promise<string>{
+      return await this.baseRepo.CreateTransaction(payload)
+   }
+   async GetTransactionByTransactionId(transactionId:string):Promise<any>{
+      return await this.baseRepo.GetTransactionByTransactionId(transactionId)
+   }
+   async GetAllTransaction():Promise<any>{
+      return await this.baseRepo.GetAllTransaction()
+   }
+   async DeleteTransaction(transactionId:string):Promise<string>{
+      return await this.baseRepo.DeleteTransaction(transactionId)
    }
      
 }

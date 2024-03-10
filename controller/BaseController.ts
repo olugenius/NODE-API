@@ -13,6 +13,7 @@ import CommentModel from '../model/CommentModel'
 import createAppointmentModel from '../model/creatAppointmentModel'
 import multer from 'multer'
 import { CreateAppointmentValidator } from '../utilities/MembersValidator'
+import TransactionModel from '../model/TransactionModel'
 
 
 /**
@@ -608,7 +609,7 @@ import { CreateAppointmentValidator } from '../utilities/MembersValidator'
  * /api/appointment/create:
  *   post:
  *     summary: Create Appointment
- *     tags: [Member]
+ *     tags: [Base]
  *     requestBody:
  *       required: true
  *       content:
@@ -649,7 +650,7 @@ import { CreateAppointmentValidator } from '../utilities/MembersValidator'
  * /api/appointment/update:
  *   put:
  *     summary: Update Appointment
- *     tags: [Member]
+ *     tags: [Base]
  *     requestBody:
  *       required: true
  *       content:
@@ -700,7 +701,7 @@ import { CreateAppointmentValidator } from '../utilities/MembersValidator'
  *         description: ID of the Appointment to Delete
  *     security: 
  *      - APIKeyHeader: []
- *     tags: [Member]
+ *     tags: [Base]
  *     responses:
  *       200:
  *         description: Successful response
@@ -725,7 +726,7 @@ import { CreateAppointmentValidator } from '../utilities/MembersValidator'
  *         description: ID of the Appointment to get
  *     security: 
  *      - APIKeyHeader: []
- *     tags: [Member]
+ *     tags: [Base]
  *     responses:
  *       200:
  *         description: Successful response
@@ -743,14 +744,14 @@ import { CreateAppointmentValidator } from '../utilities/MembersValidator'
  *     summary: Get Appointment by communityId
  *     parameters:
  *       - in: path
- *         name: Id
+ *         name: communityId
  *         required: true
  *         schema:
- *           type: number
+ *           type: string
  *         description: communityID of the Appointment to get
  *     security: 
  *      - APIKeyHeader: []
- *     tags: [Member]
+ *     tags: [Base]
  *     responses:
  *       200:
  *         description: Successful response
@@ -768,7 +769,7 @@ import { CreateAppointmentValidator } from '../utilities/MembersValidator'
  *     summary: Get All Appointment
  *     security: 
  *      - APIKeyHeader: []
- *     tags: [Member]
+ *     tags: [Base]
  *     responses:
  *       200:
  *         description: Successful response
@@ -777,6 +778,119 @@ import { CreateAppointmentValidator } from '../utilities/MembersValidator'
  *             example:
  *               message:  Successfully got All Appointment
  */
+
+
+/**
+ * @swagger
+ * /api/transaction/create:
+ *   post:
+ *     summary: Create Transaction
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Product:
+ *                 type: string
+ *               Plan:
+ *                 type: string
+ *               Phone:
+ *                 type: string
+ *               DateTime:
+ *                 type: string
+ *               Amount:
+ *                 type: number
+ *               TotalAmount:
+ *                 type: number
+ *               Status:
+ *                 type: string
+ *               PaymentMethod:
+ *                 type: string
+ *               
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Transaction created successfully
+ */
+
+
+
+/**
+ * @swagger
+ * /api/transaction/delete/{transactionId}:
+ *   delete:
+ *     summary: Delete Transaction by Id
+ *     parameters:
+ *       - in: path
+ *         name: transactionId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the Transaction to Delete
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully Deleted Appointment
+ */
+
+
+/**
+ * @swagger
+ * /api/transaction/all:
+ *   get:
+ *     summary: Get All Appointment
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got All transaction
+ */
+
+
+/**
+ * @swagger
+ * /api/transaction/{transactionId}:
+ *   get:
+ *     summary: Get Transaction by transactionId
+ *     parameters:
+ *       - in: path
+ *         name: transactionId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: transactionId of the Transaction to get
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got Transaction by transactionId
+ */
+
+
 
 
 const router = express.Router()
@@ -1254,5 +1368,70 @@ if(response?.length < 1){
   }
 
 })
+router.post('/transaction/create',async(req:any,res:any)=>{
+  try{
+    const reqBody = <TransactionModel>req.body
+    
+    var response = await baseService.CreateTransaction(reqBody)
+    if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Transaction'})
+    }
+    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Transaction',data:reqBody})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
+  }
+    
+})
+
+router.delete('/transaction/delete/:transactionId',async(req:any,res:any)=>{
+  try{
+    const param = req.boparams.transactionId
+    
+    var response = await baseService.DeleteTransaction(param)
+    if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Transaction'})
+    }
+    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Delete Transaction'})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
+  }
+    
+})
+
+router.get('/transaction/all',async(req,res)=>{
+  try{
+    var response = await baseService.GetAllTransaction()
+    if(response?.length < 1){
+      res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch All transaction '})
+    }
+    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch All transaction',data:response})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
+  }
+    
+})
+
+router.get('/transaction/:transactionId',async(req,res)=>{
+  try{
+    const param = req.params.transactionId
+    var response = await baseService.GetTransactionByTransactionId(param)
+    if(response?.length < 1){
+      res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch transaction '})
+    }
+    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch transaction',data:response})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
+  }
+    
+})
+
 
 export default router

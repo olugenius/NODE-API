@@ -9,7 +9,6 @@ import multer from 'multer'
 import XLSX from 'xlsx'
 import { CreateAppointmentValidator } from '../utilities/MembersValidator'
 import { validationResult } from 'express-validator'
-import jwt from 'jsonwebtoken'
 
 
 /**
@@ -169,21 +168,6 @@ import jwt from 'jsonwebtoken'
  */
 
 
-
-/**
- * @swagger
- * /api/test:
- *   post:
- *     summary: Get Member memberId
- *     tags: [Member]
- *     responses:
- *       200:
- *         description: Successful response
- *         content:
- *           application/json:
- *             example:
- *               message:  Successfully got Checkers by communityId
- */
 
 
 
@@ -397,24 +381,7 @@ router.post('/member/create',async(req,res)=>{
   //   }
   
   // })
-  router.post('/test',(req,res)=>{
-   // Verify the token
-   const token = 'eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjFmODk2N2Y3LTkyMGMtNGEzMy1iNzc5LWM3ZTU5OTJhNGEwMiJ9.eyJkYXRhIjp7ImpvYlJlc29sdXRpb24iOiJQQVNTRUQiLCJzZXNzaW9uSWQiOiJiYTIxMjIzZC01YTJkLTQ3ODUtYjJmMS0xN2QyMDQwN2YzM2EiLCJqb2JJZCI6IjFiYjNjMDNlLTBjMDAtNGIzMC04NzlkLTQ4ODNlMmIwNDQ4MSJ9LCJpYXQiOjE3MDk4MzIwMjUsImV4cCI6MTcxNTQwOTEyMjV9.MEQCIAk0oKWC1tOtDraF2PwnU26iYkDnsF0mewjuxa5ZISNeAiAfo8ByN4BmK7eWIB8gB20oyPj7tmsWSvvmenYJLPiEtg=='
-   const publicKeyPem = `
-   -----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEgrjGD0C7hVvrcm8WoX+YNi6o2rYD
-zXQBmX8qERcHvkKmlL8fAWMr/WmasB3iSee+TyKkxNPsWZE1AZHHjuscTA==
------END PUBLIC KEY-----
-   `
-jwt.verify(token, publicKeyPem, { algorithms: ['ES256'] }, (err, decoded) => {
-  if (err) {
-    console.error('Token verification failed:', err);
-  } else {
-    console.log('Token verified successfully:', decoded);
-  }
-});
-res.send('working')
-  })
+  
 
   export default router
   

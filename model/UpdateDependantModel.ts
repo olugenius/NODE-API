@@ -1,5 +1,5 @@
 export default interface UpdateDependantModel{
-    
+    Id:number,
     FirstName:string,
     LastName:string,
     Phone:string,

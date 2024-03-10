@@ -250,7 +250,8 @@ export default class DependantRepositoryImpl implements DependantRepository{
         }
         
     }
-    async GetDependantProfile(Phone: string,CreatorPhone:string): Promise<any> {
+    async GetAllDependantProfile(CreatorPhone:string): Promise<any> {
+        console.log('About to get All Dependant profile with CreatorPhone',CreatorPhone)
         let response : string = ''
         let errorLog:string[]=[]
         let resultArray:any[] = []
@@ -270,10 +271,10 @@ export default class DependantRepositoryImpl implements DependantRepository{
                     //         reject(err)
                     //     }
                     // })
-                    const query1 = `SELECT * FROM Dependant and CreatorPhone=?`
+                    const query1 = `SELECT * FROM Dependant WHERE CreatorPhone=?`
                     const query2 = `SELECT Gender,PhotoPath FROM Users WHERE Phone=? and IsVerified=?`
                    
-                        connection?.query(query1,[Phone,CreatorPhone],(err,data:any[])=>{
+                        connection?.query(query1,[CreatorPhone],(err,data:any[])=>{
                          //connection.release()
                             if(err){
                              errorLog.push('Failed')  
@@ -281,16 +282,23 @@ export default class DependantRepositoryImpl implements DependantRepository{
                             reject(err)
 
                             }else{
+                                console.log('Successfully fetch Dependants with datas',data)
                                 for(let i=0;i<data.length;i++){
 
-                                    connection.query(query2,[Phone,1],(err2,data2)=>{
+                                    connection.query(query2,[data[i].Phone,1],(err2,data2)=>{
                                         if(err2){
                                             errorLog.push('Failed')  
                                            console.log('error querying database',err)
                                            reject(err)
                
-                                           }
+                                           }else{
+
+                                           console.log('Successfully fetch User details of dependant with datas',data2)
                                            resultArray.push(data.concat(data2))
+                                           console.log('Result array value:',resultArray)
+
+                                           }
+                                           
 
                                     })
 
@@ -323,10 +331,10 @@ export default class DependantRepositoryImpl implements DependantRepository{
                             
                         //  }
                          if(errorLog.length < 1){
-                            resolve([])
+                            resolve(resultArray)
 
                          }else{
-                            resolve(resultArray)
+                            resolve([])
                          }
                          
                         //  })
@@ -429,7 +437,7 @@ export default class DependantRepositoryImpl implements DependantRepository{
     
     }
 
-    async UpdateDependantProfile(Id:number,payload:UpdateDependantModel): Promise<string>{
+    async UpdateDependantProfile(payload:UpdateDependantModel): Promise<string>{
 
         let response : string = ''
         let errorLog:string[]=[]
@@ -453,7 +461,7 @@ export default class DependantRepositoryImpl implements DependantRepository{
                     const query1 = `UPDATE Dependant SET Name=?,Email=?,Phone=?,DOB=? WHERE Id=? and CreatorPhone=?`
                     const query2 = `UPDATE Users SET Gender=?,PhotoPath=? WHERE Phone=? and IsVerified=?`
                    
-                        connection?.query(query1,[name,payload.Email,payload.Phone,payload.DOB,Id,payload.CreatorPhone],(err,data)=>{
+                        connection?.query(query1,[name,payload.Email,payload.Phone,payload.DOB,payload.Id,payload.CreatorPhone],(err,data)=>{
                          //connection.release()
                             if(err){
                                 errorLog.push(err.message)

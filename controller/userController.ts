@@ -29,6 +29,7 @@ import Dependant from '../services/Abstraction/Dependant'
 import Community from '../services/Abstraction/community'
 import Member from '../services/Abstraction/member'
 import checker from '../services/Abstraction/checker'
+import UpdateEmailModel from '../model/UpdateEmailModel'
 const router = express.Router()
 
 
@@ -335,6 +336,87 @@ const router = express.Router()
  */
 
 
+
+/**
+ * @swagger
+ * /api/createPassword:
+ *   post:
+ *     summary: Create Password
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Password:
+ *                 type: string
+ *               ConfirmPassword:
+ *                 type: string
+ *               Channel:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Password created  Successfully
+ */
+
+
+
+/**
+ * @swagger
+ * /api/account/delete/{Id}:
+ *   delete:
+ *     summary: Delete Account using Id
+ *     parameters:
+ *       - in: path
+ *         name: Id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the Account to delete
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Member]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully Delete Account
+ */
+
+
+/**
+ * @swagger
+ * /api/updateEmail:
+ *   post:
+ *     summary: Update Email
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Channel:
+ *                 type: string
+ *               NewEmail:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Email Updated  Successfully
+ */
 
 
 
@@ -850,6 +932,102 @@ router.post('/superAdmin/createPassword',createPasswordValidator,async(req:Reque
  
   
 })
+
+
+router.post('/createPassword',createPasswordValidator,async(req:Request,res:Response)=>{
+  try{
+
+    var reqBody = <createPasswordRequestModel>req.body
+    const error = validationResult(req)
+    if(!error.isEmpty()){
+      res.status(HttpStatus.STATUS_400).json(error.array())
+      return;
+    }
+        
+    let response = <userToken[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
+    if(response?.length < 1){
+       res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
+       return;
+    }
+   
+        let result = await userRepo.CreatePassword(reqBody)
+        if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+  
+            res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Password Create Failed, Please try again'})
+            return;
+        }
+        res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Password Created Successful, Please proceed to login'})
+       
+  
+
+  }catch(err){
+    console.log('An error occurred resetting password',err)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+ 
+  
+})
+
+
+router.delete('/account/delete/:Id',async(req:Request,res:Response)=>{
+  try{
+
+    var param = req.params.Id
+   
+        
+  
+   
+        let result = await userRepo.DeleteAccount(Number(param))
+        if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+  
+            res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Account Delete Failed, Please try again'})
+            return;
+        }
+        res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Account Deleted Successful'})
+       
+  
+
+  }catch(err){
+    console.log('An error occurred resetting password',err)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+ 
+  
+})
+
+router.post('/updateEmail',async(req:Request,res:Response)=>{
+  try{
+
+    var reqBody = <UpdateEmailModel>req.body
+    const error = validationResult(req)
+    if(!error.isEmpty()){
+      res.status(HttpStatus.STATUS_400).json(error.array())
+      return;
+    }
+        
+    let response = <registerModel[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
+    if(response?.length > 0 && response[0].UserRole.toUpperCase() === RolesEnum.SUPER_ADMIN){
+      let result = await userRepo.UpdateEmail(reqBody)
+      if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+
+          res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Error Updating Email'})
+          return;
+      }
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Email Updated Successful,'})
+     
+    }
+    res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Update Failed'})
+
+   
+        
+  
+
+  }catch(err){
+    console.log('An error occurred resetting password',err)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+ 
+  
+})
+
+
 
 
 

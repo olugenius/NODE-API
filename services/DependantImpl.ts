@@ -14,12 +14,12 @@ export default class DependantImpl implements Dependant{
   async GetDependantByPhoneOrEmail(channel:string):Promise<any>{
     return await this.dependantRepo.GetDependantByPhoneOrEmail(channel)
   }
-    async GetAllDependantProfile(Phone: string,CreatorPhone:string): Promise<any>{
-      return await this.dependantRepo.GetDependantProfile(Phone,CreatorPhone) 
+    async GetAllDependantProfile(CreatorPhone:string): Promise<any> {
+      return await this.dependantRepo.GetAllDependantProfile(CreatorPhone) 
 
   }
-  async UpdateDependantProfile(Id:number,payload:UpdateDependantModel): Promise<string>{
-      return await this.dependantRepo.UpdateDependantProfile(Id,payload) 
+  async UpdateDependantProfile(payload:UpdateDependantModel): Promise<string>{
+      return await this.dependantRepo.UpdateDependantProfile(payload) 
 
   }
   async GetDependantProfileByPhoneOrEmail(channel: string,CreatorPhone:string): Promise<any>{

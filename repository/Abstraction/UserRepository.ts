@@ -1,3 +1,4 @@
+import UpdateEmailModel from "../../model/UpdateEmailModel"
 import registerModel from "../../model/registerModel"
 import registerResponseModel from "../../model/registerResponseModel"
 import { createPasswordRequestModel } from "../../model/resetPasswordRequestModel"
@@ -14,5 +15,7 @@ export default interface UserRepository{
     UpdateUserPassword(newPassword:string,channel:string):Promise<any>
     GetUserToken(email:string,mailFor:string):Promise<any>
     CreatePassword(payload:createPasswordRequestModel):Promise<any>
+    DeleteAccount(Id:number):Promise<string>
+    UpdateEmail(payload:UpdateEmailModel):Promise<string>
 
 }

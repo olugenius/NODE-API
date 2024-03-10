@@ -1,6 +1,7 @@
 import CommentModel from "../../model/CommentModel"
 import CreateForumModel from "../../model/CreateForumModel"
 import PostModel from "../../model/PostModel"
+import TransactionModel from "../../model/TransactionModel"
 import bulkAccessCodeModel from "../../model/bulkAccessCodeModel"
 import createAppointmentModel from "../../model/creatAppointmentModel"
 import singleAccessCodeModel from "../../model/singleAccessCodeModel"
@@ -34,5 +35,9 @@ export default interface BaseRepository{
     GetAllAppointment():Promise<any>
     GetAppointmentId(Id:number):Promise<any>
     GetAppointmentCommunityId(CommunityId:string):Promise<any>
+    CreateTransaction(payload:TransactionModel):Promise<string>
+    GetTransactionByTransactionId(transactionId:string):Promise<any>
+    GetAllTransaction():Promise<any>
+    DeleteTransaction(transactionId:string):Promise<string>
 
 }

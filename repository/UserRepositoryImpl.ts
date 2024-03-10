@@ -13,6 +13,7 @@ import { injectable } from 'inversify'
 import 'reflect-metadata'
 import UserRepository from './Abstraction/UserRepository'
 import { createPasswordRequestModel } from '../model/resetPasswordRequestModel'
+import UpdateEmailModel from '../model/UpdateEmailModel'
 
 
 @injectable()
@@ -594,4 +595,95 @@ export default class UserRepositoryImpl implements UserRepository{
 
        
     }
+
+    async DeleteAccount(Id:number):Promise<string>{
+        
+        let response : string
+        let updatedAt =format(new Date(),'yyy-MM-dd HH:mm:ss')
+       let result =  await new Promise<string>(async(resolve,reject)=>{
+        const connection =  await this.getConnection() 
+        connection?.getConnection((err,connection)=>{
+            try{
+
+                if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+                    
+                        
+                            connection?.query(`DELETE FROM Users WHERE Id=?`,[Id],(err,data)=>{
+                                if(err){
+                                   console.log('error querying database',err)
+                                   resolve('Failed')
+                   
+                                }
+                                else{
+                                   console.log('successfully query',data)
+                                   resolve('Success')
+                                    
+                                }
+                               })
+    
+                    
+                     
+
+            }catch(error){
+                
+            }finally{
+                connection.release()
+            }
+           
+            
+            })
+    })
+    return result
+
+   
+    }
+
+    async UpdateEmail(payload:UpdateEmailModel):Promise<string>{
+   
+        let response : string
+       let result =  await new Promise<string>(async(resolve,reject)=>{
+        const connection =  await this.getConnection() 
+        connection?.getConnection((err,connection)=>{
+            try{
+
+                if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+                    
+    
+                        
+                            connection?.query(`UPDATE Users SET Email = ? where (Email=? or Phone=?)`,[true,payload.NewEmail,payload.Channel],(err,data)=>{
+                                if(err){
+                                   console.log('error querying database',err)
+                                   resolve('Failed')
+                   
+                                }
+                                else{
+                                   console.log('successfully query',data)
+                                   resolve('Success')
+                                    
+                                }
+                               })
+    
+                     
+                     
+
+            }catch(error){
+                
+            }finally{
+                connection.release()
+            }
+           
+            
+            })
+    })
+    return result
+
+    }
+
+
 }
