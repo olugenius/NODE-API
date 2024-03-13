@@ -4,6 +4,7 @@ import PostModel from "../../model/PostModel"
 import TransactionModel from "../../model/TransactionModel"
 import bulkAccessCodeModel from "../../model/bulkAccessCodeModel"
 import createAppointmentModel from "../../model/creatAppointmentModel"
+import createServiceProviderModel from "../../model/createServiceProviderModel"
 import singleAccessCodeModel from "../../model/singleAccessCodeModel"
 import staticAccessCodeModel from "../../model/staticAccessCodeModel"
 
@@ -39,5 +40,6 @@ export default interface BaseRepository{
     GetTransactionByTransactionId(transactionId:string):Promise<any>
     GetAllTransaction():Promise<any>
     DeleteTransaction(transactionId:string):Promise<string>
+    CreateServiceProvider(payload:createServiceProviderModel):Promise<string>
 
 }

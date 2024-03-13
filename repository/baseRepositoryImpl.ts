@@ -12,6 +12,7 @@ import CommentModel from "../model/CommentModel";
 import { formatDuration } from "date-fns";
 import createAppointmentModel from "../model/creatAppointmentModel";
 import TransactionModel from "../model/TransactionModel";
+import createServiceProviderModel from "../model/createServiceProviderModel";
 
 @injectable()
 export default class baseRepositoryImpl implements BaseRepository{
@@ -1413,6 +1414,54 @@ export default class baseRepositoryImpl implements BaseRepository{
                     const query = `DELETE FROM  Transaction WHERE TransactionId= ?`
                    
                         connection?.query(query,[transactionId],(err,data)=>{
+                         connection.release()
+                            if(err){
+                                console.log('error querying database',err)
+                                response = 'Failed'
+                               
+                            }else{
+                                console.log('successfully query',data)
+                                response = 'Success'
+                               
+                               
+                            }
+                            resolve(response)
+                         })
+                       
+                    })
+
+            })
+
+           
+                return result
+
+        }
+        catch(error){
+            console.error('Error creating user:', error);
+            return 'Failed'
+        }
+           
+      
+    }
+
+    async CreateServiceProvider(payload:createServiceProviderModel):Promise<string>{
+   
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+            let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+                    
+                  const providerId = `Provider- ${GenerateUniqueId()}`
+                    const query = `INSERT INTO ServiceProviders(ProviderId,CreatedAt,BusinessName,BusinessCategory,BusinessType,RegistrationType,BusinessRegNum,BusinessTaxId,BusinessDescription,CACPhotoPath) VALUES(?,?,?,?,?,?,?,?,?,?)`
+                   
+                        connection?.query(query,[providerId,new Date(),payload.BusinessName,payload.BusinessCategory,payload.BusinessType,payload.RegistrationType,payload.BusinessRegNum,payload.BusinessTaxId,payload.BusinessDescription,payload.CACPhotoPath],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)

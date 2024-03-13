@@ -9,6 +9,7 @@ import PostModel from "../model/PostModel";
 import CommentModel from "../model/CommentModel";
 import createAppointmentModel from "../model/creatAppointmentModel";
 import TransactionModel from "../model/TransactionModel";
+import createServiceProviderModel from "../model/createServiceProviderModel";
 
 @injectable()
 export default class BaseServiceimpl implements BaseService{
@@ -120,6 +121,10 @@ export default class BaseServiceimpl implements BaseService{
    }
    async DeleteTransaction(transactionId:string):Promise<string>{
       return await this.baseRepo.DeleteTransaction(transactionId)
+   }
+
+   async CreateServiceProvider(payload:createServiceProviderModel):Promise<string>{
+      return await this.baseRepo.CreateServiceProvider(payload)
    }
      
 }

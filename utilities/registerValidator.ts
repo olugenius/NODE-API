@@ -1,5 +1,6 @@
 import { RequestHandler, Response } from 'express'
 import { ValidationChain, body, check, validationResult } from 'express-validator'
+import { isValidDateFormat } from './dateFormatter'
 
 
 
@@ -16,7 +17,8 @@ import { ValidationChain, body, check, validationResult } from 'express-validato
   //body('IsVerified').notEmpty().trim().escape(),
   body('Language','Language is required').notEmpty().trim().escape(),
   body('CompanyType','Company type is required').notEmpty().trim().escape(),
-  body('DOB','Date of Birth is required').isDate().toDate(),
+  //body('DOB','Date of Birth is required').isDate().toDate(),
+  body('DOB').custom(isValidDateFormat).withMessage('Date of Birth must be in YYYY-MM-DD format'),
   body('UserRole','Please Pass the User Role').notEmpty().trim().escape(),
   check('Email').optional().isEmail().withMessage('A valid email is required').normalizeEmail(),
 ]
@@ -40,7 +42,7 @@ export const VerifyEmailValidator =
 export const ForgotPasswordValidator = 
 [
   body('Channel','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
-  body('DOB','Must be date format').isDate().toDate(),
+  body('DOB').custom(isValidDateFormat).withMessage('Date of Birth must be in YYYY-MM-DD format'),
   body('Medium','Medium is required').notEmpty().trim().escape(),
 ]
 
