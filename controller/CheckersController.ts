@@ -188,7 +188,7 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
       if(!req.file.path){
         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Document Upload'})
       }
-      console.log('Checkers file path',req.file.path)
+      console.log('Checkers file path',req?.file?.path)
       const workbook = XLSX.readFile(req?.file?.path);
     const sheet_name = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheet_name];
