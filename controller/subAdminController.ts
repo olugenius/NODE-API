@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { Request, Response } from 'express'
 import checker from '../services/Abstraction/checker'
 import { container } from '../Container/appContainer'
 import subAdmin from '../services/Abstraction/subAdmin'
@@ -6,6 +6,7 @@ import { HttpStatus } from '../utilities/HttpstatusCode'
 import { validationResult } from 'express-validator'
 import createSubAdminModel from '../model/createSubAdminModel'
 import { CreateSubAdminValidator } from '../utilities/CommunityValidator'
+import multer from 'multer'
 /**
  * @swagger
  * tags:
@@ -120,13 +121,28 @@ import { CreateSubAdminValidator } from '../utilities/CommunityValidator'
 
 
 const router = express.Router()
+// Set up storage for uploaded files
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/SubAdminImages/'); // Destination folder for uploaded files
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname); // Rename the file
+  }
+});
+
+// Create multer instance with the storage configuration
+const SubAdminUpload = multer({ storage: storage });
 const subAdmin = container.get<subAdmin>('subAdmin')
 
 
-router.post('/subAdmin/create',CreateSubAdminValidator,async(req:any,res:any)=>{
+router.post('/subAdmin/create',SubAdminUpload.single('file'),CreateSubAdminValidator,async(req:any,res:any)=>{
     try{
-  
+    
       const reqBody = <createSubAdminModel>req.body
+      //console.log('file Path',req.protocol + '://' + req.get('host') + req.originalUrl+'/'+req?.file?.path)
+      reqBody.PhotoPath = req?.file?.path || ''
       const error = validationResult(req)
           if(!error.isEmpty()){
             res.status(HttpStatus.STATUS_400).json(error.array())
