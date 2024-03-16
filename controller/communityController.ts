@@ -283,7 +283,7 @@ router.post('/community/create',CreateCommunityValidator,async (req:any,res:any)
           res.status(HttpStatus.STATUS_400).json(error.array())
           return;
         }
-    reqBody.CommunityId = GenerateUniqueId()
+    reqBody.CommunityId = `COM ${GenerateUniqueId()}`
     var response = await community.CreateCommunity(reqBody)
     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Community'})
