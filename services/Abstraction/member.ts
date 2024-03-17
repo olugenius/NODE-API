@@ -12,7 +12,7 @@ export default interface Member{
 //    GetAllAppointment():Promise<any>
 //    GetAppointmentId(Id:number):Promise<string>
 //    GetAppointmentCommunityId(communityId:string):Promise<string>
-   GetAllMembers():Promise<string>
+   GetAllMembers():Promise<any>
    GetMemberByPhoneOrEmail(channel:string):Promise<any>
    
 

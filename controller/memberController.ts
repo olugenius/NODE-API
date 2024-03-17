@@ -9,6 +9,7 @@ import multer from 'multer'
 import XLSX from 'xlsx'
 import { CreateAppointmentValidator } from '../utilities/MembersValidator'
 import { validationResult } from 'express-validator'
+import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
 
 
 /**
@@ -169,6 +170,22 @@ import { validationResult } from 'express-validator'
 
 
 
+/**
+ * @swagger
+ * /api/member/all:
+ *   get:
+ *     summary: Get All Members
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [member] 
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Success Fetched All Members
+ */
 
 
 
@@ -191,7 +208,7 @@ router.post('/member/create',async(req,res)=>{
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Member'})
       }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Member',data:reqBody})
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Member',data:reqBody})
   
     }catch(error){
       console.error('An Error Occurred',error)
@@ -207,7 +224,7 @@ router.post('/member/create',async(req,res)=>{
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update Member'})
       }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Update Member',data:reqBody})
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Update Member',data:reqBody})
   
     }catch(error){
       console.error('An Error Occurred',error)
@@ -223,7 +240,7 @@ router.post('/member/create',async(req,res)=>{
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Member'})
       }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deleted Member'})
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deleted Member'})
   
     }catch(error){
       console.error('An Error Occurred',error)
@@ -240,6 +257,7 @@ router.post('/member/create',async(req,res)=>{
     const data = <memberModel[]>XLSX.utils.sheet_to_json(sheet);
     let successArray:memberModel[] = []
     for(let req of data){
+      req.MemberId = `MEM- ${GenerateUniqueId()}`
       var response = await member.CreateMember(req)
       if(response?.toLowerCase() ===  HttpStatus.STATUS_SUCCESS){
         successArray.push(req)
@@ -248,7 +266,7 @@ router.post('/member/create',async(req,res)=>{
     if(successArray.length < 1){
       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Member'})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created the following Member',data:successArray})
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created the following Member',data:successArray})
   
     }catch(error){
       console.error('An Error Occurred',error)
@@ -265,9 +283,24 @@ router.post('/member/create',async(req,res)=>{
   }
   var response = await member.GetMemberByMemberId(param)
   if(response?.length < 1){
-      res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Member'})
+      return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Member'})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Member',data:response[0]})
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Member',data:response[0]})
+  
+    }catch(error){
+     console.error('An Error Occurred',error)
+     return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
+  
+  })
+
+  router.get('/member/all',async(req,res)=>{
+    try{
+ 
+  var response = <memberModel[]>await member.GetAllMembers()
+  if(response?.length < 1){
+      res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Members'})
+    }
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Members',data:response[0]})
   
     }catch(error){
      console.error('An Error Occurred',error)

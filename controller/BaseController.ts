@@ -912,7 +912,7 @@ router.post('/accessCode/single/create',SingleAccessCodeModelValidator,async(req
         if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
            return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Static Code'})
         }
-        res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Static Code',data:reqBody})
+        return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Static Code',data:reqBody})
     
       }catch(error){
         console.error('An Error Occurred',error)
@@ -931,7 +931,7 @@ router.post('/accessCode/static/create',StaticAccessCodeModelValidator,async(req
         if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
            return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Static Code'})
         }
-        res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Static Code',data:reqBody})
+        return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Static Code',data:reqBody})
     
       }catch(error){
         console.error('An Error Occurred',error)
@@ -950,7 +950,7 @@ router.post('/accessCode/bulk/create',BulkAccessCodeModelValidator,async(req:any
         if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
            return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create bulk Code'})
         }
-        res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Bulk Code',data:reqBody})
+        return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Bulk Code',data:reqBody})
     
       }catch(error){
         console.error('An Error Occurred',error)
@@ -963,7 +963,7 @@ router.get('/accessCode/all',async(req,res)=>{
       if(response?.length < 1){
         res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Access Codes '})
       }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Access Codes',data:response})
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Access Codes',data:response})
   
     }catch(error){
       console.error('An Error Occurred',error)
@@ -983,7 +983,7 @@ router.get('/accessCode/all',async(req,res)=>{
       if(response?.length < 1){
           return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Access code'})
         }
-        res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Access Code',data:response[0]})
+        return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Access Code',data:response[0]})
   
     }catch(error){
       console.error('An Error Occurred',error)
@@ -1003,7 +1003,7 @@ router.post('/forum/create',async(req:any,res:any)=>{
         if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
            return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Forum'})
         }
-        res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Forum',data:reqBody})
+        return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Forum',data:reqBody})
     
       }catch(error){
         console.error('An Error Occurred',error)
@@ -1023,7 +1023,7 @@ router.put('/forum/update/:forumId',async(req:any,res:any)=>{
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update Forum'})
       }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Updated Forum',data:reqBody})
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Updated Forum',data:reqBody})
   
     }catch(error){
       console.error('An Error Occurred',error)
@@ -1042,7 +1042,7 @@ router.delete('/forum/delete/:forumId',async(req:any,res:any)=>{
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Forum'})
       }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deleted Forum'})
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deleted Forum'})
   
     }catch(error){
       console.error('An Error Occurred',error)
@@ -1061,7 +1061,7 @@ router.post('/forum/activate/:forumId',async(req:any,res:any)=>{
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Activate Forum'})
       }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Activated Forum'})
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Activated Forum'})
   
     }catch(error){
       console.error('An Error Occurred',error)
@@ -1080,7 +1080,7 @@ router.post('/forum/deactivate/:forumId',async(req:any,res:any)=>{
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Deactivate Forum'})
       }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deactivated Forum'})
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deactivated Forum'})
   
     }catch(error){
       console.error('An Error Occurred',error)
@@ -1093,7 +1093,7 @@ router.get('/forum/all',async(req,res)=>{
     if(response?.length < 1){
       res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Forums '})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Forums',data:response})
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Forums',data:response})
 
   }catch(error){
     console.error('An Error Occurred',error)
@@ -1111,7 +1111,7 @@ router.get('/forum/:forumId',async(req,res)=>{
     if(response?.length < 1){
         return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Forum'})
       }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Forum',data:response[0]})
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Forum',data:response[0]})
 
   }catch(error){
     console.error('An Error Occurred',error)
@@ -1131,7 +1131,7 @@ router.post('/post/create',async(req:any,res:any)=>{
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Post'})
       }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Post',data:reqBody})
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Post',data:reqBody})
   
     }catch(error){
       console.error('An Error Occurred',error)
@@ -1142,9 +1142,9 @@ router.get('/post/all',async(req,res)=>{
   try{
     var response = await baseService.GetAllPost()
     if(response?.length < 1){
-      res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Posts '})
+      return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Posts '})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Posts',data:response})
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Posts',data:response})
 
   }catch(error){
     console.error('An Error Occurred',error)
@@ -1162,7 +1162,7 @@ router.get('/post/:Id',async(req,res)=>{
     if(response?.length < 1){
         return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Forum'})
       }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Forum',data:response[0]})
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Forum',data:response[0]})
 
   }catch(error){
     console.error('An Error Occurred',error)
@@ -1182,7 +1182,7 @@ router.post('/comment/create',async(req:any,res:any)=>{
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Comment'})
       }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Comment',data:reqBody})
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Comment',data:reqBody})
   
     }catch(error){
       console.error('An Error Occurred',error)
@@ -1202,7 +1202,7 @@ router.put('/comment/update/:Id',async(req:any,res:any)=>{
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update Comment'})
       }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Updated Comment',data:reqBody})
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Updated Comment',data:reqBody})
   
     }catch(error){
       console.error('An Error Occurred',error)
@@ -1221,7 +1221,7 @@ router.delete('/comment/delete/:Id',async(req:any,res:any)=>{
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Comment'})
       }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deleted Comment'})
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deleted Comment'})
   
     }catch(error){
       console.error('An Error Occurred',error)
@@ -1234,7 +1234,7 @@ router.get('/comment/all',async(req,res)=>{
     if(response?.length < 1){
       res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Comments '})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Comments',data:response})
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Comments',data:response})
 
   }catch(error){
     console.error('An Error Occurred',error)
@@ -1252,7 +1252,7 @@ router.get('/comment/:Id',async(req,res)=>{
     if(response?.length < 1){
         return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Comment'})
       }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Comment',data:response[0]})
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Comment',data:response[0]})
 
   }catch(error){
     console.error('An Error Occurred',error)
@@ -1274,7 +1274,7 @@ router.post('/appointment/create',CreateAppointmentValidator,AppointmentUploadXl
     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Appointment'})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Appointment',data:reqBody})
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Appointment',data:reqBody})
 
   }catch(error){
     console.error('An Error Occurred',error)
@@ -1291,7 +1291,7 @@ router.put('/appointment/update',AppointmentUploadXls.single('file'),async(req,r
     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update Appointment'})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Update Appointment',data:reqBody})
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Update Appointment',data:reqBody})
 
   }catch(error){
     console.error('An Error Occurred',error)
@@ -1307,7 +1307,7 @@ router.delete('/appointment/delete/:Id',async(req,res)=>{
     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Appointment'})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Delete Appointment'})
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Delete Appointment'})
 
   }catch(error){
     console.error('An Error Occurred',error)
@@ -1321,9 +1321,9 @@ router.get('/appointment/all',async(req,res)=>{
     console.log('entered appointment endpoint')
     var response = await baseService.GetAllAppointment()
     if(response?.length < 1){
-      res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Appointment '})
+      return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Appointment '})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Appointment',data:response})
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Appointment',data:response})
 
   }catch(error){
     console.error('An Error Occurred',error)
@@ -1340,9 +1340,9 @@ if(!param){
 }
 var response = await baseService.GetAppointmentId(Number(param))
 if(response?.length < 1){
-    res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Appointment'})
+   return  res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Appointment'})
   }
-  res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Appointment',data:response[0]})
+  return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Appointment',data:response[0]})
 
   }catch(error){
    console.error('An Error Occurred',error)
@@ -1358,9 +1358,9 @@ if(!param){
 }
 var response = await baseService.GetAppointmentCommunityId(param)
 if(response?.length < 1){
-    res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Appointment'})
+    return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Appointment'})
   }
-  res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Appointment',data:response[0]})
+  return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Appointment',data:response[0]})
 
   }catch(error){
    console.error('An Error Occurred',error)
@@ -1376,7 +1376,7 @@ router.post('/transaction/create',async(req:any,res:any)=>{
     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Transaction'})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Transaction',data:reqBody})
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Transaction',data:reqBody})
 
   }catch(error){
     console.error('An Error Occurred',error)
@@ -1393,7 +1393,7 @@ router.delete('/transaction/delete/:transactionId',async(req:any,res:any)=>{
     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Transaction'})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Delete Transaction'})
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Delete Transaction'})
 
   }catch(error){
     console.error('An Error Occurred',error)
@@ -1406,9 +1406,9 @@ router.get('/transaction/all',async(req,res)=>{
   try{
     var response = await baseService.GetAllTransaction()
     if(response?.length < 1){
-      res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch All transaction '})
+      return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch All transaction '})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch All transaction',data:response})
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch All transaction',data:response})
 
   }catch(error){
     console.error('An Error Occurred',error)
@@ -1422,9 +1422,9 @@ router.get('/transaction/:transactionId',async(req,res)=>{
     const param = req.params.transactionId
     var response = await baseService.GetTransactionByTransactionId(param)
     if(response?.length < 1){
-      res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch transaction '})
+      return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch transaction '})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch transaction',data:response})
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch transaction',data:response})
 
   }catch(error){
     console.error('An Error Occurred',error)

@@ -302,7 +302,7 @@ router.get('/community',async(req:any,res)=>{
   if(response?.length < 1){
     return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Fetch Communities'})
   }
-  res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Fetched Community',data:response})
+  return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Fetched Community',data:response})
 
   }catch(error){
     console.error('An Error Occurred',error)
@@ -318,7 +318,7 @@ router.get('/community/:communityId',async(req,res)=>{
   if(response?.length < 1){
     return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Fetch Communities'})
   }
-  res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Fetched Community',data:response[0]})
+  return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Fetched Community',data:response[0]})
        
 
   }catch(error){
@@ -335,7 +335,7 @@ router.get('/community/admin/profile/:phone',async(req,res)=>{
   if(response?.length < 1){
     return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Fetch Community Admin Profile'})
   }
-  res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Fetched Community Admin Profile',data:response[0]})
+  return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Fetched Community Admin Profile',data:response[0]})
        
 
   }catch(error){
@@ -351,7 +351,7 @@ router.delete('/community/delete/:Id',async(req,res)=>{
     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Community'})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deleted Community'})
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deleted Community'})
 
   }catch(error){
     console.error('An Error Occurred',error)
@@ -381,7 +381,7 @@ router.patch('/community/deactivate/:Id',async(req,res)=>{
     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Deactivate Community'})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deactivate Community'})
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deactivate Community'})
 
   }catch(error){
     console.error('An Error Occurred',error)

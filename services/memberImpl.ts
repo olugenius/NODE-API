@@ -53,7 +53,7 @@ export default class MemberImpl implements Member{
    //      return await this.memberRepo.GetAppointmentCommunityId(communityId)
    //   }
   
-     async GetAllMembers():Promise<string>{
+     async GetAllMembers():Promise<any>{
   
         return await this.memberRepo.GetAllMembers()
      }

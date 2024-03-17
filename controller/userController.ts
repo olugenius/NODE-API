@@ -483,7 +483,7 @@ router.post('/login',LoginValidator,async(req:Request,res:Response)=>{
                 const accessToken = jwtHandler.generateJWT(claims)
                 const refreshToken = await jwtHandler.generateRefreshToken(reqBody.Channel)
                  
-               res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Login Successful',accessToken:accessToken,refreshToken:refreshToken})
+               return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Login Successful',accessToken:accessToken,refreshToken:refreshToken})
                
     
     
@@ -530,7 +530,7 @@ router.post('/refreshToken',RefreshTokenValidator,async(req:Request,res:Response
                //generate jwt Token
                const accessToken = jwtHandler.generateJWT(response[0])
                const refreshToken = await jwtHandler.generateRefreshToken(response[0].Phone)
-             res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Token Generated Successfully',accessToken:accessToken,refreshToken:refreshToken})
+             return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Token Generated Successfully',accessToken:accessToken,refreshToken:refreshToken})
              
   
 
@@ -605,7 +605,7 @@ async (req:any,res:any)=>{
             return res.status(HttpStatus.STATUS_400).json({status: response.status,message:'Error registering user'})
             
           }
-          res.status(HttpStatus.STATUS_200).json({status:response.status,message:'Successfully registered user',data:reqBody})
+          return res.status(HttpStatus.STATUS_200).json({status:response.status,message:'Successfully registered user',data:reqBody})
 
      
 
@@ -682,7 +682,7 @@ router.post('/register/verify',VerifyEmailValidator,async(req:Request,res:Respon
           res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
           return;
       }
-         res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Email Verification Successful, please proceed to login'})
+         return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Email Verification Successful, please proceed to login'})
     }
 
     
@@ -714,7 +714,7 @@ router.post('/register/verify',VerifyEmailValidator,async(req:Request,res:Respon
             res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
             return;
         }
-        res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Email Verification Successful, please proceed to login'})
+        return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Email Verification Successful, please proceed to login'})
        
 
         
@@ -842,7 +842,7 @@ router.post('/forgotPassword/verify',ForgotPasswordVerifyValidator,async(req:Req
             res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'forgot Password Verification Failed, Please try again'})
             return;
         }
-        res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'forgot Password Verification Successful',Email:reqBody.Channel})
+        return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'forgot Password Verification Successful',Email:reqBody.Channel})
        
   
         //  //comment this when going to production environment
@@ -887,7 +887,7 @@ router.post('/resetPassword',resetPasswordValidator,async(req:Request,res:Respon
             res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Reset Password Failed, Please try again'})
             return;
         }
-        res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Password Reset Successful, Please proceed to login'})
+        return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Password Reset Successful, Please proceed to login'})
        
   
 
@@ -920,7 +920,7 @@ router.post('/superAdmin/createPassword',createPasswordValidator,async(req:Reque
       return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Super Admin Password Created Successful, Please proceed to login'})
      
     }
-    res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Super Admin is not created yet'})
+    return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Super Admin is not created yet'})
 
    
         
@@ -956,7 +956,7 @@ router.post('/createPassword',createPasswordValidator,async(req:Request,res:Resp
             res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Password Create Failed, Please try again'})
             return;
         }
-        res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Password Created Successful, Please proceed to login'})
+        return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Password Created Successful, Please proceed to login'})
        
   
 
@@ -982,7 +982,7 @@ router.delete('/account/delete/:Id',async(req:Request,res:Response)=>{
             res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Account Delete Failed, Please try again'})
             return;
         }
-        res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Account Deleted Successful'})
+        return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Account Deleted Successful'})
        
   
 
@@ -1014,7 +1014,7 @@ router.post('/updateEmail',async(req:Request,res:Response)=>{
       return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Email Updated Successful,'})
      
     }
-    res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Update Failed'})
+    return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Update Failed'})
 
    
         

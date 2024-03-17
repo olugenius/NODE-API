@@ -152,7 +152,7 @@ router.post('/subAdmin/create',SubAdminUpload.single('file'),CreateSubAdminValid
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Community'})
       }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Community'})
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Community'})
   
     }catch(error){
       console.error('An Error Occurred',error)
@@ -164,7 +164,7 @@ router.post('/subAdmin/create',SubAdminUpload.single('file'),CreateSubAdminValid
     try{
       var response = await subAdmin.GetAllSubAdmins()
       if(response?.length < 1){
-        res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch SubAdmins'})
+        return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch SubAdmins'})
       }
       res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch subAdmin',data:response})
   
@@ -182,9 +182,9 @@ router.post('/subAdmin/create',SubAdminUpload.single('file'),CreateSubAdminValid
   }
   var response = await subAdmin.GetSubAdminsById(Number(param))
   if(response?.length < 1){
-      res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch SubAdmins'})
+      return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch SubAdmins'})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch subAdmin',data:response[0]})
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch subAdmin',data:response[0]})
   
     }catch(error){
      console.error('An Error Occurred',error)
@@ -201,9 +201,9 @@ router.post('/subAdmin/create',SubAdminUpload.single('file'),CreateSubAdminValid
   }
   var response = await subAdmin.GetSubAdminsByCommunityId(param)
   if(response?.length < 1){
-      res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch SubAdmins'})
+      return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch SubAdmins'})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch subAdmin',data:response[0]})
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch subAdmin',data:response[0]})
   
     }catch(error){
      console.error('An Error Occurred',error)

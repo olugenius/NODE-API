@@ -173,7 +173,7 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Community'})
       }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Community',data:reqBody})
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Community',data:reqBody})
   
     }catch(error){
       console.error('An Error Occurred',error)
@@ -200,7 +200,7 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
     if(successArray.length < 1){
       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Checkers'})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created the following Checkers',data:successArray})
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created the following Checkers',data:successArray})
   
 
     }catch(err){
@@ -214,9 +214,9 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
       console.log('entered checkers endpoint')
       var response = await checker.GetAllCheckers()
       if(response?.length < 1){
-        res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Checkers '})
+        return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Checkers '})
       }
-      res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Checkers',data:response})
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Checkers',data:response})
   
     }catch(error){
       console.error('An Error Occurred',error)
@@ -237,7 +237,7 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
       if(response?.length < 1){
           return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Checkers'})
         }
-        res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Checkers',data:response[0]})
+        return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Checkers',data:response[0]})
   
     }catch(error){
       console.error('An Error Occurred',error)
@@ -256,7 +256,7 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
       if(response?.length < 1){
           return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Checkers'})
         }
-        res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Checkers',data:response[0]})
+        return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Checkers',data:response[0]})
   
     }catch(error){
       console.error('An Error Occurred',error)
