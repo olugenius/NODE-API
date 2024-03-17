@@ -182,13 +182,16 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
   })
   
   
-  router.post('/checkers/createXls',uploadXls.single('file'),async(req:any,res:any)=>{
+  router.post('/checkers/createXls',async(req:any,res:any)=>{
     try{
-      if(req.file.path === undefined){
-        console.log('Checkers file path',req?.file?.path)
-        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Document Upload'})
-      }
-      
+    
+      uploadXls.single('file')(req,res,(err)=>{
+        if(err){
+          console.log('Error Uploading fILE',err)
+          return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_400,Message:'Error Uploading file'})  
+           }
+      })
+      console.log('Error Uploading fILE',JSON.stringify(req.file))
       const workbook = XLSX.readFile(req?.file?.path);
     const sheet_name = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheet_name];
