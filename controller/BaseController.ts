@@ -895,7 +895,7 @@ import TransactionModel from '../model/TransactionModel'
 
 const router = express.Router()
 let AppointmentUploadXls = multer({
-  dest:'public/AppointmentUploads'
+  dest:'../Uploads/AppointmentUploads/'
 })
 
 const baseService = container.get<BaseService>('BaseService')

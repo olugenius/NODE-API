@@ -177,11 +177,11 @@ const router = express.Router()
 const member = container.get<Member>('Member')
 
 let uploadXls = multer({
-    dest:'public/XLSUploads'
+    dest:'../Uploads/XLSUploads/'
   })
   
   let AppointmentUploadXls = multer({
-    dest:'public/AppointmentUploads'
+    dest:'../Uploads/AppointmentUploads/'
   })
 
 router.post('/member/create',async(req,res)=>{
