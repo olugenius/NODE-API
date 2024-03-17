@@ -184,10 +184,11 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
   
   router.post('/checkers/createXls',uploadXls.single('file'),async(req:any,res:any)=>{
     try{
-      if(!req.file.path){
+      if(req.file.path === undefined){
+        console.log('Checkers file path',req?.file?.path)
         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Document Upload'})
       }
-      console.log('Checkers file path',req?.file?.path)
+      
       const workbook = XLSX.readFile(req?.file?.path);
     const sheet_name = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheet_name];
@@ -207,7 +208,7 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
 
     }catch(err){
       console.error('An Error Occurred',err)
-      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})      }
     
   })
   
@@ -222,7 +223,7 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})      }
       
   })
   
@@ -243,7 +244,7 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})      }
       
   })
   
@@ -262,7 +263,7 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})      }
       
   })
 
