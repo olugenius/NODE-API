@@ -432,7 +432,7 @@ const checkerRepo = container.get<checker>('checker')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, '../Uploads/images/'); // Destination folder for uploaded files
+    cb(null, 'tmp/Uploads/images/'); // Destination folder for uploaded files
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + '-' + file.originalname); // Rename the file
