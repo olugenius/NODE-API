@@ -272,7 +272,7 @@ const community = container.get<Community>('Community')
 // })
 
 let OrganizationUpload = multer({
-  dest:'tmp/Uploads/OrganizationUploads/'
+  dest:'public/OrganizationUploads/'
 })
 
 router.post('/community/create',CreateCommunityValidator,async (req:any,res:any)=>{

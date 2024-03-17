@@ -125,7 +125,7 @@ const router = express.Router()
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'tmp/Uploads/SubAdminImages/'); // Destination folder for uploaded files
+    cb(null, 'public/SubAdminImages/'); // Destination folder for uploaded files
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + '-' + file.originalname); // Rename the file

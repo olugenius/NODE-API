@@ -158,7 +158,7 @@ const router = express.Router()
 const checker = container.get<checker>('checker')
 
 let uploadXls = multer({
-    dest:'tmp/Uploads/XLSUploads/'
+    dest:'public/XLSUploads/'
   })
   
 router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
