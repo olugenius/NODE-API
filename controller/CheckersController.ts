@@ -7,6 +7,7 @@ import createCheckersModel from '../model/createcheckersModel'
 import { CreateCheckerValidator } from '../utilities/CommunityValidator'
 import { validationResult } from 'express-validator'
 import multer from 'multer'
+import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
 
 /**
  * @swagger
@@ -154,6 +155,84 @@ import multer from 'multer'
  *               message:  Successfully got Checkers by communityId
  */
 
+
+/**
+ * @swagger
+ * /api/checker/delete/{CheckerId}:
+ *   delete:
+ *     summary: Delete checkers By Id
+ *     parameters:
+ *       - in: path
+ *         name: CheckerId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the checker to Delete
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [checker]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Checker is Delete Successfully
+ */
+
+
+
+/**
+ * @swagger
+ * /api/checker/deactivate/{CheckerId}:
+ *   patch:
+ *     summary: Deactivate Checker By Id
+ *     parameters:
+ *       - in: path
+ *         name: CheckerId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the checker to Deactivate
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [checker]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: checker is Deactivated Successfully
+ */
+
+
+/**
+ * @swagger
+ * /api/checker/activate/{CheckerId}:
+ *   patch:
+ *     summary: Activate Checker By Id
+ *     parameters:
+ *       - in: path
+ *         name: CheckerId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the Checker to Activate
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [checker]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Checker is Activated Successfully
+ */
+
+
+
 const router = express.Router()
 const checker = container.get<checker>('checker')
 
@@ -261,6 +340,51 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
     }catch(error){
       console.error('An Error Occurred',error)
       return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})      }
+      
+  })
+
+  router.delete('/checkers/delete/:CheckerId',async(req,res)=>{
+    try{
+      const Id = req.params.CheckerId
+      var response = await checker.DeleteCheckers(Id)
+      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete checkers'})
+      }
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deleted Checkers'})
+  
+    }catch(error){
+      console.error('An Error Occurred',error)
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+      
+  })
+  
+  router.patch('/checkers/activate/:CheckerId',async(req,res)=>{
+    try{
+      const Id = req.params.CheckerId
+      var response = await checker.ActivateCheckers(Id)
+      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Activate Checker'})
+      }
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Activate Checker'})
+  
+    }catch(error){
+      console.error('An Error Occurred',error)
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+      
+  })
+  
+  router.patch('/checkers/deactivate/:CheckerId',async(req,res)=>{
+    try{
+      const Id = req.params.CheckerId
+      var response = await checker.DeactivateCheckers(Id)
+      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Deactivate Checkers'})
+      }
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deactivate checkers'})
+  
+    }catch(error){
+      console.error('An Error Occurred',error)
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
       
   })
 

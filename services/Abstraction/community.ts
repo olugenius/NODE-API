@@ -16,9 +16,9 @@ export default interface Community{
     // GetSubAdminsById(Id:number):Promise<any>
     // GetCheckersByCommunityId(communityId:number):Promise<any | null>
     // GetSubAdminsByCommunityId(communityId:string):Promise<any>
-    DeleteCommunity(Id:number):Promise<any | null>
-    DeactivateCommunity(Id:number):Promise<any | null>
-    ActivateCommunity(Id:number):Promise<any | null>
+    DeleteCommunity(Id:string):Promise<any | null>
+    DeactivateCommunity(Id:string):Promise<any | null>
+    ActivateCommunity(Id:string):Promise<any | null>
     CreateOrganization(payload:OrganizationModel):Promise<string>
     GetCommunityAdminProfile(Phone:string):Promise<any>
     // getCheckersByPhoneOrEmail(channel:string):Promise<any | null>

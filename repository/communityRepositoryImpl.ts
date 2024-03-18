@@ -157,7 +157,7 @@ export default class communityRepositoryImpl implements communityRepository{
       
     }
 
-    async DeleteCommunity(Id:number):Promise<any | null>{
+    async DeleteCommunity(Id:string):Promise<any | null>{
         let response : string = ''
         try{
 
@@ -171,7 +171,7 @@ export default class communityRepositoryImpl implements communityRepository{
                     }
                     
                   
-                    const query = `UPDATE Community SET IsActive = ? WHERE Id = ?`
+                    const query = `UPDATE Community SET IsActive = ? WHERE CommunityId = ?`
                    
                         connection?.query(query,[3,Id],(err,data)=>{
                          connection.release()
@@ -202,7 +202,7 @@ export default class communityRepositoryImpl implements communityRepository{
         }
        }
   
-    async DeactivateCommunity(Id:number):Promise<any | null>{
+    async DeactivateCommunity(Id:string):Promise<any | null>{
         let response : string = ''
         try{
 
@@ -216,7 +216,7 @@ export default class communityRepositoryImpl implements communityRepository{
                     }
                     
                   
-                    const query = `UPDATE Community SET IsActive = ? WHERE Id = ?`
+                    const query = `UPDATE Community SET IsActive = ? WHERE CommunityId = ?`
                    
                         connection?.query(query,[2,Id],(err,data)=>{
                          connection.release()
@@ -248,7 +248,7 @@ export default class communityRepositoryImpl implements communityRepository{
 
        }
   
-    async ActivateCommunity(Id:number):Promise<any | null>{
+    async ActivateCommunity(Id:string):Promise<any | null>{
         let response : string = ''
         try{
 
@@ -262,7 +262,7 @@ export default class communityRepositoryImpl implements communityRepository{
                     }
                     
                   
-                    const query = `UPDATE Community SET IsActive = ? WHERE Id = ?`
+                    const query = `UPDATE Community SET IsActive = ? WHERE CommunityId = ?`
                    
                         connection?.query(query,[1,Id],(err,data)=>{
                          connection.release()

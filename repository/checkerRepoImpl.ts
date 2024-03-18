@@ -3,6 +3,7 @@ import checkerRepo from "./Abstraction/checkerRepo";
 import conn from './dbContext/dbConnection'
 import createCheckersModel from "../model/createcheckersModel";
 import { injectable } from "inversify";
+import { GenerateUniqueId } from "../utilities/GenerateUniqueId";
 
 @injectable()
 export default class checkerRepoImpl implements checkerRepo{
@@ -33,9 +34,9 @@ export default class checkerRepoImpl implements checkerRepo{
                     }
                     
                   
-                    const query = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint) VALUES(?,?,?,?,?,?,?,?,?)`
-                   
-                        connection?.query(query,[payload.FirstName,payload.LastName,payload.Phone,payload.Email,payload.DOB,payload.Gender,payload.NIN,payload.CommunityId,payload.CheckPoint],(err,data)=>{
+                    const query = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint,IsActive,CheckerId) VALUES(?,?,?,?,?,?,?,?,?,?,?)`
+                     const checkerId = `Check- ${GenerateUniqueId()}`
+                        connection?.query(query,[payload.FirstName,payload.LastName,payload.Phone,payload.Email,payload.DOB,payload.Gender,payload.NIN,payload.CommunityId,payload.CheckPoint,1,checkerId],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)
@@ -214,6 +215,142 @@ export default class checkerRepoImpl implements checkerRepo{
         }
 
     }
+
+    async DeleteCheckers(Id:string):Promise<any | null>{
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+            let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+                    
+                  
+                    const query = `UPDATE Checkers SET IsActive = ? WHERE CheckerId = ?`
+                   
+                        connection?.query(query,[3,Id],(err,data)=>{
+                         connection.release()
+                            if(err){
+                                console.log('error querying database',err)
+                                response = 'Failed'
+                               
+                            }else{
+                                console.log('successfully query',data)
+                                response = 'Success'
+                               
+                               
+                            }
+                            resolve(response)
+                         })
+                       
+                    })
+
+            })
+
+           
+                return result
+
+        }
+        catch(error){
+            console.error('Error Deleting community:', error);
+            return 'Failed'
+        }
+       }
+  
+    async DeactivateCheckers(Id:string):Promise<any | null>{
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+            let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+                    
+                  
+                    const query = `UPDATE Checkers SET IsActive = ? WHERE CheckerId = ?`
+                   
+                        connection?.query(query,[2,Id],(err,data)=>{
+                         connection.release()
+                            if(err){
+                                console.log('error querying database',err)
+                                response = 'Failed'
+                               
+                            }else{
+                                console.log('successfully query',data)
+                                response = 'Success'
+                               
+                               
+                            }
+                            resolve(response)
+                         })
+                       
+                    })
+
+            })
+
+           
+                return result
+
+        }
+        catch(error){
+            console.error('Error Deactivate community:', error);
+            return 'Failed'
+        }
+
+       }
+  
+    async ActivateCheckers(Id:string):Promise<any | null>{
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+            let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+                    
+                  
+                    const query = `UPDATE Checkers SET IsActive = ? WHERE CheckerId = ?`
+                   
+                        connection?.query(query,[1,Id],(err,data)=>{
+                         connection.release()
+                            if(err){
+                                console.log('error querying database',err)
+                                response = 'Failed'
+                               
+                            }else{
+                                console.log('successfully query',data)
+                                response = 'Success'
+                               
+                               
+                            }
+                            resolve(response)
+                         })
+                       
+                    })
+
+            })
+
+           
+                return result
+
+        }
+        catch(error){
+            console.error('Error Activate community:', error);
+            return 'Failed'
+        }
+       }
 
 
 }

@@ -7,4 +7,7 @@ export default interface checker{
     GetAllCheckers(): Promise<any>
     GetCheckersByCommunityId(communityId:number):Promise<any | null>
     getCheckersByPhoneOrEmail(channel:string):Promise<any | null>
+    ActivateCheckers(Id:string):Promise<any | null>
+    DeactivateCheckers(Id:string):Promise<any | null>
+    DeleteCheckers(Id:string):Promise<any | null>
 }

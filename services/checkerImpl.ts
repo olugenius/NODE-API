@@ -27,4 +27,14 @@ export default class checkerImpl implements checker{
 
      }
 
+     async ActivateCheckers(Id:string):Promise<any | null>{
+        return await this.checkerRepo.ActivateCheckers(Id)
+     }
+     async DeactivateCheckers(Id:string):Promise<any | null>{
+        return await this.checkerRepo.DeactivateCheckers(Id)
+     }
+     async DeleteCheckers(Id:string):Promise<any | null>{
+        return await this.checkerRepo.DeleteCheckers(Id)
+     }
+
 }

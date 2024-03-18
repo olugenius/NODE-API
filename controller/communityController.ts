@@ -132,12 +132,12 @@ import OrganizationModel from '../model/OrganizationModel'
 
 /**
  * @swagger
- * /api/community/delete/{Id}:
+ * /api/community/delete/{CommunityId}:
  *   delete:
  *     summary: Delete Community By Id
  *     parameters:
  *       - in: path
- *         name: communityId
+ *         name: CommunityId
  *         required: true
  *         schema:
  *           type: string
@@ -158,12 +158,12 @@ import OrganizationModel from '../model/OrganizationModel'
 
 /**
  * @swagger
- * /api/community/deactivate/{Id}:
+ * /api/community/deactivate/{CommunityId}:
  *   patch:
  *     summary: Deactivate Community By Id
  *     parameters:
  *       - in: path
- *         name: communityId
+ *         name: CommunityId
  *         required: true
  *         schema:
  *           type: string
@@ -183,12 +183,12 @@ import OrganizationModel from '../model/OrganizationModel'
 
 /**
  * @swagger
- * /api/community/activate/{Id}:
+ * /api/community/activate/{CommunityId}:
  *   patch:
  *     summary: Activate Community By Id
  *     parameters:
  *       - in: path
- *         name: communityId
+ *         name: CommunityId
  *         required: true
  *         schema:
  *           type: string
@@ -344,10 +344,10 @@ router.get('/community/admin/profile/:phone',async(req,res)=>{
 
 })
 
-router.delete('/community/delete/:Id',async(req,res)=>{
+router.delete('/community/delete/:CommunityId',async(req,res)=>{
   try{
-    const Id = req.params.Id
-    var response = await community.DeleteCommunity(Number(Id))
+    const Id = req.params.CommunityId
+    var response = await community.DeleteCommunity(Id)
     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Community'})
     }
@@ -359,10 +359,10 @@ router.delete('/community/delete/:Id',async(req,res)=>{
     
 })
 
-router.patch('/community/activate/:Id',async(req,res)=>{
+router.patch('/community/activate/:CommunityId',async(req,res)=>{
   try{
-    const Id = req.params.Id
-    var response = await community.ActivateCommunity(Number(Id))
+    const Id = req.params.CommunityId
+    var response = await community.ActivateCommunity(Id)
     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Activate Community'})
     }
@@ -374,10 +374,10 @@ router.patch('/community/activate/:Id',async(req,res)=>{
     
 })
 
-router.patch('/community/deactivate/:Id',async(req,res)=>{
+router.patch('/community/deactivate/:CommunityId',async(req,res)=>{
   try{
-    const Id = req.params.Id
-    var response = await community.DeactivateCommunity(Number(Id))
+    const Id = req.params.CommunityId
+    var response = await community.DeactivateCommunity(Id)
     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Deactivate Community'})
     }

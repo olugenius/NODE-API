@@ -31,15 +31,15 @@ export default class CommunityImpl implements Community{
        return await this.communityRepo.createCommunity(payload)
     }
 
-    async DeleteCommunity(Id:number):Promise<any | null>{
+    async DeleteCommunity(Id:string):Promise<any | null>{
       return await this.communityRepo.DeleteCommunity(Id)
      }
 
-     async DeactivateCommunity(Id:number):Promise<any | null>{
+     async DeactivateCommunity(Id:string):Promise<any | null>{
       return await this.communityRepo.DeactivateCommunity(Id)
      }
 
-     async ActivateCommunity(Id:number):Promise<any | null>{
+     async ActivateCommunity(Id:string):Promise<any | null>{
       return await this.communityRepo.ActivateCommunity(Id)
      }
      async GetCommunityAdminProfile(Phone:string):Promise<any>{

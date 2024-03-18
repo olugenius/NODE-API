@@ -15,9 +15,9 @@ export default interface communityRepository{
     // GetAllSubAdmins():Promise<any|null>
     // GetSubAdminsById(Id:number):any
     // GetSubAdminsByCommunityId(communityId:string):any
-    ActivateCommunity(Id:number):Promise<any | null>
-    DeactivateCommunity(Id:number):Promise<any | null>
-    DeleteCommunity(Id:number):Promise<any | null>
+    ActivateCommunity(Id:string):Promise<any | null>
+    DeactivateCommunity(Id:string):Promise<any | null>
+    DeleteCommunity(Id:string):Promise<any | null>
     GetCommunityAdminProfile(Phone:string):Promise<any>
     CreateOrganization(payload:OrganizationModel):Promise<string>
     //getCheckersByPhoneOrEmail(channel:string):Promise<any | null>
