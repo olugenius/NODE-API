@@ -576,7 +576,7 @@ router.post('/organization/create',OrganizationUpload.single('file'),async(req:a
     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Organization'})
     }
-    res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Organization'})
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Organization'})
 
   }catch(error){
     console.error('An Error Occurred',error)
