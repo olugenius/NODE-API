@@ -781,7 +781,7 @@ router.post('/forgotPassword/sendMail',ForgotPasswordValidator,async(req:Request
                 if(!emailSMSResult){
                   return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:`${reqBody.Medium} sending failed, please try again`})
                 }
-                return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Email Sent Successfully'})
+                return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Email Sent Successfully',Channel:`${reqBody.Channel}`,Medium: `${reqBody.Medium}`})
 
     }
 
