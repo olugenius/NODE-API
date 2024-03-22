@@ -382,7 +382,7 @@ const router = express.Router()
  *         description: ID of the Account to delete
  *     security: 
  *      - APIKeyHeader: []
- *     tags: [Member]
+ *     tags: [User]
  *     responses:
  *       200:
  *         description: Successful response

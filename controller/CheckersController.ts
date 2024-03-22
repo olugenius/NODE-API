@@ -173,7 +173,7 @@ import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
  *         description: ID of the checker to Delete
  *     security: 
  *      - APIKeyHeader: []
- *     tags: [checkers]
+ *     tags: [Checkers]
  *     responses:
  *       200:
  *         description: Successful response
@@ -199,7 +199,7 @@ import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
  *         description: ID of the checker to Deactivate
  *     security: 
  *      - APIKeyHeader: []
- *     tags: [checkers]
+ *     tags: [Checkers]
  *     responses:
  *       200:
  *         description: Successful response
@@ -224,7 +224,7 @@ import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
  *         description: ID of the Checker to Activate
  *     security: 
  *      - APIKeyHeader: []
- *     tags: [checkers]
+ *     tags: [Checkers]
  *     responses:
  *       200:
  *         description: Successful response

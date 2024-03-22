@@ -178,7 +178,7 @@ import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
  *     summary: Get All Members
  *     security: 
  *      - APIKeyHeader: []
- *     tags: [member] 
+ *     tags: [Member] 
  *     responses:
  *       200:
  *         description: Successful response
