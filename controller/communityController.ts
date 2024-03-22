@@ -60,7 +60,7 @@ import { Authorize } from '../middleware/authorization'
  *         content:
  *           application/json:
  *             example:
- *               message: Communit Created Successfuly
+ *               message: Community Created Successfuly
  */
 
 
@@ -79,6 +79,7 @@ import { Authorize } from '../middleware/authorization'
  *           application/json:
  *             example:
  *               message: Success Fetched All Communities
+ *               data: []
  */
 
 /**
@@ -103,6 +104,7 @@ import { Authorize } from '../middleware/authorization'
  *           application/json:
  *             example:
  *               message: Community is fetch by communityId Successfully
+ *               data: {}
  */
 
 

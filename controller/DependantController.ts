@@ -123,6 +123,7 @@ import UpdateDependantModel from '../model/UpdateDependantModel'
  *           application/json:
  *             example:
  *               message:  Successfully got Dependant profile by channel
+ *               data: {}
  */
 
 
@@ -148,6 +149,7 @@ import UpdateDependantModel from '../model/UpdateDependantModel'
  *           application/json:
  *             example:
  *               message:  Successfully got All Dependant Attached to a creator
+ *               data: []
  */
 
 
@@ -173,6 +175,7 @@ import UpdateDependantModel from '../model/UpdateDependantModel'
  *           application/json:
  *             example:
  *               message:  Successfully got Dependant by channel
+ *               data: {}
  */
 
 

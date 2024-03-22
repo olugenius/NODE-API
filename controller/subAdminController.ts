@@ -67,6 +67,7 @@ import multer from 'multer'
  *           application/json:
  *             example:
  *               message:  Successfully got All SubAdmins
+ *               data: []
  */
 
 
@@ -92,6 +93,7 @@ import multer from 'multer'
  *           application/json:
  *             example:
  *               message:  Successfully got SubAdmin by Id
+ *               data: {}
  */
 
 
@@ -117,6 +119,7 @@ import multer from 'multer'
  *           application/json:
  *             example:
  *               message:  Successfully got subAdmin by communityId
+ *               data: {}
  */
 
 

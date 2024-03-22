@@ -159,6 +159,7 @@ import BusinessCategoryModel from '../model/BusinessCategoryModel'
  *           application/json:
  *             example:
  *               message:  Successfully got All Access Code
+ *               data: []
  */
 
 
@@ -185,6 +186,7 @@ import BusinessCategoryModel from '../model/BusinessCategoryModel'
  *           application/json:
  *             example:
  *               message:  Successfully got Access Code by Id
+ *               data: {}
  */
 
 
@@ -363,6 +365,7 @@ import BusinessCategoryModel from '../model/BusinessCategoryModel'
  *           application/json:
  *             example:
  *               message:  Successfully got All Forum
+ *               data: []
  */
 
 
@@ -388,6 +391,7 @@ import BusinessCategoryModel from '../model/BusinessCategoryModel'
  *           application/json:
  *             example:
  *               message:  Successfully got Forum by forumId
+ *               data: {}
  */
 
 
@@ -440,6 +444,7 @@ import BusinessCategoryModel from '../model/BusinessCategoryModel'
  *           application/json:
  *             example:
  *               message:  Successfully got All Post
+ *               data: []
  */
 
 
@@ -465,6 +470,7 @@ import BusinessCategoryModel from '../model/BusinessCategoryModel'
  *           application/json:
  *             example:
  *               message:  Successfully got Post by Id
+ *               data: {}
  */
 
 
@@ -578,6 +584,7 @@ import BusinessCategoryModel from '../model/BusinessCategoryModel'
  *           application/json:
  *             example:
  *               message:  Successfully got All Comments
+ *               data: []
  */
 
 
@@ -604,6 +611,7 @@ import BusinessCategoryModel from '../model/BusinessCategoryModel'
  *           application/json:
  *             example:
  *               message:  Successfully got comment by Id
+ *               data: {}
  */
 
 
@@ -737,6 +745,7 @@ import BusinessCategoryModel from '../model/BusinessCategoryModel'
  *           application/json:
  *             example:
  *               message:  Successfully got Appointment by Id
+ *               data: {}
  */
 
 
@@ -762,6 +771,7 @@ import BusinessCategoryModel from '../model/BusinessCategoryModel'
  *           application/json:
  *             example:
  *               message:  Successfully got Appointment by communityId
+ *               data: {}
  */
 
 
@@ -780,6 +790,7 @@ import BusinessCategoryModel from '../model/BusinessCategoryModel'
  *           application/json:
  *             example:
  *               message:  Successfully got All Appointment
+ *               data: []
  */
 
 
@@ -866,6 +877,7 @@ import BusinessCategoryModel from '../model/BusinessCategoryModel'
  *           application/json:
  *             example:
  *               message:  Successfully got All transaction
+ *               data: []
  */
 
 
@@ -891,6 +903,7 @@ import BusinessCategoryModel from '../model/BusinessCategoryModel'
  *           application/json:
  *             example:
  *               message:  Successfully got Transaction by transactionId
+ *               data: {}
  */
 
 
@@ -974,6 +987,7 @@ import BusinessCategoryModel from '../model/BusinessCategoryModel'
  *           application/json:
  *             example:
  *               message:  Successfully got All Business Category
+ *               data: []
  */
 
 
@@ -1000,6 +1014,7 @@ import BusinessCategoryModel from '../model/BusinessCategoryModel'
  *           application/json:
  *             example:
  *               message:  Successfully got Business Category by Id
+ *               data:{}
  */
 
 

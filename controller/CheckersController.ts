@@ -103,6 +103,7 @@ import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
  *           application/json:
  *             example:
  *               message: Successfully get all checkers
+ *               data: []
  */
 
 
@@ -128,6 +129,7 @@ import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
  *           application/json:
  *             example:
  *               message:  Successfully got Checkers by Id
+ *               data: {}
  */
 
 
@@ -153,6 +155,7 @@ import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
  *           application/json:
  *             example:
  *               message:  Successfully got Checkers by communityId
+ *               data: {}
  */
 
 
@@ -160,7 +163,7 @@ import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
  * @swagger
  * /api/checker/delete/{CheckerId}:
  *   delete:
- *     summary: Delete checkers By Id
+ *     summary: Delete checkers By CheckerId
  *     parameters:
  *       - in: path
  *         name: CheckerId
@@ -170,7 +173,7 @@ import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
  *         description: ID of the checker to Delete
  *     security: 
  *      - APIKeyHeader: []
- *     tags: [checker]
+ *     tags: [checkers]
  *     responses:
  *       200:
  *         description: Successful response
@@ -196,7 +199,7 @@ import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
  *         description: ID of the checker to Deactivate
  *     security: 
  *      - APIKeyHeader: []
- *     tags: [checker]
+ *     tags: [checkers]
  *     responses:
  *       200:
  *         description: Successful response
@@ -221,7 +224,7 @@ import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
  *         description: ID of the Checker to Activate
  *     security: 
  *      - APIKeyHeader: []
- *     tags: [checker]
+ *     tags: [checkers]
  *     responses:
  *       200:
  *         description: Successful response

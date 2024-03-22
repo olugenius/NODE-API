@@ -166,6 +166,7 @@ import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
  *           application/json:
  *             example:
  *               message:  Successfully got Checkers by communityId
+ *               data: {}
  */
 
 
@@ -185,6 +186,7 @@ import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
  *           application/json:
  *             example:
  *               message: Success Fetched All Members
+ *               data: []
  */
 
 
