@@ -1,6 +1,6 @@
 import { RequestHandler, Response } from 'express'
 import { ValidationChain, body, check, validationResult } from 'express-validator'
-import { isValidDateFormat } from './dateFormatter'
+import { isAtLeast16YearsOld, isValidDateFormat } from './dateFormatter'
 
 
 
@@ -18,7 +18,7 @@ import { isValidDateFormat } from './dateFormatter'
   body('Language','Language is required').notEmpty().trim().escape(),
   body('CompanyType','Company type is required').notEmpty().trim().escape(),
   //body('DOB','Date of Birth is required').isDate().toDate(),
-  body('DOB').custom(isValidDateFormat).withMessage('Date of Birth must be in YYYY-MM-DD format'),
+  body('DOB').custom(isValidDateFormat).withMessage('Date of Birth must be in YYYY-MM-DD format').custom(isAtLeast16YearsOld).withMessage('You must be at least 16 years old'),
   body('UserRole','Please Pass the User Role').notEmpty().trim().escape(),
   check('Email').optional().isEmail().withMessage('A valid email is required').normalizeEmail(),
 ]

@@ -13,6 +13,7 @@ import Community from '../services/Abstraction/community'
 import { validationResult } from 'express-validator'
 import { CreateCheckerValidator, CreateCommunityValidator, CreateSubAdminValidator } from '../utilities/CommunityValidator'
 import OrganizationModel from '../model/OrganizationModel'
+import { Authorize } from '../middleware/authorization'
 
 
 
@@ -296,7 +297,7 @@ router.post('/community/create',CreateCommunityValidator,async (req:any,res:any)
     
 })
 
-router.get('/community',async(req:any,res)=>{
+router.get('/community',Authorize,async(req:any,res)=>{
   try{
     var response = await community.GetCommunity()
   if(response?.length < 1){
@@ -310,7 +311,7 @@ router.get('/community',async(req:any,res)=>{
   
 })
 
-router.get('/community/:communityId',async(req,res)=>{
+router.get('/community/:communityId',Authorize,async(req,res)=>{
   try{
   const param = req.params.communityId
   console.log('param Value is : ',param)
@@ -327,7 +328,7 @@ router.get('/community/:communityId',async(req,res)=>{
 
 })
 
-router.get('/community/admin/profile/:phone',async(req,res)=>{
+router.get('/community/admin/profile/:phone',Authorize,async(req,res)=>{
   try{
   const param = req.params.phone
   console.log('param Value is : ',param)
@@ -344,7 +345,7 @@ router.get('/community/admin/profile/:phone',async(req,res)=>{
 
 })
 
-router.delete('/community/delete/:CommunityId',async(req,res)=>{
+router.delete('/community/delete/:CommunityId',Authorize,async(req,res)=>{
   try{
     const Id = req.params.CommunityId
     var response = await community.DeleteCommunity(Id)
@@ -359,7 +360,7 @@ router.delete('/community/delete/:CommunityId',async(req,res)=>{
     
 })
 
-router.patch('/community/activate/:CommunityId',async(req,res)=>{
+router.patch('/community/activate/:CommunityId',Authorize,async(req,res)=>{
   try{
     const Id = req.params.CommunityId
     var response = await community.ActivateCommunity(Id)
@@ -374,7 +375,7 @@ router.patch('/community/activate/:CommunityId',async(req,res)=>{
     
 })
 
-router.patch('/community/deactivate/:CommunityId',async(req,res)=>{
+router.patch('/community/deactivate/:CommunityId',Authorize,async(req,res)=>{
   try{
     const Id = req.params.CommunityId
     var response = await community.DeactivateCommunity(Id)
@@ -562,7 +563,7 @@ router.patch('/community/deactivate/:CommunityId',async(req,res)=>{
 
 // })
 
-router.post('/organization/create',OrganizationUpload.single('file'),async(req:any,res:any)=>{
+router.post('/organization/create',Authorize,OrganizationUpload.single('file'),async(req:any,res:any)=>{
   try{
 
     const reqBody = <OrganizationModel>req.body

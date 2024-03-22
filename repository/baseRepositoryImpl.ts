@@ -13,6 +13,8 @@ import { formatDuration } from "date-fns";
 import createAppointmentModel from "../model/creatAppointmentModel";
 import TransactionModel from "../model/TransactionModel";
 import createServiceProviderModel from "../model/createServiceProviderModel";
+import BusinessCategoryModel from "../model/BusinessCategoryModel";
+import getCurrentDate from "../utilities/GetNewDate";
 
 @injectable()
 export default class baseRepositoryImpl implements BaseRepository{
@@ -1462,6 +1464,220 @@ export default class baseRepositoryImpl implements BaseRepository{
                     const query = `INSERT INTO ServiceProviders(ProviderId,CreatedAt,BusinessName,BusinessCategory,BusinessType,RegistrationType,BusinessRegNum,BusinessTaxId,BusinessDescription,CACPhotoPath) VALUES(?,?,?,?,?,?,?,?,?,?)`
                    
                         connection?.query(query,[providerId,new Date(),payload.BusinessName,payload.BusinessCategory,payload.BusinessType,payload.RegistrationType,payload.BusinessRegNum,payload.BusinessTaxId,payload.BusinessDescription,payload.CACPhotoPath],(err,data)=>{
+                         connection.release()
+                            if(err){
+                                console.log('error querying database',err)
+                                response = 'Failed'
+                               
+                            }else{
+                                console.log('successfully query',data)
+                                response = 'Success'
+                               
+                               
+                            }
+                            resolve(response)
+                         })
+                       
+                    })
+
+            })
+
+           
+                return result
+
+        }
+        catch(error){
+            console.error('Error creating user:', error);
+            return 'Failed'
+        }
+           
+      
+    }
+
+    async CreateBusinessCategory(payload:BusinessCategoryModel):Promise<string>{
+
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+            let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+                    
+                    const query = `INSERT INTO BusinessCategory(Name,CreatedAt) VALUES(?,?)`
+                   
+                        connection?.query(query,[payload.Name,getCurrentDate()],(err,data)=>{
+                         connection.release()
+                            if(err){
+                                console.log('error querying database',err)
+                                response = 'Failed'
+                               
+                            }else{
+                                console.log('successfully query',data)
+                                response = 'Success'
+                               
+                               
+                            }
+                            resolve(response)
+                         })
+                       
+                    })
+
+            })
+
+           
+                return result
+
+        }
+        catch(error){
+            console.error('Error creating user:', error);
+            return 'Failed'
+        }
+
+    }
+    async UpdateBusinessCategory(Id:number,payload:BusinessCategoryModel):Promise<string>{
+
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+            let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+                    
+                    const query = `UPDATE BusinessCategory SET Name = ?,UpdatedAt=? WHERE Id=?`
+                   
+                        connection?.query(query,[payload.Name,getCurrentDate(),Id],(err,data)=>{
+                         connection.release()
+                            if(err){
+                                console.log('error querying database',err)
+                                response = 'Failed'
+                               
+                            }else{
+                                console.log('successfully query',data)
+                                response = 'Success'
+                               
+                               
+                            }
+                            resolve(response)
+                         })
+                       
+                    })
+
+            })
+
+           
+                return result
+
+        }
+        catch(error){
+            console.error('Error creating user:', error);
+            return 'Failed'
+        }
+
+    }
+    async GetAllBusinessCategory():Promise<any>{
+
+        let result : any
+        try{
+            const connection =  await this.getConnection()  
+            let result =await new Promise<any>((resolve,reject)=>{
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+
+                    connection?.query(`SELECT * FROM BusinessCategory`,(err,data)=>{
+                        connection.release()
+                        if(err){
+                           console.log('error querying database',err)           
+                        }
+                        else{
+                           console.log('successfully query',data)
+                           
+                        }
+                        resolve(data)
+                       })
+        
+
+                   
+                    
+                    })
+            })
+    
+             return result
+
+        }catch(error){
+            console.error('Error Getting Business Categories:', error);
+        }
+
+    }
+    async GetBusinessCategoryById(Id:number):Promise<any>{
+
+        let result : any
+        try{
+            const connection =  await this.getConnection()  
+            let result =await new Promise<any>((resolve,reject)=>{
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+
+                    connection?.query(`SELECT * FROM BusinessCategory WHERE Id=?`,[Id],(err,data)=>{
+                        connection.release()
+                        if(err){
+                           console.log('error querying database',err)           
+                        }
+                        else{
+                           console.log('successfully query',data)
+                           
+                        }
+                        resolve(data)
+                       })
+        
+
+                   
+                    
+                    })
+            })
+    
+             return result
+
+        }catch(error){
+            console.error('Error Getting Business Category:', error);
+        }
+
+    }
+
+
+    async DeleteBusinessCategory(Id:number):Promise<string>{
+   
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+            let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+                    
+                  
+                    const query = `DELETE FROM  BusinessCategory WHERE Id= ?`
+                   
+                        connection?.query(query,[Id],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)

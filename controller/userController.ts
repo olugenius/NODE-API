@@ -30,6 +30,7 @@ import Community from '../services/Abstraction/community'
 import Member from '../services/Abstraction/member'
 import checker from '../services/Abstraction/checker'
 import UpdateEmailModel from '../model/UpdateEmailModel'
+import path from 'path'
 const router = express.Router()
 
 
@@ -430,6 +431,19 @@ const checkerRepo = container.get<checker>('checker')
 
 // Set up storage for uploaded files
 
+const fileFilter = (req:any, file:any, cb:any) => {
+  // Check if the file extension is one of the allowed image formats
+  const allowedExtensions = ['.png', '.jpg', '.jpeg', '.gif'];
+  const ext = path.extname(file.originalname).toLowerCase();
+  if (allowedExtensions.includes(ext)) {
+    cb(null, true); // Accept the file
+  } else {
+    const error = new Error('Only images with .png, .jpg, .jpeg, or .gif extensions are allowed');
+    
+    cb(error);// Reject the file
+  }
+};
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'public/images/'); // Destination folder for uploaded files
@@ -440,7 +454,10 @@ const storage = multer.diskStorage({
 });
 
 // Create multer instance with the storage configuration
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage,fileFilter:fileFilter, limits: {
+  fileSize: 5 * 1024 * 1024, // 5MB limit
+} });
+
 
 router.get('',(req,res)=>{
   res.send("Welcome to VSURED Api Platform")
@@ -546,10 +563,15 @@ router.post('/refreshToken',RefreshTokenValidator,async(req:Request,res:Response
 router.post('/register',upload.single('file'),validator,
 async (req:any,res:any)=>{
     try{
+
+      if (req.fileValidationError) {
+        return res.status(400).json({ message: req.fileValidationError.message });
+      }
+
         const reqBody = <registerModel>req.body
 
-        //console.log('file Path',req.protocol + '://' + req.get('host') + req.originalUrl+'/'+req?.file?.path)
-        reqBody.PhotoPath = req?.file?.path || ''
+        //console.log('file Path',req.protocol + '://' + req.get('host') +req?.file?.path.replace('public',''))
+        reqBody.PhotoPath = req.protocol + '://' + req.get('host') +req?.file?.path.replace('public','')
         const error = validationResult(req)
         if(!error.isEmpty()){
           res.status(HttpStatus.STATUS_400).json(error.array())
@@ -806,10 +828,10 @@ router.post('/forgotPassword/verify',ForgotPasswordVerifyValidator,async(req:Req
          if(reqBody.Token === '000000'){
           let testResult = await  userRepo.UpdateUserTokenTest(reqBody.Channel,'EmailVerify')
           if(testResult?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
-            res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
+            res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Verification Failed, Please try again'})
             return;
         }
-           return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Email Verification Successful, please proceed to login'})
+           return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Verification Successful'})
       }
 
 
@@ -824,7 +846,7 @@ router.post('/forgotPassword/verify',ForgotPasswordVerifyValidator,async(req:Req
         //Get Token from Db
     let response = <userToken[]>await userRepo.GetUserToken(reqBody.Channel,'ForgotPassword')
     if(response?.length < 1){
-       res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
+       res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Verification Failed, Please try again'})
        return;
     }
     let tokenRes = response.find(c=>c.Token === reqBody.Token && c.Used == false)

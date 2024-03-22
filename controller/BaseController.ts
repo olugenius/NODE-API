@@ -14,6 +14,9 @@ import createAppointmentModel from '../model/creatAppointmentModel'
 import multer from 'multer'
 import { CreateAppointmentValidator } from '../utilities/MembersValidator'
 import TransactionModel from '../model/TransactionModel'
+import { Authorize } from '../middleware/authorization'
+import { businessCategoryValidator } from '../utilities/BusinessCatgoryValidator'
+import BusinessCategoryModel from '../model/BusinessCategoryModel'
 
 
 /**
@@ -892,6 +895,137 @@ import TransactionModel from '../model/TransactionModel'
 
 
 
+/**
+ * @swagger
+ * /api/businessCategory/create:
+ *   post:
+ *     summary: Create Business Category
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Name:
+ *                 type: string
+ *               
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Business Category Created successfully
+ */
+
+
+
+/**
+ * @swagger
+ * /api/businessCategory/update:
+ *   post:
+ *     summary: Update Business Category
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     parameters:
+ *       - in: path
+ *         name: Id
+ *         required: true
+ *         schema: 
+ *           type: number
+ *         description: Id of the business Category to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Name:
+ *                 type: string
+ *               
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Business Category Updated successfully
+ */
+
+
+/**
+ * @swagger
+ * /api/businessCategory/all:
+ *   get:
+ *     summary: Get All Business Category
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got All Business Category
+ */
+
+
+
+/**
+ * @swagger
+ * /api/businessCategory/{Id}:
+ *   get:
+ *     summary: Get Business Category by Id
+ *     parameters:
+ *       - in: path
+ *         name: Id
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: Id of the Business Category to get
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got Business Category by Id
+ */
+
+
+/**
+ * @swagger
+ * /api/businessCategory/delete/{Id}:
+ *   delete:
+ *     summary: Delete Business Category by Id
+ *     parameters:
+ *       - in: path
+ *         name: Id
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: ID of the Business Category to Delete
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully Deleted Business Category
+ */
 
 const router = express.Router()
 let AppointmentUploadXls = multer({
@@ -900,7 +1034,7 @@ let AppointmentUploadXls = multer({
 
 const baseService = container.get<BaseService>('BaseService')
 
-router.post('/accessCode/single/create',SingleAccessCodeModelValidator,async(req:any,res:any)=>{
+router.post('/accessCode/single/create',Authorize,SingleAccessCodeModelValidator,async(req:any,res:any)=>{
     try{
         const reqBody = <singleAccessCodeModel>req.body
         const error = validationResult(req)
@@ -919,7 +1053,7 @@ router.post('/accessCode/single/create',SingleAccessCodeModelValidator,async(req
         return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})        }
 })
 
-router.post('/accessCode/static/create',StaticAccessCodeModelValidator,async(req:any,res:any)=>{
+router.post('/accessCode/static/create',Authorize,StaticAccessCodeModelValidator,async(req:any,res:any)=>{
     try{
         const reqBody = <staticAccessCodeModel>req.body
         const error = validationResult(req)
@@ -938,7 +1072,7 @@ router.post('/accessCode/static/create',StaticAccessCodeModelValidator,async(req
         return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})        }
 })
 
-router.post('/accessCode/bulk/create',BulkAccessCodeModelValidator,async(req:any,res:any)=>{
+router.post('/accessCode/bulk/create',Authorize,BulkAccessCodeModelValidator,async(req:any,res:any)=>{
     try{
         const reqBody = <bulkAccessCodeModel>req.body
         const error = validationResult(req)
@@ -957,7 +1091,7 @@ router.post('/accessCode/bulk/create',BulkAccessCodeModelValidator,async(req:any
         return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})        }
 })
 
-router.get('/accessCode/all',async(req,res)=>{
+router.get('/accessCode/all',Authorize,async(req,res)=>{
     try{
       var response = await baseService.GetAllAccessCode()
       if(response?.length < 1){
@@ -972,7 +1106,7 @@ router.get('/accessCode/all',async(req,res)=>{
       
   })
 
-  router.get('/accessCode/:Id',async(req,res)=>{
+  router.get('/accessCode/:Id',Authorize,async(req,res)=>{
     try{
       const param = req?.params?.Id
       if(!param){
@@ -991,7 +1125,7 @@ router.get('/accessCode/all',async(req,res)=>{
       
   })
 
-router.post('/forum/create',async(req:any,res:any)=>{
+router.post('/forum/create',Authorize,async(req:any,res:any)=>{
     try{
         const reqBody = <CreateForumModel>req.body
         // const error = validationResult(req)
@@ -1010,7 +1144,7 @@ router.post('/forum/create',async(req:any,res:any)=>{
         return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})        }
 })
 
-router.put('/forum/update/:forumId',async(req:any,res:any)=>{
+router.put('/forum/update/:forumId',Authorize,async(req:any,res:any)=>{
   try{
       const param = req?.params?.forumId
       const reqBody = <CreateForumModel>req.body
@@ -1030,7 +1164,7 @@ router.put('/forum/update/:forumId',async(req:any,res:any)=>{
       return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
 })
 
-router.delete('/forum/delete/:forumId',async(req:any,res:any)=>{
+router.delete('/forum/delete/:forumId',Authorize,async(req:any,res:any)=>{
   try{
       const param = req?.params?.forumId
       // const error = validationResult(req)
@@ -1049,7 +1183,7 @@ router.delete('/forum/delete/:forumId',async(req:any,res:any)=>{
       return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
 })
 
-router.post('/forum/activate/:forumId',async(req:any,res:any)=>{
+router.post('/forum/activate/:forumId',Authorize,async(req:any,res:any)=>{
   try{
       const param = req?.params?.forumId
       // const error = validationResult(req)
@@ -1068,7 +1202,7 @@ router.post('/forum/activate/:forumId',async(req:any,res:any)=>{
       return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
 })
 
-router.post('/forum/deactivate/:forumId',async(req:any,res:any)=>{
+router.post('/forum/deactivate/:forumId',Authorize,async(req:any,res:any)=>{
   try{
       const param = req?.params?.forumId
       // const error = validationResult(req)
@@ -1101,7 +1235,7 @@ router.get('/forum/all',async(req,res)=>{
     
 })
 
-router.get('/forum/:forumId',async(req,res)=>{
+router.get('/forum/:forumId',Authorize,async(req,res)=>{
   try{
     const param = req?.params?.forumId
     if(!param){
@@ -1119,7 +1253,7 @@ router.get('/forum/:forumId',async(req,res)=>{
     
 })
 
-router.post('/post/create',async(req:any,res:any)=>{
+router.post('/post/create',Authorize,async(req:any,res:any)=>{
   try{
       const reqBody = <PostModel>req.body
       // const error = validationResult(req)
@@ -1138,7 +1272,7 @@ router.post('/post/create',async(req:any,res:any)=>{
       return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
 })
 
-router.get('/post/all',async(req,res)=>{
+router.get('/post/all',Authorize,async(req,res)=>{
   try{
     var response = await baseService.GetAllPost()
     if(response?.length < 1){
@@ -1152,7 +1286,7 @@ router.get('/post/all',async(req,res)=>{
     
 })
 
-router.get('/post/:Id',async(req,res)=>{
+router.get('/post/:Id',Authorize,async(req,res)=>{
   try{
     const param = req?.params?.Id
     if(!param){
@@ -1170,7 +1304,7 @@ router.get('/post/:Id',async(req,res)=>{
     
 })
 
-router.post('/comment/create',async(req:any,res:any)=>{
+router.post('/comment/create',Authorize,async(req:any,res:any)=>{
   try{
       const reqBody = <CommentModel>req.body
       // const error = validationResult(req)
@@ -1189,7 +1323,7 @@ router.post('/comment/create',async(req:any,res:any)=>{
       return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
 })
 
-router.put('/comment/update/:Id',async(req:any,res:any)=>{
+router.put('/comment/update/:Id',Authorize,async(req:any,res:any)=>{
   try{
       const param = req?.params?.Id
       const reqBody = <CommentModel>req.body
@@ -1209,7 +1343,7 @@ router.put('/comment/update/:Id',async(req:any,res:any)=>{
       return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
 })
 
-router.delete('/comment/delete/:Id',async(req:any,res:any)=>{
+router.delete('/comment/delete/:Id',Authorize,async(req:any,res:any)=>{
   try{
       const param = req?.params?.Id
       // const error = validationResult(req)
@@ -1228,7 +1362,7 @@ router.delete('/comment/delete/:Id',async(req:any,res:any)=>{
       return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
 })
 
-router.get('/comment/all',async(req,res)=>{
+router.get('/comment/all',Authorize,async(req,res)=>{
   try{
     var response = await baseService.GetAllComments()
     if(response?.length < 1){
@@ -1242,7 +1376,7 @@ router.get('/comment/all',async(req,res)=>{
     
 })
 
-router.get('/comment/:Id',async(req,res)=>{
+router.get('/comment/:Id',Authorize,async(req,res)=>{
   try{
     const param = req?.params?.Id
     if(!param){
@@ -1261,7 +1395,7 @@ router.get('/comment/:Id',async(req,res)=>{
 })
 
 
-router.post('/appointment/create',CreateAppointmentValidator,AppointmentUploadXls.single('file'),async(req:any,res:any)=>{
+router.post('/appointment/create',Authorize,CreateAppointmentValidator,AppointmentUploadXls.single('file'),async(req:any,res:any)=>{
   try{
     const reqBody = <createAppointmentModel>req.body
     const error = validationResult(req)
@@ -1283,7 +1417,7 @@ router.post('/appointment/create',CreateAppointmentValidator,AppointmentUploadXl
     
 })
 
-router.put('/appointment/update',AppointmentUploadXls.single('file'),async(req,res)=>{
+router.put('/appointment/update',Authorize,AppointmentUploadXls.single('file'),async(req,res)=>{
   try{
     const reqBody = <createAppointmentModel>req.body
     reqBody.PhotoPath = req?.file?.path || ''
@@ -1300,7 +1434,7 @@ router.put('/appointment/update',AppointmentUploadXls.single('file'),async(req,r
     
 })
 
-router.delete('/appointment/delete/:Id',async(req,res)=>{
+router.delete('/appointment/delete/:Id',Authorize,async(req,res)=>{
   try{
     const Id = req.params.Id
     var response = await baseService.DeleteAppointment(Number(Id))
@@ -1316,7 +1450,7 @@ router.delete('/appointment/delete/:Id',async(req,res)=>{
     
 })
 
-router.get('/appointment/all',async(req,res)=>{
+router.get('/appointment/all',Authorize,async(req,res)=>{
   try{
     console.log('entered appointment endpoint')
     var response = await baseService.GetAllAppointment()
@@ -1332,7 +1466,7 @@ router.get('/appointment/all',async(req,res)=>{
     
 })
 
-router.get('/appointment/:Id',async(req,res)=>{
+router.get('/appointment/:Id',Authorize,async(req,res)=>{
   try{
 const param = req?.params?.Id
 if(!param){
@@ -1350,7 +1484,7 @@ if(response?.length < 1){
   }
 
 })
-router.get('/appointment/:communityId',async(req,res)=>{
+router.get('/appointment/:communityId',Authorize,async(req,res)=>{
   try{
 const param = req?.params?.communityId
 if(!param){
@@ -1368,7 +1502,7 @@ if(response?.length < 1){
   }
 
 })
-router.post('/transaction/create',async(req:any,res:any)=>{
+router.post('/transaction/create',Authorize,async(req:any,res:any)=>{
   try{
     const reqBody = <TransactionModel>req.body
     
@@ -1385,9 +1519,9 @@ router.post('/transaction/create',async(req:any,res:any)=>{
     
 })
 
-router.delete('/transaction/delete/:transactionId',async(req:any,res:any)=>{
+router.delete('/transaction/delete/:transactionId',Authorize,async(req:any,res:any)=>{
   try{
-    const param = req.boparams.transactionId
+    const param = req.params.transactionId
     
     var response = await baseService.DeleteTransaction(param)
     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
@@ -1402,7 +1536,7 @@ router.delete('/transaction/delete/:transactionId',async(req:any,res:any)=>{
     
 })
 
-router.get('/transaction/all',async(req,res)=>{
+router.get('/transaction/all',Authorize,async(req,res)=>{
   try{
     var response = await baseService.GetAllTransaction()
     if(response?.length < 1){
@@ -1417,14 +1551,103 @@ router.get('/transaction/all',async(req,res)=>{
     
 })
 
-router.get('/transaction/:transactionId',async(req,res)=>{
+router.get('/transaction/:transactionId',Authorize,async(req,res)=>{
   try{
     const param = req.params.transactionId
     var response = await baseService.GetTransactionByTransactionId(param)
     if(response?.length < 1){
       return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch transaction '})
     }
-    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch transaction',data:response})
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch transaction',data:response[0]})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
+  }
+    
+})
+
+
+router.post('/businessCategory/create',Authorize,businessCategoryValidator,async(req:any,res:any)=>{
+  try{
+      const reqBody = <BusinessCategoryModel>req.body
+      const error = validationResult(req)
+      if(!error.isEmpty()){
+        res.status(HttpStatus.STATUS_400).json(error.array())
+        return;
+      }
+      var response = await baseService.CreateBusinessCategory(reqBody)
+      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Static Code'})
+      }
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Static Code',data:reqBody})
+  
+    }catch(error){
+      console.error('An Error Occurred',error)
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})        }
+})
+
+router.post('/businessCategory/update/:Id',Authorize,businessCategoryValidator,async(req:any,res:any)=>{
+  try{
+      const reqBody = <BusinessCategoryModel>req.body
+      const param = req.params.Id
+      const error = validationResult(req)
+      if(!error.isEmpty()){
+        res.status(HttpStatus.STATUS_400).json(error.array())
+        return;
+      }
+      var response = await baseService.UpdateBusinessCategory(Number(param),reqBody)
+      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to update Business Category'})
+      }
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Update Business Category',data:reqBody})
+  
+    }catch(error){
+      console.error('An Error Occurred',error)
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})        }
+})
+
+router.get('/businessCategory/all',Authorize,async(req,res)=>{
+  try{
+    var response = <BusinessCategoryModel[]>await baseService.GetAllBusinessCategory()
+    if(response?.length < 1){
+      return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch All Business Categories '})
+    }
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch All Business Categories',data:response.sort((a, b) => a.Name.localeCompare(b.Name))})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
+  }
+    
+})
+
+router.get('/businessCategory/:Id',Authorize,async(req,res)=>{
+  try{
+    const param = req.params.Id
+    var response = await baseService.GetBusinessCategoryById(Number(param))
+    if(response?.length < 1){
+      return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch transaction '})
+    }
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch transaction',data:response[0]})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
+  }
+    
+})
+
+
+router.delete('/businessCategory/delete/:Id',Authorize,async(req:any,res:any)=>{
+  try{
+    const param = req.params.Id
+    
+    var response = await baseService.DeleteBusinessCategory(Number(param))
+    if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Business Category'})
+    }
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Delete Business Category'})
 
   }catch(error){
     console.error('An Error Occurred',error)

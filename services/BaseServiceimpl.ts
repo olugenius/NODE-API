@@ -10,6 +10,7 @@ import CommentModel from "../model/CommentModel";
 import createAppointmentModel from "../model/creatAppointmentModel";
 import TransactionModel from "../model/TransactionModel";
 import createServiceProviderModel from "../model/createServiceProviderModel";
+import BusinessCategoryModel from "../model/BusinessCategoryModel";
 
 @injectable()
 export default class BaseServiceimpl implements BaseService{
@@ -125,6 +126,22 @@ export default class BaseServiceimpl implements BaseService{
 
    async CreateServiceProvider(payload:createServiceProviderModel):Promise<string>{
       return await this.baseRepo.CreateServiceProvider(payload)
+   }
+
+   async CreateBusinessCategory(payload:BusinessCategoryModel):Promise<string>{
+      return await this.baseRepo.CreateBusinessCategory(payload)
+   }
+   async UpdateBusinessCategory(Id:number,payload:BusinessCategoryModel):Promise<string>{
+      return await this.baseRepo.UpdateBusinessCategory(Id,payload)
+   }
+   async GetAllBusinessCategory():Promise<any>{
+      return await this.baseRepo.GetAllBusinessCategory()
+   }
+   async GetBusinessCategoryById(Id:number):Promise<any>{
+      return await this.baseRepo.GetBusinessCategoryById(Id)
+   }
+   async DeleteBusinessCategory(Id:number):Promise<string>{
+      return await this.baseRepo.DeleteBusinessCategory(Id)
    }
      
 }

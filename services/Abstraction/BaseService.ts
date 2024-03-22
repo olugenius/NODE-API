@@ -1,3 +1,4 @@
+import BusinessCategoryModel from "../../model/BusinessCategoryModel"
 import CommentModel from "../../model/CommentModel"
 import CreateForumModel from "../../model/CreateForumModel"
 import PostModel from "../../model/PostModel"
@@ -40,5 +41,11 @@ export default interface BaseService{
     GetAllTransaction():Promise<any>
     DeleteTransaction(transactionId:string):Promise<string>
     CreateServiceProvider(payload:createServiceProviderModel):Promise<string>
+
+    CreateBusinessCategory(payload:BusinessCategoryModel):Promise<string>
+    UpdateBusinessCategory(Id:number,payload:BusinessCategoryModel):Promise<string>
+    GetAllBusinessCategory():Promise<any>
+    GetBusinessCategoryById(Id:number):Promise<any>
+    DeleteBusinessCategory(Id:number):Promise<string>
         
 }

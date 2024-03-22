@@ -1,4 +1,5 @@
 import { format } from "date-fns/format";
+import { DateTime } from 'luxon';
 
 
 export function dateFormatter(date:Date):string{
@@ -10,4 +11,11 @@ export const isValidDateFormat = (value:string) => {
       throw new Error('Invalid date format. Date must be in YYYY-MM-DD format');
     }
     return true;
+  };
+
+  export const isAtLeast16YearsOld = (value:string) => {
+    const dob = DateTime.fromISO(value);
+    const today = DateTime.now();
+    const age = today.diff(dob, 'years').years;
+    return age >= 16;
   };
