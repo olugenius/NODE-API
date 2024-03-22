@@ -937,38 +937,30 @@ import BusinessCategoryModel from '../model/BusinessCategoryModel'
 
 
 
+
 /**
  * @swagger
- * /api/businessCategory/update:
- *   post:
- *     summary: Update Business Category
+ * /api/businessCategory/{Id}:
+ *   get:
+ *     summary: Get Business Category by Id
+ *     parameters:
+ *       - in: path
+ *         name: transactionId
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: Id of the BusinessCategory to get
  *     security: 
  *      - APIKeyHeader: []
  *     tags: [Base]
- *     parameters:
- *       - in: path
- *         name: Id
- *         required: true
- *         schema: 
- *           type: number
- *         description: Id of the business Category to update
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               Name:
- *                 type: string
- *               
  *     responses:
  *       200:
  *         description: Successful response
  *         content:
  *           application/json:
  *             example:
- *               message: Business Category Updated successfully
+ *               message:  Successfully got Business Category by Id
+ *               data: {}
  */
 
 
