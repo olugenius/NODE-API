@@ -9,4 +9,5 @@ export default interface checkerRepo{
     ActivateCheckers(Id:string):Promise<any | null>
     DeactivateCheckers(Id:string):Promise<any | null>
     DeleteCheckers(Id:string):Promise<any | null>
+    createCheckersXls(payloads:createCheckersModel[]):Promise<string>
 }

@@ -36,5 +36,8 @@ export default class checkerImpl implements checker{
      async DeleteCheckers(Id:string):Promise<any | null>{
         return await this.checkerRepo.DeleteCheckers(Id)
      }
+     async createCheckersXls(payloads:createCheckersModel[]):Promise<string>{
+      return await this.checkerRepo.createCheckersXls(payloads);
+     }
 
 }

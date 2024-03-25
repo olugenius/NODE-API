@@ -94,6 +94,17 @@ export const createPasswordValidator =
  
 ]
 
+export const CreatOrganisationValidator = 
+[
+  body('Name').notEmpty().trim().escape().withMessage('Name is required'),
+  check('Phone').optional().trim().isMobilePhone('any',{ strictMode: true }).withMessage('Invalid phone number'),
+  body('Address','Organisation office address is required').notEmpty().trim().escape(),
+  //body('DOB','Date of Birth is required').isDate().toDate(),
+  body('DateIncoporated').notEmpty().withMessage('Date of Incoporation is required').custom(isValidDateFormat).withMessage('Date of Birth must be in YYYY-MM-DD format').custom(isAtLeast16YearsOld).withMessage('You must be at least 16 years old'),
+  body('NatureOfBusiness','Nature of business is required').notEmpty().trim().escape(),
+  check('Email').optional().isEmail().withMessage('InValid Email').normalizeEmail(),
+]
+
 
 
 

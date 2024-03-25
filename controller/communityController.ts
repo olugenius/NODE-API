@@ -14,6 +14,7 @@ import { validationResult } from 'express-validator'
 import { CreateCheckerValidator, CreateCommunityValidator, CreateSubAdminValidator } from '../utilities/CommunityValidator'
 import OrganizationModel from '../model/OrganizationModel'
 import { Authorize } from '../middleware/authorization'
+import { CreatOrganisationValidator } from '../utilities/registerValidator'
 
 
 
@@ -565,7 +566,7 @@ router.patch('/community/deactivate/:CommunityId',Authorize,async(req,res)=>{
 
 // })
 
-router.post('/organization/create',Authorize,OrganizationUpload.single('file'),async(req:any,res:any)=>{
+router.post('/organization/create',Authorize,CreatOrganisationValidator,OrganizationUpload.single('file'),async(req:any,res:any)=>{
   try{
 
     const reqBody = <OrganizationModel>req.body

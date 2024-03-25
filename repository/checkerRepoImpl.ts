@@ -35,7 +35,7 @@ export default class checkerRepoImpl implements checkerRepo{
                     
                   
                     const query = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint,IsActive,CheckerId) VALUES(?,?,?,?,?,?,?,?,?,?,?)`
-                     const checkerId = `Check- ${GenerateUniqueId()}`
+                     const checkerId = `Check-${GenerateUniqueId()}`
                         connection?.query(query,[payload.FirstName,payload.LastName,payload.Phone,payload.Email,payload.DOB,payload.Gender,payload.NIN,payload.CommunityId,payload.CheckPoint,1,checkerId],(err,data)=>{
                          connection.release()
                             if(err){
@@ -58,6 +58,104 @@ export default class checkerRepoImpl implements checkerRepo{
            
                 return result
 
+        }
+        catch(error){
+            console.error('Error creating user:', error);
+            return 'Failed'
+        }
+           
+      
+    }
+
+    async createCheckersXls(payloads:createCheckersModel[]):Promise<string>{
+   
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+             let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+               
+                    
+                  
+            //         const query = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint,IsActive,CheckerId) VALUES(?,?,?,?,?,?,?,?,?,?,?)`
+            //          const checkerId = `Check-${GenerateUniqueId()}`
+            const batchSize = 50; // Number of rows to insert in each batch
+            const batches = Math.ceil(payloads.length / batchSize);
+            let errorLog:string[]=[]
+            
+            for (let i = 0; i < batches; i++) {
+                const start = i * batchSize;
+                const end = (i + 1) * batchSize;
+                const batchPayloads = payloads.slice(start, end);
+    
+                connection?.beginTransaction((err)=>{
+                    if(err){
+                        console.log('error beginning transaction',err)
+                        reject(err)
+                    }
+                })
+                    const placeholders = batchPayloads.map(() => '(?,?,?,?,?,?,?,?,?,?,?)').join(',');
+                    const values = batchPayloads.flatMap(payload => [
+                        payload.FirstName,
+                        payload.LastName,
+                        payload.Phone,
+                        payload.Email,
+                        payload.DOB,
+                        payload.Gender,
+                        payload.NIN,
+                        payload.CommunityId,
+                        payload.CheckPoint,
+                        1,
+                        `Check-${GenerateUniqueId()}`
+
+                    ])
+                
+    
+                    const query = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint,IsActive,CheckerId) VALUES ${placeholders}`;
+    
+                        connection?.query(query,values,(err,data)=>{
+                         //connection.release()
+                            if(err){
+                                errorLog.push(err.message)
+                                console.log('error querying database',err)
+                                connection.rollback((err)=>{
+                                    console.log('error rolling back transaction',err)
+                                    })
+                            }
+                         })
+                       
+                
+                
+            }
+            connection.commit((error)=>{
+                connection.release()
+             if(error){
+                errorLog.push(error.message)
+             connection.rollback((err)=>{
+             console.log('error rolling back transaction',err)
+             })
+             }
+             if(errorLog.length < 1){
+                resolve('Success')
+
+             }else{
+                resolve('Failed')
+             }
+             
+            })
+            
+                
+            })
+
+        })
+                return result
+        
         }
         catch(error){
             console.error('Error creating user:', error);

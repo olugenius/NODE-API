@@ -273,12 +273,10 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
     const sheet = workbook.Sheets[sheet_name];
     const data = <createCheckersModel[]>XLSX.utils.sheet_to_json(sheet);
     let successArray:createCheckersModel[] = []
-    for(let reqFile of data){
-      var response = await checker.CreateCheckers(reqFile)
+      var response = await checker.createCheckersXls(data)
       if(response?.toLowerCase() ===  HttpStatus.STATUS_SUCCESS){
         successArray.push(req)
       }
-    }
     if(successArray.length < 1){
       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Checkers'})
     }
