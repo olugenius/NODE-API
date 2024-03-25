@@ -436,7 +436,7 @@ const router = express.Router()
  *         description: channel of the user profile to get
  *     security: 
  *      - APIKeyHeader: []
- *     tags: [Base]
+ *     tags: [User]
  *     responses:
  *       200:
  *         description: Successful response
