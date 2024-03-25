@@ -1137,7 +1137,6 @@ import SupportCommentModel from '../model/SupportCommentModel'
  *           application/json:
  *             example:
  *               message:  Successfully got Support by ticketId
- *               data:{}
  */
 
 
@@ -1171,7 +1170,7 @@ import SupportCommentModel from '../model/SupportCommentModel'
 
 /**
  * @swagger
- * /api/support/all:
+ * /api/supportComment/all:
  *   get:
  *     summary: Get All Support Comment
  *     security: 
@@ -1210,7 +1209,6 @@ import SupportCommentModel from '../model/SupportCommentModel'
  *           application/json:
  *             example:
  *               message:  Successfully got Support Comment by Id
- *               data:{}
  */
 
 const router = express.Router()
@@ -1411,7 +1409,7 @@ router.get('/forum/all',async(req,res)=>{
   try{
     var response = await baseService.GetAllForum()
     if(response?.length < 1){
-      res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Forums '})
+      return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Forums '})
     }
     return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Forums',data:response})
 
