@@ -443,8 +443,7 @@ const router = express.Router()
  *         content:
  *           application/json:
  *             example:
- *               message:  Successfully got Forum by forumId
- *               data: {}
+ *               message:  Successfully got user profile by channel
  */
 
 
