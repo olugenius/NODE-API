@@ -31,6 +31,7 @@ import Member from '../services/Abstraction/member'
 import checker from '../services/Abstraction/checker'
 import UpdateEmailModel from '../model/UpdateEmailModel'
 import path from 'path'
+import { Authorize } from '../middleware/authorization'
 const router = express.Router()
 
 
@@ -417,6 +418,33 @@ const router = express.Router()
  *           application/json:
  *             example:
  *               message: Email Updated  Successfully
+ */
+
+
+
+/**
+ * @swagger
+ * /api/profile/{channel}:
+ *   get:
+ *     summary: Get user profile by Phone or Email
+ *     parameters:
+ *       - in: path
+ *         name: channel
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: channel of the user profile to get
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got Forum by forumId
+ *               data: {}
  */
 
 
@@ -1047,6 +1075,25 @@ router.post('/updateEmail',async(req:Request,res:Response)=>{
     return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
  
   
+})
+
+
+router.get('/profile/:channel',Authorize,async(req,res)=>{
+  try{
+    const param = req?.params?.channel
+    if(!param){
+      return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Id'})
+    }
+    var response = await userRepo.GetUserByEmailOrPhone(param)
+    if(response?.length < 1){
+        return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch UserDetails'})
+      }
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch UserDetails',data:response[0]})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+    
 })
 
 
