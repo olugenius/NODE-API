@@ -500,7 +500,7 @@ router.post('/login',LoginValidator,async(req:Request,res:Response)=>{
                 const accessToken = jwtHandler.generateJWT(claims)
                 const refreshToken = await jwtHandler.generateRefreshToken(reqBody.Channel)
                  
-               return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Login Successful',accessToken:accessToken,refreshToken:refreshToken})
+               return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Login Successful',UserId:response[0]?.UserId,accessToken:accessToken,refreshToken:refreshToken})
                
     
     
