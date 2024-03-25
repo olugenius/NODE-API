@@ -14,6 +14,7 @@ import 'reflect-metadata'
 import UserRepository from './Abstraction/UserRepository'
 import { createPasswordRequestModel } from '../model/resetPasswordRequestModel'
 import UpdateEmailModel from '../model/UpdateEmailModel'
+import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
 
 
 @injectable()
@@ -513,10 +514,10 @@ export default class UserRepositoryImpl implements UserRepository{
                         reject(err)
                     }
                     
-                  
-                    const query = `INSERT INTO Users(FirstName,LastName,DOB,Gender,Address,Phone,Email,PhotoPath,Password,IsVerified,Language,CompanyType,UserRole) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`
+                  const userId = GenerateUniqueId()
+                    const query = `INSERT INTO Users(FirstName,LastName,DOB,Gender,Address,Phone,Email,PhotoPath,Password,IsVerified,Language,CompanyType,UserRole,UserId) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`
                    
-                        connection?.query(query,[payload.FirstName,payload.LastName,dateFormat,payload.Gender,payload.Address,payload.Phone,payload.Email ?? '',payload.PhotoPath,passwordEncrypt,false,payload.Language,payload.CompanyType,payload.UserRole],(err,data)=>{
+                        connection?.query(query,[payload.FirstName,payload.LastName,dateFormat,payload.Gender,payload.Address,payload.Phone,payload.Email ?? '',payload.PhotoPath,passwordEncrypt,false,payload.Language,payload.CompanyType,payload.UserRole,userId],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)

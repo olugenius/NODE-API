@@ -14,5 +14,6 @@ export default interface registerModel{
         CompanyType : string
         UserRole:string
         RefreshToken:string
+        UserId:string
 
     }

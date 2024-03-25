@@ -596,7 +596,8 @@ export default class baseRepositoryImpl implements BaseRepository{
                    }
                    
                  
-                   const query = `SELECT * FROM Forum`
+                   //const query = `SELECT * FROM Forum`
+                   const query = `select a.CommunityId,a.Title,a.ForumId,(select FirstName from users where Id = a.createdBy ) as CreatedBy,DateCreated,Status from forum a`
                   
                        connection?.query(query,(err,data)=>{
                         connection.release()
