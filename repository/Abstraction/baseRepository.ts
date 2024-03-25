@@ -2,6 +2,8 @@ import BusinessCategoryModel from "../../model/BusinessCategoryModel"
 import CommentModel from "../../model/CommentModel"
 import CreateForumModel from "../../model/CreateForumModel"
 import PostModel from "../../model/PostModel"
+import SupportCommentModel from "../../model/SupportCommentModel"
+import SupportModel from "../../model/SupportModel"
 import TransactionModel from "../../model/TransactionModel"
 import bulkAccessCodeModel from "../../model/bulkAccessCodeModel"
 import createAppointmentModel from "../../model/creatAppointmentModel"
@@ -48,5 +50,13 @@ export default interface BaseRepository{
     GetAllBusinessCategory():Promise<any>
     GetBusinessCategoryById(Id:number):Promise<any>
     DeleteBusinessCategory(Id:number):Promise<string>
+    CreateSupport(payload:SupportModel):Promise<string>
+    DeactivateSupport(TicketId:string):Promise<string>
+    GetAllSupport():Promise<any>
+    GetSupportByTicketId(ticketId:string):Promise<any>
+    CreateSupportComment(payload:SupportCommentModel):Promise<string>
+    UpdateSupportComment(Id:number,payload:SupportCommentModel):Promise<string>
+    GetSupportCommentById(Id:number):Promise<any>
+    GetAllSupportComment():Promise<any>
 
 }

@@ -11,6 +11,8 @@ import createAppointmentModel from "../model/creatAppointmentModel";
 import TransactionModel from "../model/TransactionModel";
 import createServiceProviderModel from "../model/createServiceProviderModel";
 import BusinessCategoryModel from "../model/BusinessCategoryModel";
+import SupportModel from "../model/SupportModel";
+import SupportCommentModel from "../model/SupportCommentModel";
 
 @injectable()
 export default class BaseServiceimpl implements BaseService{
@@ -143,5 +145,31 @@ export default class BaseServiceimpl implements BaseService{
    async DeleteBusinessCategory(Id:number):Promise<string>{
       return await this.baseRepo.DeleteBusinessCategory(Id)
    }
+
+   async CreateSupport(payload:SupportModel):Promise<string>{
+      return await this.baseRepo.CreateSupport(payload)
+   }
+   async DeactivateSupport(TicketId:string):Promise<string>{
+      return await this.baseRepo.DeactivateSupport(TicketId)
+   }
+
+   async GetAllSupport():Promise<any>{
+      return await this.baseRepo.GetAllSupport()
+   }
      
+   async GetSupportByTicketId(ticketId:string):Promise<any>{
+      return await this.baseRepo.GetSupportByTicketId(ticketId)
+   }
+   async CreateSupportComment(payload:SupportCommentModel):Promise<string>{
+      return await this.baseRepo.CreateSupportComment(payload)
+   }
+   async UpdateSupportComment(Id:number,payload:SupportCommentModel):Promise<string>{
+      return await this.baseRepo.UpdateSupportComment(Id,payload)
+   }
+   async GetSupportCommentById(Id:number):Promise<any>{
+      return await this.baseRepo.GetSupportCommentById(Id)
+   }
+   async GetAllSupportComment():Promise<any>{
+      return await this.baseRepo.GetAllSupportComment()
+   }
 }

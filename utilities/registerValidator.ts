@@ -20,7 +20,7 @@ import { isAtLeast16YearsOld, isValidDateFormat } from './dateFormatter'
   //body('DOB','Date of Birth is required').isDate().toDate(),
   body('DOB').custom(isValidDateFormat).withMessage('Date of Birth must be in YYYY-MM-DD format').custom(isAtLeast16YearsOld).withMessage('You must be at least 16 years old'),
   body('UserRole','Please Pass the User Role').notEmpty().trim().escape(),
-  check('Email').optional().isEmail().withMessage('A valid email is required').normalizeEmail(),
+  check('Email').optional().isEmail().withMessage('InValid Email').normalizeEmail(),
 ]
 
 export const EmailValidator = 

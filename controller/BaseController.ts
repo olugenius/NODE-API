@@ -17,6 +17,8 @@ import TransactionModel from '../model/TransactionModel'
 import { Authorize } from '../middleware/authorization'
 import { businessCategoryValidator } from '../utilities/BusinessCatgoryValidator'
 import BusinessCategoryModel from '../model/BusinessCategoryModel'
+import SupportModel from '../model/SupportModel'
+import SupportCommentModel from '../model/SupportCommentModel'
 
 
 /**
@@ -945,7 +947,7 @@ import BusinessCategoryModel from '../model/BusinessCategoryModel'
  *     summary: Get Business Category by Id
  *     parameters:
  *       - in: path
- *         name: transactionId
+ *         name: Id
  *         required: true
  *         schema:
  *           type: number
@@ -1032,6 +1034,183 @@ import BusinessCategoryModel from '../model/BusinessCategoryModel'
  *           application/json:
  *             example:
  *               message:  Successfully Deleted Business Category
+ */
+
+
+
+/**
+ * @swagger
+ * /api/support/create:
+ *   post:
+ *     summary: Create Support
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Heading:
+ *                 type: string
+ *               Complain:
+ *                 type: string
+ *               
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Support Created successfully
+ */
+
+
+
+/**
+ * @swagger
+ * /api/support/deactivate/{ticketId}:
+ *   put:
+ *     summary: Deactivate Support by ticketId
+ *     parameters:
+ *       - in: path
+ *         name: ticketId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ticketID of the support to deactivate
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully Deactivate Support
+ */
+
+
+
+/**
+ * @swagger
+ * /api/support/all:
+ *   get:
+ *     summary: Get All Support
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got All Support
+ *               data: []
+ */
+
+
+
+/**
+ * @swagger
+ * /api/support/{ticketId}:
+ *   get:
+ *     summary: Get Support by ticketId
+ *     parameters:
+ *       - in: path
+ *         name: ticketId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ticketId of the Support to get
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got Support by ticketId
+ *               data:{}
+ */
+
+
+/**
+ * @swagger
+ * /api/supportComment/create:
+ *   post:
+ *     summary: Create Support Comment
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Comment:
+ *                 type: string
+ *               
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Support Comment Created successfully
+ */
+
+
+/**
+ * @swagger
+ * /api/support/all:
+ *   get:
+ *     summary: Get All Support Comment
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got All Support Comment
+ *               data: []
+ */
+
+
+/**
+ * @swagger
+ * /api/supportComment/{Id}:
+ *   get:
+ *     summary: Get Support Comment by Id
+ *     parameters:
+ *       - in: path
+ *         name: Id
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: Id of the Support Comment to get
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got Support Comment by Id
+ *               data:{}
  */
 
 const router = express.Router()
@@ -1634,9 +1813,9 @@ router.get('/businessCategory/:Id',Authorize,async(req,res)=>{
     const param = req.params.Id
     var response = await baseService.GetBusinessCategoryById(Number(param))
     if(response?.length < 1){
-      return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch transaction '})
+      return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Business Category '})
     }
-    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch transaction',data:response[0]})
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Business Ctegory',data:response[0]})
 
   }catch(error){
     console.error('An Error Occurred',error)
@@ -1663,5 +1842,143 @@ router.delete('/businessCategory/delete/:Id',Authorize,async(req:any,res:any)=>{
     
 })
 
+
+router.post('/support/create',Authorize,async(req:any,res:any)=>{
+  try{
+      const reqBody = <SupportModel>req.body
+      const error = validationResult(req)
+      if(!error.isEmpty()){
+        res.status(HttpStatus.STATUS_400).json(error.array())
+        return;
+      }
+      var response = await baseService.CreateSupport(reqBody)
+      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Support'})
+      }
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Support',data:reqBody})
+  
+    }catch(error){
+      console.error('An Error Occurred',error)
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})        }
+})
+
+router.put('/support/deactivate/:ticketId',Authorize,async(req:any,res:any)=>{
+  try{
+    const param = req.params.ticketId
+    
+    var response = await baseService.DeactivateSupport(param)
+    if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Deactivate Support'})
+    }
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Deactivated Support'})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
+  }
+    
+})
+
+
+router.get('/support/all',Authorize,async(req,res)=>{
+  try{
+    var response = <SupportModel[]>await baseService.GetAllSupport()
+    if(response?.length < 1){
+      return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch All Support '})
+    }
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch All Support',data:response})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
+  }
+    
+})
+
+
+router.get('/support/:ticketId',Authorize,async(req,res)=>{
+  try{
+    const param = req.params.ticketId
+    var response = await baseService.GetSupportByTicketId(param)
+    if(response?.length < 1){
+      return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Support '})
+    }
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Support',data:response[0]})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
+  }
+    
+})
+
+router.post('/supportComment/create',Authorize,async(req:any,res:any)=>{
+  try{
+      const reqBody = <SupportCommentModel>req.body
+      const error = validationResult(req)
+      if(!error.isEmpty()){
+        res.status(HttpStatus.STATUS_400).json(error.array())
+        return;
+      }
+      var response = await baseService.CreateSupportComment(reqBody)
+      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Support comment'})
+      }
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Support comment',data:reqBody})
+  
+    }catch(error){
+      console.error('An Error Occurred',error)
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      
+      }
+})
+
+
+router.put('/supportComment/update/:Id',Authorize,async(req:any,res:any)=>{
+  try{
+    const param = req.params.Id
+    const reqBody = <SupportCommentModel>req.body
+    var response = await baseService.UpdateSupportComment(Number(param),reqBody)
+    if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update Support Comment'})
+    }
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Updated Support Comment'})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
+  }
+    
+})
+
+router.get('/supportComment/:Id',Authorize,async(req,res)=>{
+  try{
+    const param = req.params.Id
+    var response = await baseService.GetSupportCommentById(Number(param))
+    if(response?.length < 1){
+      return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Support Comment'})
+    }
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Support Comment',data:response[0]})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
+  }
+    
+})
+
+router.get('/supportComment/all',Authorize,async(req,res)=>{
+  try{
+    var response = <SupportCommentModel[]>await baseService.GetAllSupportComment()
+    if(response?.length < 1){
+      return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch All Support Comment'})
+    }
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch All Support Comment',data:response})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
+  }
+    
+})
 
 export default router

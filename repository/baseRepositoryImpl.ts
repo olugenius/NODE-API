@@ -15,6 +15,8 @@ import TransactionModel from "../model/TransactionModel";
 import createServiceProviderModel from "../model/createServiceProviderModel";
 import BusinessCategoryModel from "../model/BusinessCategoryModel";
 import getCurrentDate from "../utilities/GetNewDate";
+import SupportModel from "../model/SupportModel";
+import SupportCommentModel from "../model/SupportCommentModel";
 
 @injectable()
 export default class baseRepositoryImpl implements BaseRepository{
@@ -1707,5 +1709,347 @@ export default class baseRepositoryImpl implements BaseRepository{
            
       
     }
+
+
+    async CreateSupport(payload:SupportModel):Promise<string>{
+
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+            let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+                    const ticketId = `${GenerateUniqueId()}`
+                    
+                    const query = `INSERT INTO Support(TicketId,Heading,Complain,CreatorEmail,CreatedAt) VALUES(?,?,?,?,?)`
+                   
+                        connection?.query(query,[ticketId,payload.Heading,payload.Complain,payload.CreatorEmail,getCurrentDate()],(err,data)=>{
+                         connection.release()
+                            if(err){
+                                console.log('error querying database',err)
+                                response = 'Failed'
+                               
+                            }else{
+                                console.log('successfully query',data)
+                                response = 'Success'
+                               
+                               
+                            }
+                            resolve(response)
+                         })
+                       
+                    })
+
+            })
+
+           
+                return result
+
+        }
+        catch(error){
+            console.error('Error creating user:', error);
+            return 'Failed'
+        }
+
+    }
+
+
+    async DeactivateSupport(TicketId:string):Promise<string>{
+   
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+            let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+                    
+                  
+                    const query = `UPDATE Support SET IsActive=? WHERE TicketId= ?`
+                   
+                        connection?.query(query,[2,TicketId],(err,data)=>{
+                         connection.release()
+                            if(err){
+                                console.log('error querying database',err)
+                                response = 'Failed'
+                               
+                            }else{
+                                console.log('successfully query',data)
+                                response = 'Success'
+                               
+                               
+                            }
+                            resolve(response)
+                         })
+                       
+                    })
+
+            })
+
+           
+                return result
+
+        }
+        catch(error){
+            console.error('Error creating user:', error);
+            return 'Failed'
+        }
+           
+      
+    }
+
+    async GetAllSupport():Promise<any>{
+        let result : any
+        try{
+            const connection =  await this.getConnection()  
+            let result =await new Promise<any>((resolve,reject)=>{
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+
+                    connection?.query(`SELECT * FROM Support`,(err,data)=>{
+                        connection.release()
+                        if(err){
+                           console.log('error querying database',err)           
+                        }
+                        else{
+                           console.log('successfully query',data)
+                           
+                        }
+                        resolve(data)
+                       })
+        
+
+                   
+                    
+                    })
+            })
+    
+             return result
+
+        }catch(error){
+            console.error('Error Getting Support:', error);
+        }
+    }
+
+    async GetSupportByTicketId(ticketId:string):Promise<any>{
+        let result : any
+        try{
+            const connection =  await this.getConnection()  
+            let result =await new Promise<any>((resolve,reject)=>{
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+
+                    connection?.query(`SELECT * FROM Support WHERE TicketId=?`,[ticketId],(err,data)=>{
+                        connection.release()
+                        if(err){
+                           console.log('error querying database',err)           
+                        }
+                        else{
+                           console.log('successfully query',data)
+                           
+                        }
+                        resolve(data)
+                       })
+        
+
+                   
+                    
+                    })
+            })
+    
+             return result
+
+        }catch(error){
+            console.error('Error Getting Business Category:', error);
+        }
+
+
+    }
+
+
+    async CreateSupportComment(payload:SupportCommentModel):Promise<string>{
+
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+            let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+                    const ticketId = `${GenerateUniqueId()}`
+                    
+                    const query = `INSERT INTO SupportComment(TicketId,Comment,UserId,CreatedAt) VALUES(?,?,?,?,?)`
+                   
+                        connection?.query(query,[payload.TicketId,payload.Comment,payload.UserId,getCurrentDate()],(err,data)=>{
+                         connection.release()
+                            if(err){
+                                console.log('error querying database',err)
+                                response = 'Failed'
+                               
+                            }else{
+                                console.log('successfully query',data)
+                                response = 'Success'
+                               
+                               
+                            }
+                            resolve(response)
+                         })
+                       
+                    })
+
+            })
+
+           
+                return result
+
+        }
+        catch(error){
+            console.error('Error creating user:', error);
+            return 'Failed'
+        }
+
+    }
+
+    async UpdateSupportComment(Id:number,payload:SupportCommentModel):Promise<string>{
+   
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+            let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+                    
+                  
+                    const query = `UPDATE SupportComment SET Comment=?, UpdatedAt=? WHERE Id= ?`
+                   
+                        connection?.query(query,[payload.Comment,getCurrentDate(),Id],(err,data)=>{
+                         connection.release()
+                            if(err){
+                                console.log('error querying database',err)
+                                response = 'Failed'
+                               
+                            }else{
+                                console.log('successfully query',data)
+                                response = 'Success'
+                               
+                               
+                            }
+                            resolve(response)
+                         })
+                       
+                    })
+
+            })
+
+           
+                return result
+
+        }
+        catch(error){
+            console.error('Error creating user:', error);
+            return 'Failed'
+        }
+           
+      
+    }
+
+    async GetSupportCommentById(Id:number):Promise<any>{
+        let result : any
+        try{
+            const connection =  await this.getConnection()  
+            let result =await new Promise<any>((resolve,reject)=>{
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+
+                    connection?.query(`SELECT * FROM SupportComment WHERE Id=?`,[Id],(err,data)=>{
+                        connection.release()
+                        if(err){
+                           console.log('error querying database',err)           
+                        }
+                        else{
+                           console.log('successfully query',data)
+                           
+                        }
+                        resolve(data)
+                       })
+        
+
+                   
+                    
+                    })
+            })
+    
+             return result
+
+        }catch(error){
+            console.error('Error Getting Business Category:', error);
+        }
+
+
+    }
+
+    async GetAllSupportComment():Promise<any>{
+        let result : any
+        try{
+            const connection =  await this.getConnection()  
+            let result =await new Promise<any>((resolve,reject)=>{
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+
+                    connection?.query(`SELECT * FROM SupportComment`,(err,data)=>{
+                        connection.release()
+                        if(err){
+                           console.log('error querying database',err)           
+                        }
+                        else{
+                           console.log('successfully query',data)
+                           
+                        }
+                        resolve(data)
+                       })
+        
+
+                   
+                    
+                    })
+            })
+    
+             return result
+
+        }catch(error){
+            console.error('Error Getting Support:', error);
+        }
+    }
+
   
 }

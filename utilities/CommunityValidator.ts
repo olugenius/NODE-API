@@ -5,7 +5,7 @@ export const CreateCommunityValidator =
   body('Name','Name field is required').notEmpty().trim().escape(),
   body('Address','Address field is required').notEmpty().trim().escape(),
   body('Phone','Phone field is required').notEmpty().trim().isMobilePhone('any',{strictMode:true}).withMessage('invalid phone number'),
-  body('Email').optional().trim().isEmail().withMessage('inavlid Email').normalizeEmail(),
+  body('Email').optional().trim().isEmail().withMessage('invalid Email').normalizeEmail(),
   //body('CommunityId','Community field is required').notEmpty().trim().escape(),
  
 ]
