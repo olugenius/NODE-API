@@ -566,7 +566,7 @@ router.patch('/community/deactivate/:CommunityId',Authorize,async(req,res)=>{
 
 // })
 
-router.post('/organization/create',Authorize,CreatOrganisationValidator,OrganizationUpload.single('file'),async(req:any,res:any)=>{
+router.post('/organization/create',CreatOrganisationValidator,OrganizationUpload.single('file'),async(req:any,res:any)=>{
   try{
 
     const reqBody = <OrganizationModel>req.body
