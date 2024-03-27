@@ -100,7 +100,7 @@ export default class checkerRepoImpl implements checkerRepo{
                         reject(err)
                     }
                 })
-                    const placeholders = batchPayloads.map(() => '(?,?,?,?,?,?,?,?,?,?,?)').join(',');
+                    const placeholders = batchPayloads.map(() => '(?,?,?,?,?,?,?,?,?,?,?,?)').join(',');
                     const values = batchPayloads.flatMap(payload => [
                         payload.FirstName,
                         payload.LastName,
@@ -112,12 +112,13 @@ export default class checkerRepoImpl implements checkerRepo{
                         payload.CommunityId,
                         payload.CheckPoint,
                         1,
-                        `Check-${GenerateUniqueId()}`
+                        `Check-${GenerateUniqueId()}`,
+                        new Date()
 
                     ])
                 
     
-                    const query = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint,IsActive,CheckerId) VALUES ${placeholders}`;
+                    const query = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint,IsActive,CheckerId,CreatedAt) VALUES ${placeholders}`;
     
                         connection?.query(query,values,(err,data)=>{
                          //connection.release()
