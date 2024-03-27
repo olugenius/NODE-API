@@ -125,9 +125,9 @@ export default class communityRepositoryImpl implements communityRepository{
                     }
                     
                   
-                    const query = `INSERT INTO Community(Name,Address,Phone,Email,CommunityId,IsActive,CreatedAt) VALUES(?,?,?,?,?,?)`
+                    const query = `INSERT INTO Community(Name,Address,Phone,Email,CommunityId,IsActive,CreatedAt) VALUES(?,?,?,?,?,?,?)`
                    
-                        connection?.query(query,[payload.Name,payload.Address,payload.Phone,payload.Email,payload.CommunityId,1, new Date()],(err,data)=>{
+                        connection?.query(query,[payload.Name,payload.Address,payload.Phone,payload.Email,payload.CommunityId,1,new Date()],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)
