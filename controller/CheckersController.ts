@@ -8,6 +8,7 @@ import { CreateCheckerValidator } from '../utilities/CommunityValidator'
 import { validationResult } from 'express-validator'
 import multer from 'multer'
 import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
+import { Authorize } from '../middleware/authorization'
 
 /**
  * @swagger
@@ -243,7 +244,7 @@ let uploadXls = multer({
     dest:'public/XLSUploads/'
   })
   
-router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
+router.post('/checkers/create',Authorize,CreateCheckerValidator,async(req:any,res:any)=>{
     try{
       const reqBody = <createCheckersModel>req.body
       const error = validationResult(req)
@@ -264,7 +265,7 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
   })
   
   
-  router.post('/checkers/createXls',uploadXls.single('file'),async(req:any,res:any)=>{
+  router.post('/checkers/createXls',Authorize,uploadXls.single('file'),async(req:any,res:any)=>{
     try{
     
       
@@ -289,7 +290,7 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
     
   })
   
-  router.get('/checkers/all',async(req,res)=>{
+  router.get('/checkers/all',Authorize,async(req,res)=>{
     try{
       console.log('entered checkers endpoint')
       var response = await checker.GetAllCheckers()
@@ -306,7 +307,7 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
   
   
   //For the checkers page
-  router.get('/checkers/:Id',async(req,res)=>{
+  router.get('/checkers/:Id',Authorize,async(req,res)=>{
     try{
       const param = req?.params?.Id
       if(!param){
@@ -325,7 +326,7 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
       
   })
   
-  router.get('/checkers/:communityId',async(req,res)=>{
+  router.get('/checkers/:communityId',Authorize,async(req,res)=>{
     try{
       const param = req?.params?.communityId
       if(!param){
@@ -344,7 +345,7 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
       
   })
 
-  router.delete('/checkers/delete/:CheckerId',async(req,res)=>{
+  router.delete('/checkers/delete/:CheckerId',Authorize,async(req,res)=>{
     try{
       const Id = req.params.CheckerId
       var response = await checker.DeleteCheckers(Id)
@@ -359,7 +360,7 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
       
   })
   
-  router.patch('/checkers/activate/:CheckerId',async(req,res)=>{
+  router.patch('/checkers/activate/:CheckerId',Authorize,async(req,res)=>{
     try{
       const Id = req.params.CheckerId
       var response = await checker.ActivateCheckers(Id)
@@ -374,7 +375,7 @@ router.post('/checkers/create',CreateCheckerValidator,async(req:any,res:any)=>{
       
   })
   
-  router.patch('/checkers/deactivate/:CheckerId',async(req,res)=>{
+  router.patch('/checkers/deactivate/:CheckerId',Authorize,async(req,res)=>{
     try{
       const Id = req.params.CheckerId
       var response = await checker.DeactivateCheckers(Id)

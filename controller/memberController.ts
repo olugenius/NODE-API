@@ -10,6 +10,7 @@ import XLSX from 'xlsx'
 import { CreateAppointmentValidator } from '../utilities/MembersValidator'
 import { validationResult } from 'express-validator'
 import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
+import { Authorize } from '../middleware/authorization'
 
 
 /**
@@ -203,7 +204,7 @@ let uploadXls = multer({
     dest:'public/AppointmentUploads/'
   })
 
-router.post('/member/create',async(req,res)=>{
+router.post('/member/create',Authorize,async(req,res)=>{
     try{
       const reqBody = <memberModel>req.body
       var response = await member.CreateMember(reqBody)
@@ -219,7 +220,7 @@ router.post('/member/create',async(req,res)=>{
       
   })
 
-  router.put('/member/update',async(req,res)=>{
+  router.put('/member/update',Authorize,async(req,res)=>{
     try{
       const reqBody = <memberModel>req.body
       var response = await member.UpdateMember(reqBody)
@@ -235,7 +236,7 @@ router.post('/member/create',async(req,res)=>{
       
   })
 
-  router.delete('/member/delete/:Id',async(req,res)=>{
+  router.delete('/member/delete/:Id',Authorize,async(req,res)=>{
     try{
       const Id = req.params.Id
       var response = await member.DeleteMember(Number(Id))
@@ -251,7 +252,7 @@ router.post('/member/create',async(req,res)=>{
       
   })
   
-  router.post('/member/createXLs',uploadXls.single('file'),async(req:any,res:any)=>{
+  router.post('/member/createXLs',Authorize,uploadXls.single('file'),async(req:any,res:any)=>{
     try{
       const workbook = XLSX.readFile(req.file.path);
     const sheet_name = workbook.SheetNames[0];
@@ -277,7 +278,7 @@ router.post('/member/create',async(req,res)=>{
       
   })
   
-  router.get('/member/:memberId',async(req,res)=>{
+  router.get('/member/:memberId',Authorize,async(req,res)=>{
     try{
   const param = req?.params?.memberId
   if(!param){
@@ -295,7 +296,7 @@ router.post('/member/create',async(req,res)=>{
   
   })
 
-  router.get('/member/all',async(req,res)=>{
+  router.get('/member/all',Authorize,async(req,res)=>{
     try{
  
   var response = <memberModel[]>await member.GetAllMembers()

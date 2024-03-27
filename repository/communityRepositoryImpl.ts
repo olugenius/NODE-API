@@ -10,6 +10,7 @@ import createAppointmentModel from '../model/creatAppointmentModel'
 import memberModel from '../model/memberModel'
 import communityRepository from './Abstraction/communityRepository'
 import OrganizationModel from '../model/OrganizationModel'
+import { dateFormatter } from '../utilities/dateFormatter'
 
 
 
@@ -124,9 +125,9 @@ export default class communityRepositoryImpl implements communityRepository{
                     }
                     
                   
-                    const query = `INSERT INTO Community(Name,Address,Phone,Email,CommunityId,IsActive) VALUES(?,?,?,?,?,?)`
+                    const query = `INSERT INTO Community(Name,Address,Phone,Email,CommunityId,IsActive,CreatedAt) VALUES(?,?,?,?,?,?)`
                    
-                        connection?.query(query,[payload.Name,payload.Address,payload.Phone,payload.Email,payload.CommunityId,1],(err,data)=>{
+                        connection?.query(query,[payload.Name,payload.Address,payload.Phone,payload.Email,payload.CommunityId,1, new Date()],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)

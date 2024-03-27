@@ -4,6 +4,7 @@ import Dependant from '../services/Abstraction/Dependant'
 import { container } from '../Container/appContainer'
 import { HttpStatus } from '../utilities/HttpstatusCode'
 import UpdateDependantModel from '../model/UpdateDependantModel'
+import { Authorize } from '../middleware/authorization'
 
 /**
  * @swagger
@@ -218,7 +219,7 @@ const router = express.Router()
 
 const dependant = container.get<Dependant>('Dependant')
 
-router.post('/dependant/create',async(req,res)=>{
+router.post('/dependant/create',Authorize,async(req,res)=>{
     try{
       const reqBody = <CreateDependantmodel[]>req.body
       var response = await dependant.CreateDependant(reqBody)
@@ -234,7 +235,7 @@ router.post('/dependant/create',async(req,res)=>{
       
   })
 
-  router.put('/dependant/profile/update',async(req,res)=>{
+  router.put('/dependant/profile/update',Authorize,async(req,res)=>{
     try{
       const reqBody = <UpdateDependantModel>req.body
       var response = await dependant.UpdateDependantProfile(reqBody)
@@ -250,7 +251,7 @@ router.post('/dependant/create',async(req,res)=>{
       
   })
 
-  router.get('/dependant/profile/:channel/:creatorPhone',async(req,res)=>{
+  router.get('/dependant/profile/:channel/:creatorPhone',Authorize,async(req,res)=>{
     try{
   const param = req?.params?.channel
   const param2 = req?.params?.creatorPhone
@@ -269,7 +270,7 @@ router.post('/dependant/create',async(req,res)=>{
   
   })
 
-  router.get('/dependant/:channel',async(req,res)=>{
+  router.get('/dependant/:channel',Authorize,async(req,res)=>{
     try{
   const param = req?.params?.channel
   if(!param){
@@ -287,7 +288,7 @@ router.post('/dependant/create',async(req,res)=>{
   
   })
 
-  router.delete('/dependant/delete/:Phone/:creatorPhone',async(req,res)=>{
+  router.delete('/dependant/delete/:Phone/:creatorPhone',Authorize,async(req,res)=>{
     try{
       const param = req.params.Phone
       const param2 = req.params.creatorPhone
@@ -304,7 +305,7 @@ router.post('/dependant/create',async(req,res)=>{
       
   })
 
-  router.get('/dependant/profiles/:creatorPhone',async(req,res)=>{
+  router.get('/dependant/profiles/:creatorPhone',Authorize,async(req,res)=>{
     try{
         const param = req.params.creatorPhone
         console.log('Param value is:',param)

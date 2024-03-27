@@ -1405,7 +1405,7 @@ router.post('/forum/deactivate/:forumId',Authorize,async(req:any,res:any)=>{
       return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
 })
 
-router.get('/forum/all',async(req,res)=>{
+router.get('/forum/all',Authorize,async(req,res)=>{
   try{
     var response = await baseService.GetAllForum()
     if(response?.length < 1){

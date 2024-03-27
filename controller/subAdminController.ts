@@ -7,6 +7,7 @@ import { validationResult } from 'express-validator'
 import createSubAdminModel from '../model/createSubAdminModel'
 import { CreateSubAdminValidator } from '../utilities/CommunityValidator'
 import multer from 'multer'
+import { Authorize } from '../middleware/authorization'
 /**
  * @swagger
  * tags:
@@ -140,7 +141,7 @@ const SubAdminUpload = multer({ storage: storage });
 const subAdmin = container.get<subAdmin>('subAdmin')
 
 
-router.post('/subAdmin/create',SubAdminUpload.single('file'),CreateSubAdminValidator,async(req:any,res:any)=>{
+router.post('/subAdmin/create',Authorize,SubAdminUpload.single('file'),CreateSubAdminValidator,async(req:any,res:any)=>{
     try{
     
       const reqBody = <createSubAdminModel>req.body
@@ -163,7 +164,7 @@ router.post('/subAdmin/create',SubAdminUpload.single('file'),CreateSubAdminValid
       
   })
   
-  router.get('/subAdmin/all',async(req,res)=>{
+  router.get('/subAdmin/all',Authorize,async(req,res)=>{
     try{
       var response = await subAdmin.GetAllSubAdmins()
       if(response?.length < 1){
@@ -177,7 +178,7 @@ router.post('/subAdmin/create',SubAdminUpload.single('file'),CreateSubAdminValid
       
   })
   
-  router.get('/subAdmin/:Id',async(req,res)=>{
+  router.get('/subAdmin/:Id',Authorize,async(req,res)=>{
     try{
   const param = req?.params?.Id
   if(!param){
@@ -196,7 +197,7 @@ router.post('/subAdmin/create',SubAdminUpload.single('file'),CreateSubAdminValid
   })
   
   
-  router.get('/subAdmin/:communityId',async(req,res)=>{
+  router.get('/subAdmin/:communityId',Authorize,async(req,res)=>{
     try{
   const param = req?.params?.communityId
   if(!param){
