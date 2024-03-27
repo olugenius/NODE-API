@@ -13,9 +13,18 @@ export default class checkerImpl implements checker{
 
         return await this.checkerRepo.createCheckers(payload)
      }
+
+     async UpdateCheckers(checkerId:string,payload:createCheckersModel):Promise<string>{
+
+      return await this.checkerRepo.updateCheckers(checkerId,payload)
+   }
      
      async GetCheckersById(Id:number):Promise<any | null>{
       return await this.checkerRepo.getCheckersById(Id)
+     }
+
+     async GetCheckersByCheckerId(checkerId:string):Promise<any | null>{
+      return await this.checkerRepo.getCheckersByCheckerId(checkerId)
      }
 
      async GetCheckersByCommunityId(communityId:number):Promise<any | null>{

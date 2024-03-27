@@ -152,7 +152,7 @@ router.post('/subAdmin/create',Authorize,SubAdminUpload.single('file'),CreateSub
           }
       var response = await subAdmin.CreateSubAdmin(reqBody)
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
-         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Community'})
+         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create SubAdmin'})
       }
       return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created SubAdmin'})
   

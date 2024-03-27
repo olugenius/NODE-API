@@ -68,6 +68,53 @@ export default class checkerRepoImpl implements checkerRepo{
       
     }
 
+    async updateCheckers(checkerId:string,payload:createCheckersModel):Promise<string>{
+   
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+            let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+                    
+                    const query = `UPDATE Checkers SET FirstName=?,LastName=?,Phone=?,Email=?,DOB=?,Gender=?,NIN=?,CheckPoint=?,UpdatedAt=? WHERE CheckerId=? AND IsActive=?`
+                     const checkerId = `Check-${GenerateUniqueId()}`
+                        connection?.query(query,[payload.FirstName,payload.LastName,payload.Phone,payload.Email,payload.DOB,payload.Gender,payload.NIN,payload.CheckPoint,GetNewDate(),checkerId,1],(err,data)=>{
+                         connection.release()
+                            if(err){
+                                console.log('error querying database',err)
+                                response = 'Failed'
+                               
+                            }else{
+                                console.log('successfully query',data)
+                                response = 'Success'
+                               
+                               
+                            }
+                            resolve(response)
+                         })
+                       
+                    })
+
+            })
+
+           
+                return result
+
+        }
+        catch(error){
+            console.error('Error creating user:', error);
+            return 'Failed'
+        }
+           
+      
+    }
+
     async createCheckersXls(payloads:createCheckersModel[]):Promise<string>{
    
         let response : string = ''
@@ -167,7 +214,6 @@ export default class checkerRepoImpl implements checkerRepo{
       
     }
 
-
     async getCheckersById(Id:number):Promise<any | null>{
         let result : any
         try{
@@ -180,6 +226,41 @@ export default class checkerRepoImpl implements checkerRepo{
                     }
 
                     connection?.query(`SELECT * FROM Checkers WHERE Id = ?`,[Id],(err,data)=>{
+                        connection.release()
+                        if(err){
+                           console.log('error querying database',err)           
+                        }
+                        else{
+                           console.log('successfully query',data)
+                           
+                        }
+                        resolve(data)
+                       })
+        
+
+                   
+                    
+                    })
+            })
+    
+             return result
+
+        }catch(error){
+         
+        }
+    }
+    async getCheckersByCheckerId(checkerId:string):Promise<any | null>{
+        let result : any
+        try{
+            const connection =  await this.getConnection()  
+            let result =await new Promise<any>((resolve,reject)=>{
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+
+                    connection?.query(`SELECT * FROM Checkers WHERE CheckerId = ?`,[checkerId],(err,data)=>{
                         connection.release()
                         if(err){
                            console.log('error querying database',err)           
