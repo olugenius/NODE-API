@@ -167,7 +167,6 @@ import { Authorize } from '../middleware/authorization'
  *           application/json:
  *             example:
  *               message:  Successfully got Checkers by communityId
- *               data: {}
  */
 
 

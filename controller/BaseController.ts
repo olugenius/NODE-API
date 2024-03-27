@@ -188,7 +188,6 @@ import SupportCommentModel from '../model/SupportCommentModel'
  *           application/json:
  *             example:
  *               message:  Successfully got Access Code by Id
- *               data: {}
  */
 
 
@@ -393,7 +392,6 @@ import SupportCommentModel from '../model/SupportCommentModel'
  *           application/json:
  *             example:
  *               message:  Successfully got Forum by forumId
- *               data: {}
  */
 
 
@@ -472,7 +470,6 @@ import SupportCommentModel from '../model/SupportCommentModel'
  *           application/json:
  *             example:
  *               message:  Successfully got Post by Id
- *               data: {}
  */
 
 
@@ -613,7 +610,6 @@ import SupportCommentModel from '../model/SupportCommentModel'
  *           application/json:
  *             example:
  *               message:  Successfully got comment by Id
- *               data: {}
  */
 
 
@@ -747,7 +743,6 @@ import SupportCommentModel from '../model/SupportCommentModel'
  *           application/json:
  *             example:
  *               message:  Successfully got Appointment by Id
- *               data: {}
  */
 
 
@@ -773,7 +768,6 @@ import SupportCommentModel from '../model/SupportCommentModel'
  *           application/json:
  *             example:
  *               message:  Successfully got Appointment by communityId
- *               data: {}
  */
 
 
@@ -905,7 +899,6 @@ import SupportCommentModel from '../model/SupportCommentModel'
  *           application/json:
  *             example:
  *               message:  Successfully got Transaction by transactionId
- *               data: {}
  */
 
 
@@ -962,7 +955,6 @@ import SupportCommentModel from '../model/SupportCommentModel'
  *           application/json:
  *             example:
  *               message:  Successfully got Business Category by Id
- *               data: {}
  */
 
 
@@ -1008,7 +1000,6 @@ import SupportCommentModel from '../model/SupportCommentModel'
  *           application/json:
  *             example:
  *               message:  Successfully got Business Category by Id
- *               data:{}
  */
 
 

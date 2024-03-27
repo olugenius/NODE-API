@@ -4,6 +4,7 @@ import conn from './dbContext/dbConnection'
 import createCheckersModel from "../model/createcheckersModel";
 import { injectable } from "inversify";
 import { GenerateUniqueId } from "../utilities/GenerateUniqueId";
+import GetNewDate from "../utilities/GetNewDate";
 
 @injectable()
 export default class checkerRepoImpl implements checkerRepo{
@@ -34,9 +35,9 @@ export default class checkerRepoImpl implements checkerRepo{
                     }
                     
                   
-                    const query = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint,IsActive,CheckerId) VALUES(?,?,?,?,?,?,?,?,?,?,?)`
+                    const query = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint,IsActive,CheckerId,CreatedAt) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)`
                      const checkerId = `Check-${GenerateUniqueId()}`
-                        connection?.query(query,[payload.FirstName,payload.LastName,payload.Phone,payload.Email,payload.DOB,payload.Gender,payload.NIN,payload.CommunityId,payload.CheckPoint,1,checkerId],(err,data)=>{
+                        connection?.query(query,[payload.FirstName,payload.LastName,payload.Phone,payload.Email,payload.DOB,payload.Gender,payload.NIN,payload.CommunityId,payload.CheckPoint,1,checkerId,GetNewDate()],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)
@@ -113,7 +114,7 @@ export default class checkerRepoImpl implements checkerRepo{
                         payload.CheckPoint,
                         1,
                         `Check-${GenerateUniqueId()}`,
-                        new Date()
+                        GetNewDate()
 
                     ])
                 

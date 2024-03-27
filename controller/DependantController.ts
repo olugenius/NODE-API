@@ -124,7 +124,6 @@ import { Authorize } from '../middleware/authorization'
  *           application/json:
  *             example:
  *               message:  Successfully got Dependant profile by channel
- *               data: {}
  */
 
 
@@ -176,7 +175,6 @@ import { Authorize } from '../middleware/authorization'
  *           application/json:
  *             example:
  *               message:  Successfully got Dependant by channel
- *               data: {}
  */
 
 

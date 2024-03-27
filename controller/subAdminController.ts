@@ -94,7 +94,6 @@ import { Authorize } from '../middleware/authorization'
  *           application/json:
  *             example:
  *               message:  Successfully got SubAdmin by Id
- *               data: {}
  */
 
 
@@ -120,7 +119,6 @@ import { Authorize } from '../middleware/authorization'
  *           application/json:
  *             example:
  *               message:  Successfully got subAdmin by communityId
- *               data: {}
  */
 
 
@@ -156,7 +154,7 @@ router.post('/subAdmin/create',Authorize,SubAdminUpload.single('file'),CreateSub
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Community'})
       }
-      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Community'})
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created SubAdmin'})
   
     }catch(error){
       console.error('An Error Occurred',error)

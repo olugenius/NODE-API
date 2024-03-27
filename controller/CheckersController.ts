@@ -130,7 +130,6 @@ import { Authorize } from '../middleware/authorization'
  *           application/json:
  *             example:
  *               message:  Successfully got Checkers by Id
- *               data: {}
  */
 
 
@@ -156,7 +155,6 @@ import { Authorize } from '../middleware/authorization'
  *           application/json:
  *             example:
  *               message:  Successfully got Checkers by communityId
- *               data: {}
  */
 
 
@@ -273,15 +271,12 @@ router.post('/checkers/create',Authorize,CreateCheckerValidator,async(req:any,re
     const sheet_name = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheet_name];
     const data = <createCheckersModel[]>XLSX.utils.sheet_to_json(sheet);
-    let successArray:createCheckersModel[] = []
       var response = await checker.createCheckersXls(data)
       if(response?.toLowerCase() ===  HttpStatus.STATUS_SUCCESS){
-        successArray.push(req)
+        return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Checkers',data:data})
+
       }
-    if(successArray.length < 1){
       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Checkers'})
-    }
-    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created the following Checkers',data:successArray})
   
 
     }catch(err){
@@ -301,7 +296,8 @@ router.post('/checkers/create',Authorize,CreateCheckerValidator,async(req:any,re
   
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})      }
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    
+      }
       
   })
   

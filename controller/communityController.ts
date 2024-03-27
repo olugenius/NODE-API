@@ -61,7 +61,7 @@ import { CreatOrganisationValidator } from '../utilities/registerValidator'
  *         content:
  *           application/json:
  *             example:
- *               message: Community Created Successfuly
+ *               message: Community Created Successfully
  */
 
 
@@ -105,7 +105,6 @@ import { CreatOrganisationValidator } from '../utilities/registerValidator'
  *           application/json:
  *             example:
  *               message: Community is fetch by communityId Successfully
- *               data: {}
  */
 
 
@@ -279,7 +278,7 @@ let OrganizationUpload = multer({
   dest:'public/OrganizationUploads/'
 })
 
-router.post('/community/create',CreateCommunityValidator,async (req:any,res:any)=>{
+router.post('/community/create',Authorize,CreateCommunityValidator,async (req:any,res:any)=>{
   try{
     const reqBody = <createCommunityModel>req.body
     const error = validationResult(req)
@@ -287,7 +286,7 @@ router.post('/community/create',CreateCommunityValidator,async (req:any,res:any)
           res.status(HttpStatus.STATUS_400).json(error.array())
           return;
         }
-    reqBody.CommunityId = `COM ${GenerateUniqueId()}`
+    reqBody.CommunityId = `COM-${GenerateUniqueId()}`
     var response = await community.CreateCommunity(reqBody)
     if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Community'})
