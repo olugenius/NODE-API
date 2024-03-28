@@ -340,7 +340,7 @@ router.post('/checkers/create',Authorize,CreateCheckerValidator,async(req:any,re
       
   })
 
-  router.post('/checkers/update/:checkerId',Authorize,CreateCheckerValidator,async(req:any,res:any)=>{
+  router.put('/checkers/update/:checkerId',Authorize,CreateCheckerValidator,async(req:any,res:any)=>{
     try{
       const reqBody = <createCheckersModel>req.body
       const param = req.params.checkerId

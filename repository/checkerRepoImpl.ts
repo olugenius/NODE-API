@@ -83,7 +83,7 @@ export default class checkerRepoImpl implements checkerRepo{
                     }
                     
                     const query = `UPDATE Checkers SET FirstName=?,LastName=?,Phone=?,Email=?,DOB=?,Gender=?,NIN=?,CheckPoint=?,UpdatedAt=? WHERE CheckerId=? AND IsActive=?`
-                     const checkerId = `Check-${GenerateUniqueId()}`
+                     
                         connection?.query(query,[payload.FirstName,payload.LastName,payload.Phone,payload.Email,payload.DOB,payload.Gender,payload.NIN,payload.CheckPoint,GetNewDate(),checkerId,1],(err,data)=>{
                          connection.release()
                             if(err){
