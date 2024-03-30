@@ -1782,7 +1782,7 @@ router.post('/businessCategory/update/:Id',Authorize,businessCategoryValidator,a
       return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})        }
 })
 
-router.get('/businessCategory/all',Authorize,async(req,res)=>{
+router.get('/businessCategory/all',async(req,res)=>{
   try{
     var response = <BusinessCategoryModel[]>await baseService.GetAllBusinessCategory()
     if(response?.length < 1){
@@ -1797,7 +1797,7 @@ router.get('/businessCategory/all',Authorize,async(req,res)=>{
     
 })
 
-router.get('/businessCategory/:Id',Authorize,async(req,res)=>{
+router.get('/businessCategory/:Id',async(req,res)=>{
   try{
     const param = req.params.Id
     var response = await baseService.GetBusinessCategoryById(Number(param))
