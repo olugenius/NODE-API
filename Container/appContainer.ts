@@ -26,6 +26,10 @@ import checkerRepo from '../repository/Abstraction/checkerRepo'
 import checkerRepoImpl from '../repository/checkerRepoImpl'
 import subAdminRepo from '../repository/Abstraction/subAdminRepo'
 import subAdminRepoimpl from '../repository/subAdminRepoImpl'
+import NotificationImpl from '../services/NotificationImpl'
+import NotificationRepoImpl from '../repository/NotificationRepoImpl'
+import Notification from '../services/Abstraction/Notification'
+import NotificationRepo from '../repository/Abstraction/NotificationRepo'
 
 
 export const container = new Container()
@@ -43,6 +47,10 @@ container.bind<checker>('checker').to(checkerImpl)
 container.bind<subAdmin>('subAdmin').to(subAdminImpl)
 container.bind<checkerRepo>('checkerRepo').to(checkerRepoImpl)
 container.bind<subAdminRepo>('subAdminRepo').to(subAdminRepoimpl)
+container.bind<NotificationRepo>('NotificationRepo').to(NotificationRepoImpl)
+container.bind<Notification>('Notification').to(NotificationImpl)
+
+
 
 
 

@@ -10,6 +10,6 @@ export default interface CreateNotificationModel{
     PhotoPath:string,
     CommunityId:string,
     NotificationId:string
-    Roles:[],
-    UsersId:[]
+    Roles: any,
+    UserIds:any
 }

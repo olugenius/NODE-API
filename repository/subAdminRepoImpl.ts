@@ -3,6 +3,7 @@ import subAdminRepo from "./Abstraction/subAdminRepo";
 import conn from './dbContext/dbConnection'
 import createSubAdminModel from "../model/createSubAdminModel";
 import { injectable } from "inversify";
+import { GenerateUniqueId } from "../utilities/GenerateUniqueId";
 
 @injectable()
 export default class subAdminRepoimpl implements subAdminRepo{
@@ -32,9 +33,9 @@ export default class subAdminRepoimpl implements subAdminRepo{
                     }
                     
                   
-                    const query = `INSERT INTO SubAdmin(FirstName,LastName,Phone,Email,PhotoPath,CommunityId) VALUES(?,?,?,?,?,?)`
-                   
-                        connection?.query(query,[payload.FirstName,payload.LastName,payload.Phone,payload.Email,payload.PhotoPath,payload.CommunityId],(err,data)=>{
+                    const query = `INSERT INTO SubAdmin(FirstName,LastName,Phone,Email,PhotoPath,CommunityId,SubAdminId) VALUES(?,?,?,?,?,?,?)`
+                    const subAdminId = `subAdmin-${GenerateUniqueId()}`
+                        connection?.query(query,[payload.FirstName,payload.LastName,payload.Phone,payload.Email,payload.PhotoPath,payload.CommunityId,subAdminId],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)

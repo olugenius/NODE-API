@@ -16,6 +16,7 @@ import CheckersController from './controller/CheckersController';
 import subAdminController from './controller/subAdminController';
 import DependantController from './controller/DependantController';
 import multer from 'multer';
+import NotificationController from './controller/NotificationController';
 //import swaggerDocs from   './utilities/user-swagger-doc'
 
 
@@ -90,6 +91,7 @@ app.use('/api',BaseController)
 app.use('/api',CheckersController)
 app.use('/api',subAdminController)
 app.use('/api',DependantController)
+app.use('/api',NotificationController)
 
 //const port = process.env.PORT || 3000
 app.use((err:any, req:any, res:any, next:any) => {

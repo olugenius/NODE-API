@@ -4,6 +4,7 @@ import DependantRepository from "./Abstraction/DependantRepository";
 import conn from './dbContext/dbConnection'
 import { injectable } from "inversify";
 import UpdateDependantModel from "../model/UpdateDependantModel";
+import { GenerateUniqueId } from "../utilities/GenerateUniqueId";
 
 @injectable()
 export default class DependantRepositoryImpl implements DependantRepository{
@@ -81,12 +82,12 @@ export default class DependantRepositoryImpl implements DependantRepository{
                             reject(err)
                         }
                     })
-                    const query1 = `INSERT INTO Dependant(Name,Email,Phone,DOB,CreatorPhone) VALUES(?,?,?,?,?)`
+                    const query1 = `INSERT INTO Dependant(Name,Email,Phone,DOB,CreatorPhone,DependantId) VALUES(?,?,?,?,?,?)`
                   
 
                          for(let i=0;i<payload.length;i++){
-
-                            connection?.query(query1,[payload[i].Name,payload[i].Email,payload[i].Phone,payload[i].DOB,payload[i].CreatorPhone],(err,data)=>{
+                           const dependantId = `Dependant-${GenerateUniqueId()}`
+                            connection?.query(query1,[payload[i].Name,payload[i].Email,payload[i].Phone,payload[i].DOB,payload[i].CreatorPhone,dependantId],(err,data)=>{
                                    if(err){
                                     errorLog.push(err.message)
                                        connection.rollback(()=>{
