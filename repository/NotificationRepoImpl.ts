@@ -6,7 +6,9 @@ import CreateNotificationModel from "../model/CreateNotificationModel";
 import createSubAdminModel from "../model/createSubAdminModel";
 import createCheckersModel from "../model/createcheckersModel";
 import CreateDependantmodel from "../model/CreateDependantModel";
+import { injectable } from "inversify";
 
+@injectable()
 export default class NotificationRepoImpl implements NotificationRepo{
     private  async getConnection(): Promise<Pool | undefined>{
         try{
