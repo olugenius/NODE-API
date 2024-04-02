@@ -289,9 +289,9 @@ export default class memberRepositoryImpl implements memberRepository{
                     }
                     
                     const memberId = `MEM- ${GenerateUniqueId()}`
-                    const query = `INSERT INTO Member(MemberId,FirstName,LastName,DOB,Gender,NIN,Email,Phone) VALUES(?,?,?,?,?,?,?,?)`
+                    const query = `INSERT INTO Member(MemberId,FirstName,LastName,DOB,Gender,NIN,Email,Phone,IsActive) VALUES(?,?,?,?,?,?,?,?,?)`
                    
-                        connection?.query(query,[memberId,payload.FirstName,payload.LastName,payload.DOB,payload.Gender,payload.NIN,payload.Email,payload.Phone],(err,data)=>{
+                        connection?.query(query,[memberId,payload.FirstName,payload.LastName,payload.DOB,payload.Gender,payload.NIN,payload.Email,payload.Phone,1],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)
@@ -370,7 +370,7 @@ export default class memberRepositoryImpl implements memberRepository{
       
     }
 
-    async deleteMember(Id:number):Promise<string>{
+    async deleteMember(memberId:string):Promise<string>{
    
         let response : string = ''
         try{
@@ -385,9 +385,9 @@ export default class memberRepositoryImpl implements memberRepository{
                     }
                     
                   
-                    const query = `DELETE FROM  Member WHERE MemberId=?`
+                    const query = `UPDATE Member SET IsActive =? WHERE MemberId=?`
                    
-                        connection?.query(query,[Id],(err,data)=>{
+                        connection?.query(query,[memberId],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)

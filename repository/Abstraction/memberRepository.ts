@@ -10,7 +10,7 @@ export default interface memberRepository{
     // GetAppointmentCommunityId(CommunityId:string):Promise<any>
     createMember(payload:memberModel):Promise<string>
     updateMember(memberId:string,payload:memberModel):Promise<string>
-    deleteMember(Id:number):Promise<string>
+    deleteMember(memberId:string):Promise<string>
     GetMemberByMemberId(memberId:string):Promise<any>
     GetAllMembers():Promise<any>
     GetMemberByPhoneOrEmail(channel:string):Promise<any>

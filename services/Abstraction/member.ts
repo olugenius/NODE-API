@@ -4,7 +4,7 @@ import memberModel from "../../model/memberModel"
 export default interface Member{
     CreateMember(payload:memberModel):Promise<string>
     UpdateMember(memberId:string,payload:memberModel):Promise<string>
-    DeleteMember(Id: number): Promise<string> 
+    DeleteMember(memberId:string): Promise<string> 
    GetMemberByMemberId(memberId:string):Promise<string>
 //    CreateAppointment(payload:createAppointmentModel):Promise<string>
 //    UpdateAppointment(payload:createAppointmentModel):Promise<string>

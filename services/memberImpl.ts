@@ -15,8 +15,8 @@ export default class MemberImpl implements Member{
        return await this.memberRepo.updateMember(memberId,payload)
    }
 
-   async DeleteMember(Id:number): Promise<string> {
-      return await this.memberRepo.deleteMember(Id)
+   async DeleteMember(memberId:string): Promise<string> {
+      return await this.memberRepo.deleteMember(memberId)
   }
 
     async CreateMember(payload:memberModel):Promise<string>{

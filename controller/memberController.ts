@@ -100,7 +100,7 @@ import { Authorize } from '../middleware/authorization'
 
 /**
  * @swagger
- * /api/member/delete/{Id}:
+ * /api/member/delete/{memberId}:
  *   delete:
  *     summary: Delete Member using Id
  *     parameters:
@@ -109,7 +109,7 @@ import { Authorize } from '../middleware/authorization'
  *         required: true
  *         schema:
  *           type: string
- *         description: ID of the member to delete
+ *         description: memberId of the member to delete
  *     security: 
  *      - APIKeyHeader: []
  *     tags: [Member]
@@ -243,10 +243,10 @@ router.post('/member/create',Authorize,async(req,res)=>{
       
   })
 
-  router.delete('/member/delete/:Id',Authorize,async(req,res)=>{
+  router.delete('/member/delete/:memberId',Authorize,async(req,res)=>{
     try{
-      const Id = req.params.Id
-      var response = await member.DeleteMember(Number(Id))
+      const param = req.params.memberId
+      var response = await member.DeleteMember(param)
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Delete Member'})
       }
