@@ -311,7 +311,7 @@ router.post('/member/create',Authorize,async(req,res)=>{
   if(response?.length < 1){
       return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Members'})
     }
-    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Members',data:response[0]})
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Members',data:response})
   
     }catch(error){
      console.error('An Error Occurred',error)
