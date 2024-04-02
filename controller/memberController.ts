@@ -154,7 +154,7 @@ import { Authorize } from '../middleware/authorization'
 
 /**
  * @swagger
- * /api/member/{memberId}:
+ * /api/member/single/{memberId}:
  *   get:
  *     summary: Get Member memberId
  *     parameters:
@@ -285,7 +285,7 @@ router.post('/member/create',Authorize,async(req,res)=>{
       
   })
   
-  router.get('/member/:memberId',Authorize,async(req,res)=>{
+  router.get('/member/single/:memberId',Authorize,async(req,res)=>{
     try{
   const param = req?.params?.memberId
   if(!param){

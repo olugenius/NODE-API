@@ -187,7 +187,7 @@ import { Authorize } from '../middleware/authorization'
 
 /**
  * @swagger
- * /api/checkers/{checkerId}:
+ * /api/checkers/single/{checkerId}:
  *   get:
  *     summary: Get Checkers by checkerId
  *     parameters:
@@ -419,7 +419,7 @@ router.post('/checkers/create',Authorize,CreateCheckerValidator,async(req:any,re
   //     return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})      }
       
   // })
-  router.get('/checkers/:checkerId',Authorize,async(req,res)=>{
+  router.get('/checkers/single/:checkerId',Authorize,async(req,res)=>{
     try{
       const param = req?.params?.checkerId
       if(!param){
