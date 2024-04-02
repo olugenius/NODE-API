@@ -57,9 +57,16 @@ import { Authorize } from '../middleware/authorization'
 
 /**
  * @swagger
- * /api/member/update:
- *   post:
+ * /api/member/update/{memberId}:
+ *   put:
  *     summary: Update Member
+ *     parameters:
+ *       - in: path
+ *         name: memberId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: memberId of the member to update
  *     security: 
  *      - APIKeyHeader: []
  *     tags: [Member]
@@ -219,10 +226,11 @@ router.post('/member/create',Authorize,async(req,res)=>{
       
   })
 
-  router.put('/member/update',Authorize,async(req,res)=>{
+  router.put('/member/update/:memberId',Authorize,async(req,res)=>{
     try{
       const reqBody = <memberModel>req.body
-      var response = await member.UpdateMember(reqBody)
+      const param  = req.params.memberId
+      var response = await member.UpdateMember(param,reqBody)
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update Member'})
       }

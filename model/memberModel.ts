@@ -1,8 +1,19 @@
 export default interface memberModel{
     Id:number,
     MemberId:string,
-    Name:string,
-    Email:string,
+    FirstName:string,
+    LastName:string,
     Phone:string,
-    HouseNumber:string
+    Email:string,
+    DOB:Date,
+    Gender:string,
+    NIN:string,
+    CommunityId:string,
+    AllowPushNotification:Boolean,
+    AllowEmailNotification:Boolean,
+    AllowSMSNotification:Boolean
+    IsActive:number,
+
+
+
 }

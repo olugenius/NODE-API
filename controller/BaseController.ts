@@ -43,7 +43,7 @@ import SupportCommentModel from '../model/SupportCommentModel'
  *           schema:
  *             type: object
  *             properties:
- *               Purpose:
+ *               PurposeCode:
  *                 type: string
  *               StartTime:
  *                 type: Date

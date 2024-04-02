@@ -11,8 +11,8 @@ export default class MemberImpl implements Member{
 
     constructor(@inject('memberRepository') private memberRepo: memberRepository){}
 
-   async UpdateMember(payload: memberModel): Promise<string> {
-       return await this.memberRepo.updateMember(payload)
+   async UpdateMember(memberId:string,payload:memberModel):Promise<string> {
+       return await this.memberRepo.updateMember(memberId,payload)
    }
 
    async DeleteMember(Id:number): Promise<string> {

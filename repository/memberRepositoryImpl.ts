@@ -289,9 +289,9 @@ export default class memberRepositoryImpl implements memberRepository{
                     }
                     
                     const memberId = `MEM- ${GenerateUniqueId()}`
-                    const query = `INSERT INTO Member(MemberId,Name,Email,Phone,HouseNumber) VALUES(?,?,?,?,?)`
+                    const query = `INSERT INTO Member(MemberId,FirstName,LastName,DOB,Gender,NIN,Email,Phone) VALUES(?,?,?,?,?,?,?,?)`
                    
-                        connection?.query(query,[memberId,payload.Name,payload.Email,payload.Phone,payload.HouseNumber],(err,data)=>{
+                        connection?.query(query,[memberId,payload.FirstName,payload.LastName,payload.DOB,payload.Gender,payload.NIN,payload.Email,payload.Phone],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)
@@ -322,7 +322,7 @@ export default class memberRepositoryImpl implements memberRepository{
       
     }
 
-    async updateMember(payload:memberModel):Promise<string>{
+    async updateMember(memberId:string,payload:memberModel):Promise<string>{
    
         let response : string = ''
         try{
@@ -337,9 +337,9 @@ export default class memberRepositoryImpl implements memberRepository{
                     }
                     
                   
-                    const query = `UPDATE Member SET Name=?,Email=?,Phone=?,HouseNumber=? WHERE Id=?`
+                    const query = `UPDATE Member SET FirstName=?,LastName=?,NIN=?,DOB,?,Gender=?,CommunityId=?,Email=?,Phone=? WHERE MemberId=?`
                    
-                        connection?.query(query,[payload.Name,payload.Email,payload.Phone,payload.HouseNumber,payload.Id],(err,data)=>{
+                        connection?.query(query,[payload.FirstName,payload.LastName,payload.NIN,payload.DOB,payload.Gender,payload.CommunityId,payload.Email,payload.Phone,memberId],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)
