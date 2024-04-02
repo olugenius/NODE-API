@@ -46,9 +46,9 @@ import SupportCommentModel from '../model/SupportCommentModel'
  *               PurposeCode:
  *                 type: string
  *               StartTime:
- *                 type: Date
+ *                 type: string
  *               EndTime:
- *                 type: Date
+ *                 type: string
  *               Name:
  *                 type: string
  *               Date:
@@ -120,12 +120,10 @@ import SupportCommentModel from '../model/SupportCommentModel'
  *             type: object
  *             properties:
  *               Date:
- *                 type: Date
+ *                 type: string
  *               StartTime:
- *                 type: Date
+ *                 type: string
  *               EndTime:
- *                 type: Date
- *               Frequency:
  *                 type: string
  *               AppointmentTitle:
  *                 type: string

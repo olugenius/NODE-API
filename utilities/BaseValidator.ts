@@ -26,7 +26,7 @@ export const StaticAccessCodeModelValidator =
 
 export const BulkAccessCodeModelValidator = 
 [
-  body('Frequency','Frequency field is required').notEmpty().trim().escape(),
+  //body('Frequency','Frequency field is required').notEmpty().trim().escape(),
   body('StartTime','StartTime field is required').notEmpty().trim().escape(),
   body('EndTime','EndTime field is required').notEmpty().trim().escape(),
   body('AppointmentTitle','AppointmentTitle field is required').notEmpty().trim(),

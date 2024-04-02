@@ -387,7 +387,7 @@ export default class memberRepositoryImpl implements memberRepository{
                   
                     const query = `UPDATE Member SET IsActive =? WHERE MemberId=?`
                    
-                        connection?.query(query,[memberId],(err,data)=>{
+                        connection?.query(query,[3,memberId],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)
