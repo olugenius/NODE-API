@@ -1,10 +1,11 @@
 import { Pool } from "mysql2"
 import conn from './dbContext/dbConnection'
 import createAppointmentModel from "../model/creatAppointmentModel"
-import memberModel from "../model/memberModel"
 import memberRepository from "./Abstraction/memberRepository"
 import { injectable } from "inversify"
 import { GenerateUniqueId } from "../utilities/GenerateUniqueId"
+import memberModel from "../model/memberModel"
+import GetNewDate from "../utilities/GetNewDate"
 
 
 @injectable()
@@ -527,6 +528,101 @@ export default class memberRepositoryImpl implements memberRepository{
          console.log('An error occurred',error)
         }
 
+    }
+
+    async createMembersXls(payloads:memberModel[]):Promise<string>{
+   
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+             let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+               
+               
+            const batchSize = 50; // Number of rows to insert in each batch
+            const batches = Math.ceil(payloads.length / batchSize);
+            let errorLog:string[]=[]
+            
+            for (let i = 0; i < batches; i++) {
+                const start = i * batchSize;
+                const end = (i + 1) * batchSize;
+                const batchPayloads = payloads.slice(start, end);
+    
+                connection?.beginTransaction((err)=>{
+                    if(err){
+                        console.log('error beginning transaction',err)
+                        reject(err)
+                    }
+                })
+                    const placeholders = batchPayloads.map(() => '(?,?,?,?,?,?,?,?,?,?,?)').join(',');
+                    const values = batchPayloads.flatMap(payload => [
+                        payload.FirstName,
+                        payload.LastName,
+                        payload.Phone,
+                        payload.Email,
+                        payload.DOB,
+                        payload.Gender,
+                        payload.NIN,
+                        payload.CommunityId,
+                        1,
+                        `MEM-${GenerateUniqueId()}`,
+                        GetNewDate()
+
+                    ])
+                
+    
+                    const query = `INSERT INTO Member(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,IsActive,MemberId,CreatedAt) VALUES ${placeholders}`;
+    
+                        connection?.query(query,values,(err,data)=>{
+                         //connection.release()
+                            if(err){
+                                errorLog.push(err.message)
+                                console.log('error querying database',err)
+                                connection.rollback((err)=>{
+                                    console.log('error rolling back transaction',err)
+                                    })
+                            }
+                         })
+                       
+                
+                
+            }
+            connection.commit((error)=>{
+                connection.release()
+             if(error){
+                errorLog.push(error.message)
+             connection.rollback((err)=>{
+             console.log('error rolling back transaction',err)
+             })
+             }
+             if(errorLog.length < 1){
+                resolve('Success')
+
+             }else{
+                resolve('Failed')
+             }
+             
+            })
+            
+                
+            })
+
+        })
+                return result
+        
+        }
+        catch(error){
+            console.error('Error creating user:', error);
+            return 'Failed'
+        }
+           
+      
     }
 
 

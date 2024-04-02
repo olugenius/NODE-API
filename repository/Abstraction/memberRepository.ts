@@ -14,5 +14,6 @@ export default interface memberRepository{
     GetMemberByMemberId(memberId:string):Promise<any>
     GetAllMembers():Promise<any>
     GetMemberByPhoneOrEmail(channel:string):Promise<any>
+    createMembersXls(payloads:memberModel[]):Promise<string>
     
 }

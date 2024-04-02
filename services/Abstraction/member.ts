@@ -14,6 +14,7 @@ export default interface Member{
 //    GetAppointmentCommunityId(communityId:string):Promise<string>
    GetAllMembers():Promise<any>
    GetMemberByPhoneOrEmail(channel:string):Promise<any>
+   createMembersXls(payloads:memberModel[]):Promise<string>
    
 
 

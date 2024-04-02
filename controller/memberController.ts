@@ -266,18 +266,23 @@ router.post('/member/create',Authorize,async(req,res)=>{
     const sheet = workbook.Sheets[sheet_name];
     const data = <memberModel[]>XLSX.utils.sheet_to_json(sheet);
     let successArray:memberModel[] = []
-    for(let req of data){
-      req.MemberId = `MEM- ${GenerateUniqueId()}`
-      var response = await member.CreateMember(req)
-      if(response?.toLowerCase() ===  HttpStatus.STATUS_SUCCESS){
-        successArray.push(req)
-      }
+    // for(let req of data){
+    //   req.MemberId = `MEM- ${GenerateUniqueId()}`
+    //   var response = await member.CreateMember(req)
+    //   if(response?.toLowerCase() ===  HttpStatus.STATUS_SUCCESS){
+    //     successArray.push(req)
+    //   }
+    // }
+    // if(successArray.length < 1){
+    //   return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Member'})
+    // }
+    // return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created the following Member',data:successArray})
+    var response = await member.createMembersXls(data)
+    if(response?.toLowerCase() ===  HttpStatus.STATUS_SUCCESS){
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Members',data:data})
+
     }
-    if(successArray.length < 1){
-      return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Member'})
-    }
-    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created the following Member',data:successArray})
-  
+    return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Members'})
     }catch(error){
       console.error('An Error Occurred',error)
       return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    
