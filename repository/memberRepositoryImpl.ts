@@ -509,7 +509,7 @@ export default class memberRepositoryImpl implements memberRepository{
                            console.log('error querying database',err)           
                         }
                         else{
-                           console.log('successfully query checkers',data)
+                           console.log('successfully query member',data)
                            
                         }
                         resolve(data)

@@ -307,6 +307,7 @@ router.post('/member/create',Authorize,async(req,res)=>{
     try{
  
   var response = <memberModel[]>await member.GetAllMembers()
+  console.log('member data',response)
   if(response?.length < 1){
       res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Members'})
     }
