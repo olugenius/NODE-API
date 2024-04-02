@@ -50,9 +50,8 @@ export default class communityRepositoryImpl implements communityRepository{
                            
                            
                         }else{
-                            console.log('successfully query',data)
+                            console.log('successfully query community',data)
                             
-                           
                            
                         }
                         resolve(data)
