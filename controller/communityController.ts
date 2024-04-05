@@ -287,11 +287,7 @@ import {CreateOrganisationValidator, UpdateOrganisationValidator } from '../util
  *             properties:
  *               file:
  *                 type: file
- *               CreatorPhone:
- *                 type: string
  *               Name:
- *                 type: string
- *               CACNo:
  *                 type: string
  *               Phone:
  *                 type: string
@@ -302,14 +298,14 @@ import {CreateOrganisationValidator, UpdateOrganisationValidator } from '../util
  *               NatureOfBusiness:
  *                 type: string
  *               Address:
- *                 type: Date
+ *                 type: string
  *     responses:
  *       200:
  *         description: Successful response
  *         content:
  *           application/json:
  *             example:
- *               message: Registration Successful
+ *               message: Organisation Created Successful
  */
 
 
