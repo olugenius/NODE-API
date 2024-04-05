@@ -6,6 +6,7 @@ import createCheckersModel from "../../model/createcheckersModel"
 export default interface Community{
     GetCommunity():Promise<any>
     GetCommunityById(communityId:string):Promise<any>
+    GetCommunityByCreatorUserId(creatorUserId:string):Promise<any>
     CreateCommunity(payload:createCommunityModel):Promise<string>
     // CreateSubAdmin(payload:createSubAdminModel):Promise<string>
     // CreateCheckers(payload:createCheckersModel):Promise<string>

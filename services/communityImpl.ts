@@ -25,6 +25,9 @@ export default class CommunityImpl implements Community{
 
       return await this.communityRepo.GetCommunityById(communityId)
    }
+   async GetCommunityByCreatorUserId(creatorUserId:string):Promise<any>{
+      return await this.communityRepo.GetCommunityByCreatorUserId(creatorUserId)
+   }
 
     async CreateCommunity(payload:createCommunityModel):Promise<string>{
 

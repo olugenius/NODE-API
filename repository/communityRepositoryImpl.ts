@@ -110,6 +110,46 @@ export default class communityRepositoryImpl implements communityRepository{
         
        }
 
+       async GetCommunityByCreatorUserId(creatorUserId:string):Promise<any>{
+        try{
+   
+           const connection =  await this.getConnection()
+           let result = await new Promise<any>((resolve,reject)=>{
+            
+               connection?.getConnection((err,connection)=>{
+                   if(err){
+                       console.log('connection error',err)
+                       reject(err)
+                   }
+                   
+                 
+                   const query = `SELECT * FROM Community where CreatorUserId = ?`
+                  
+                       connection?.query(query,[creatorUserId],(err,data)=>{
+                        connection.release()
+                           if(err){
+                               console.log('error querying database',err)
+                              
+                              
+                           }else{
+                               console.log('successfully query',data)
+                              
+                           }
+                           resolve(data)
+                        })
+                      
+                   })
+   
+           })
+           return result
+   
+        }
+        catch(error){
+          console.error('Error Getting community',error)
+        }
+        
+       }
+
     async createCommunity(payload:createCommunityModel):Promise<string>{
    
         let response : string = ''
@@ -125,9 +165,9 @@ export default class communityRepositoryImpl implements communityRepository{
                     }
                     
                   
-                    const query = `INSERT INTO Community(Name,Address,Phone,Email,CommunityId,IsActive,CreatedAt) VALUES(?,?,?,?,?,?,?)`
+                    const query = `INSERT INTO Community(Name,Address,Phone,Email,CommunityId,IsActive,CreatedAt,CreatorUserId) VALUES(?,?,?,?,?,?,?,?)`
                    
-                        connection?.query(query,[payload.Name,payload.Address,payload.Phone,payload.Email,payload.CommunityId,1,GetNewDate()],(err,data)=>{
+                        connection?.query(query,[payload.Name,payload.Address,payload.Phone,payload.Email,payload.CommunityId,1,GetNewDate(),payload.CreatorUserId],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)

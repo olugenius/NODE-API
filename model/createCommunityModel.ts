@@ -4,4 +4,5 @@ export default interface createCommunityModel{
     Phone:string,
     Email:string,
     CommunityId:string
+    CreatorUserId:string
 }

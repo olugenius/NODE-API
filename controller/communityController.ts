@@ -50,6 +50,8 @@ import {CreateOrganisationValidator, UpdateOrganisationValidator } from '../util
  *                 type: string
  *               Email:
  *                 type: string
+ *               CreatorUserId:
+ *                 type: string
  *           example:
  *             Name: JohnDoe
  *             Address: No 22 Adebayo str Ikeja
@@ -105,6 +107,31 @@ import {CreateOrganisationValidator, UpdateOrganisationValidator } from '../util
  *           application/json:
  *             example:
  *               message: Community is fetch by communityId Successfully
+ */
+
+
+/**
+ * @swagger
+ * /api/community/all/{creatorUserId}:
+ *   get:
+ *     summary: Get Community By creatorUserId
+ *     parameters:
+ *       - in: path
+ *         name: creatorUserId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: creatorUserId of the community to get
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Community]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Community is fetched by creatorUserId Successfully
  */
 
 
@@ -383,6 +410,23 @@ router.get('/community/:communityId',Authorize,async(req,res)=>{
     return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
 
 })
+
+router.get('/community/all/:creatorUserId',Authorize,async(req,res)=>{
+  try{
+  const param = req.params.creatorUserId
+  var response = await community.GetCommunityByCreatorUserId(param)
+  if(response?.length < 1){
+    return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Fetch Communities'})
+  }
+  return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Fetched Community',data:response})
+       
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+
+})
+
 
 router.get('/community/admin/profile/:phone',Authorize,async(req,res)=>{
   try{
