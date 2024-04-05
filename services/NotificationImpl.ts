@@ -5,6 +5,7 @@ import createCheckersModel from "../model/createcheckersModel";
 import CreateDependantmodel from "../model/CreateDependantModel";
 import Notification from "./Abstraction/Notification";
 import createSubAdminModel from "../model/createSubAdminModel";
+import memberModel from "../model/memberModel";
 @injectable()
 export default class NotificationImpl implements Notification{
 constructor(@inject('NotificationRepo') private notificationRepo:NotificationRepo){}
@@ -17,6 +18,9 @@ async UpdateNotification(notificationId:string,payload:CreateNotificationModel):
 }
 async UpdateDependantNotificationStatus(dependantId:string,payload:CreateDependantmodel):Promise<string>{
   return await this.notificationRepo.UpdateDependantNotificationStatus(dependantId,payload)
+}
+async UpdateMemberNotificationStatus(dependantId:string,payload:memberModel):Promise<string>{
+  return await this.notificationRepo.UpdateMemberNotificationStatus(dependantId,payload)
 }
 async UpdateCheckerNotificationStatus(checkerId:string,payload:createCheckersModel):Promise<string>{
   return await this.notificationRepo.UpdateCheckerNotificationStatus(checkerId,payload)

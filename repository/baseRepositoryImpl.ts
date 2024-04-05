@@ -139,7 +139,7 @@ export default class baseRepositoryImpl implements BaseRepository{
                     }
                     
                     var AccessCode = `Access- ${GenerateUniqueId()}`
-                    const query = `INSERT INTO AccessCode(CodeType,Code,Date,StartTime,EndTime,AppointmentTitle,Phone,Email,NoOfParticipants) VALUES(?,?,?,?,?,?,?,?,?,?)`
+                    const query = `INSERT INTO AccessCode(CodeType,Code,Date,StartTime,EndTime,AppointmentTitle,Phone,Email,NoOfParticipants) VALUES(?,?,?,?,?,?,?,?,?)`
                    
                         connection?.query(query,['Bulk',AccessCode,payload.Date,payload.StartTime,payload.EndTime,payload.AppointmentTitle,payload.Phone,payload.Email,payload.NoOfParticipants],(err,data)=>{
                          connection.release()
