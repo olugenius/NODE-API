@@ -50,7 +50,7 @@ export default class checkerImpl implements checker{
      }
 
      async getCheckersByCreatorId(creatorUserId:string):Promise<any | null>{
-      return await this.checkerRepo.getCheckersByCheckerId(creatorUserId);
+      return await this.checkerRepo.getCheckersByCreatorId(creatorUserId);
      }
 
 }
