@@ -1,7 +1,6 @@
 import { Connection } from 'mysql2/typings/mysql/lib/Connection'
 import loginModel from '../model/loginModel'
 import conn from './dbContext/dbConnection'
-import registerModel from '../model/registerModel'
 import bcrypt from 'bcrypt'
 import { format } from 'date-fns/format'
 import registerResponseModel from '../model/registerResponseModel'
@@ -12,9 +11,10 @@ import { dateFormatter } from '../utilities/dateFormatter'
 import { injectable } from 'inversify'
 import 'reflect-metadata'
 import UserRepository from './Abstraction/UserRepository'
-import { createPasswordRequestModel } from '../model/resetPasswordRequestModel'
+import { createPasswordRequestModel, updatePasswordRequestModel } from '../model/resetPasswordRequestModel'
 import UpdateEmailModel from '../model/UpdateEmailModel'
 import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
+import { registerModel, updateUserModel } from '../model/registerModel'
 
 
 @injectable()
@@ -553,7 +553,47 @@ export default class UserRepositoryImpl implements UserRepository{
                  
         
     }
+async updateUser(channel:string,payload:updateUserModel):Promise<string>{
+    let response : string = ''
+    try{
+       
+        const connection =  await this.getConnection()
+        let result = await new Promise<string>((resolve,reject)=>{
+         
+            connection?.getConnection((err,connection)=>{
+                if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                }
+                
+              const userId = GenerateUniqueId()
+                const query = `UPDATE Users SET FirstName=?,LastName=?,Email=?,PhotoPath=? WHERE (Phone=? or Email=?)) VALUES(?,?,?,?,?,?)`
+               
+                    connection?.query(query,[payload.FirstName,payload.LastName,payload.Email ?? '',payload.PhotoPath,channel,channel],(err,data)=>{
+                     connection.release()
+                        if(err){
+                            console.log('error querying database',err)
+                            response = 'Failed'
+                           
+                        }else{
+                            console.log('successfully query',data)
+                            response = 'Success'
+                           
+                        }
+                        resolve(response)
+                     })
+                   
+                })
 
+        })
+            return result
+
+    }
+    catch(error){
+        console.error('Error creating user:', error);
+        return 'Failed'
+    }
+}
 
     async CreatePassword(payload:createPasswordRequestModel):Promise<any>{
         const saltRound = 10
@@ -595,6 +635,45 @@ export default class UserRepositoryImpl implements UserRepository{
         
 
        
+    }
+
+    async UpdatePassword(payload:updatePasswordRequestModel):Promise<any>{
+        const saltRound = 10
+        const passwordEncrypt = await bcrypt.hash(payload.NewPassword,saltRound)
+        let resValue:string = ''
+        try{
+            const connection =  await this.getConnection() 
+       let result =  await new Promise<any>((resolve,reject)=>{
+            connection?.getConnection((err,connection)=>{
+                if(err){
+                console.log('connection error',err)
+                reject(err)
+                }
+
+                 connection?.query(`UPDATE Users SET Password=? WHERE Phone = ?`,[passwordEncrypt,payload.Phone],(err,data)=>{
+                connection.release()
+                if(err){
+                   console.log('error querying database',err)   
+                   resValue = 'Failed'
+                }
+                else{
+                   console.log('successfully query',data)
+                   resValue = 'Success'
+                   
+                }
+                resolve(resValue)
+               })
+                
+                
+                })
+        })
+
+        return result
+       
+
+        }catch(error){
+         
+        }
     }
 
     async DeleteAccount(Id:number):Promise<string>{

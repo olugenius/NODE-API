@@ -1,4 +1,4 @@
-export default interface registerModel{
+export interface registerModel{
         FirstName : string
         LastName :string
         DOB : Date
@@ -15,5 +15,16 @@ export default interface registerModel{
         UserRole:string
         RefreshToken:string
         UserId:string
+
+    }
+
+
+
+    export interface updateUserModel{
+        FirstName : string
+        LastName :string
+        Email : string
+        PhotoPath : string
+        UserRole:string
 
     }

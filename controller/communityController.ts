@@ -14,7 +14,7 @@ import { validationResult } from 'express-validator'
 import { CreateCheckerValidator, CreateCommunityValidator, CreateSubAdminValidator } from '../utilities/CommunityValidator'
 import OrganizationModel from '../model/OrganizationModel'
 import { Authorize } from '../middleware/authorization'
-import { CreatOrganisationValidator } from '../utilities/registerValidator'
+import {CreateOrganisationValidator, UpdateOrganisationValidator } from '../utilities/registerValidator'
 
 
 
@@ -254,6 +254,64 @@ import { CreatOrganisationValidator } from '../utilities/registerValidator'
  *             example:
  *               message: Registration Successful
  */
+
+
+
+/**
+ * @swagger
+ * /api/organization/update/{creatorPhone}/{channel}:
+ *   post:
+ *     summary: Update Organization
+ *     parameters:
+ *       - in: path
+ *         name: creatorPhone
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: creatorPhone of the organisation to update
+ *       - in: path
+ *         name: channel
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Phone or Email of the organisation to update
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: file
+ *               CreatorPhone:
+ *                 type: string
+ *               Name:
+ *                 type: string
+ *               CACNo:
+ *                 type: string
+ *               Phone:
+ *                 type: string
+ *               Email:
+ *                 type: string
+ *               DateIncoporated:
+ *                 type: Date
+ *               NatureOfBusiness:
+ *                 type: string
+ *               Address:
+ *                 type: Date
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Registration Successful
+ */
+
 
 
 
@@ -565,7 +623,7 @@ router.patch('/community/deactivate/:CommunityId',Authorize,async(req,res)=>{
 
 // })
 
-router.post('/organization/create',CreatOrganisationValidator,OrganizationUpload.single('file'),async(req:any,res:any)=>{
+router.post('/organization/create',CreateOrganisationValidator,OrganizationUpload.single('file'),async(req:any,res:any)=>{
   try{
 
     const reqBody = <OrganizationModel>req.body
@@ -580,6 +638,31 @@ router.post('/organization/create',CreatOrganisationValidator,OrganizationUpload
        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Organization'})
     }
     return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Organization'})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
+  }
+    
+})
+
+router.post('/organization/update/:creatorPhone/:channel',UpdateOrganisationValidator,OrganizationUpload.single('file'),async(req:any,res:any)=>{
+  try{
+
+    const reqBody = <OrganizationModel>req.body
+    const param1 = req.params.creatorPhone
+    const param2 = req.params.channel
+    // const error = validationResult(req)
+    //     if(!error.isEmpty()){
+    //       res.status(HttpStatus.STATUS_400).json(error.array())
+    //       return;
+    //     }
+    reqBody.PhotoPath = req?.file?.path || ''
+    var response = await community.UpdateOrganization(param1,param2,reqBody)
+    if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update Organization'})
+    }
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Update Organization'})
 
   }catch(error){
     console.error('An Error Occurred',error)

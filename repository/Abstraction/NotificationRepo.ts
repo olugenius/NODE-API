@@ -9,7 +9,7 @@ export default interface NotificationRepo{
     CreateNotification(payload:CreateNotificationModel):Promise<string>
     UpdateNotification(notificationId:string,payload:CreateNotificationModel):Promise<string>
     UpdateDependantNotificationStatus(dependantId:string,payload:CreateDependantmodel):Promise<string>
-    UpdateMemberNotificationStatus(dependantId:string,payload:memberModel):Promise<string>
+    UpdateMemberNotificationStatus(memberId:string,payload:memberModel):Promise<string>
     UpdateCheckerNotificationStatus(checkerId:string,payload:createCheckersModel):Promise<string>
     UpdateSubAdminNotificationStatus(subAdminId:string,payload:createSubAdminModel):Promise<string>
     GetAllNotification():Promise<any>

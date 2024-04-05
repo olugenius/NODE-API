@@ -7,6 +7,7 @@ import { HttpStatus } from "../utilities/HttpstatusCode"
 import createCheckersModel from "../model/createcheckersModel"
 import CreateDependantmodel from "../model/CreateDependantModel"
 import createSubAdminModel from "../model/createSubAdminModel"
+import memberModel from "../model/memberModel"
 
 
 /**
@@ -20,7 +21,7 @@ import createSubAdminModel from "../model/createSubAdminModel"
  * @swagger
  * /api/notification/checkers/update/{checkerId}:
  *   put:
- *     summary: Update Comment
+ *     summary: Update checker notification status
  *     security: 
  *      - APIKeyHeader: []
  *     tags: [Notification]
@@ -59,7 +60,7 @@ import createSubAdminModel from "../model/createSubAdminModel"
  * @swagger
  * /api/notification/dependant/update/{dependantId}:
  *   put:
- *     summary: Update Comment
+ *     summary: Update dependant notification status
  *     security: 
  *      - APIKeyHeader: []
  *     tags: [Notification]
@@ -94,11 +95,53 @@ import createSubAdminModel from "../model/createSubAdminModel"
  */
 
 
+
+/**
+ * @swagger
+ * /api/notification/member/update/{memberId}:
+ *   put:
+ *     summary: Update Member Notification status
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Notification]
+ *     parameters:
+ *       - in: path
+ *         name: memberId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: memberId of the Member
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               AllowPushNotification:
+ *                 type: boolean
+ *               AllowEmailNotification:
+ *                 type: boolean
+ *               AllowSMSNotification:
+ *                 type: boolean
+ *               
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Member Notification Status Updated successfully
+ */
+
+
+
+
 /**
  * @swagger
  * /api/notification/subAdmin/update/{subAdminId}:
  *   put:
- *     summary: Update Comment
+ *     summary: Update subAdmin notification status
  *     security: 
  *      - APIKeyHeader: []
  *     tags: [Notification]
@@ -137,7 +180,7 @@ import createSubAdminModel from "../model/createSubAdminModel"
  * @swagger
  * /api/notification/update/{notificationId}:
  *   put:
- *     summary: Update Comment
+ *     summary: Update Notification
  *     security: 
  *      - APIKeyHeader: []
  *     tags: [Notification]
@@ -189,7 +232,7 @@ import createSubAdminModel from "../model/createSubAdminModel"
  * @swagger
  * /api/notification/create:
  *   post:
- *     summary: Update Comment
+ *     summary: Create Notification
  *     security: 
  *      - APIKeyHeader: []
  *     tags: [Notification]
@@ -317,6 +360,23 @@ router.post('/notification/create',Authorize,async(req,res)=>{
          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update dependant Notification status '})
       }
       return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Updated dependant Notification status ',data:reqBody})
+  
+    }catch(error){
+      console.error('An Error Occurred',error)
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    
+    }
+      
+  })
+
+  router.put('/notification/member/update/:memberId',Authorize,async(req,res)=>{
+    try{
+      const reqBody = <memberModel>req.body
+      const param = req.params.memberId
+      var response = await notification.UpdateMemberNotificationStatus(param,reqBody)
+      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update member Notification status '})
+      }
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Updated member Notification status ',data:reqBody})
   
     }catch(error){
       console.error('An Error Occurred',error)

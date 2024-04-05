@@ -19,8 +19,8 @@ async UpdateNotification(notificationId:string,payload:CreateNotificationModel):
 async UpdateDependantNotificationStatus(dependantId:string,payload:CreateDependantmodel):Promise<string>{
   return await this.notificationRepo.UpdateDependantNotificationStatus(dependantId,payload)
 }
-async UpdateMemberNotificationStatus(dependantId:string,payload:memberModel):Promise<string>{
-  return await this.notificationRepo.UpdateMemberNotificationStatus(dependantId,payload)
+async UpdateMemberNotificationStatus(memberId:string,payload:memberModel):Promise<string>{
+  return await this.notificationRepo.UpdateMemberNotificationStatus(memberId,payload)
 }
 async UpdateCheckerNotificationStatus(checkerId:string,payload:createCheckersModel):Promise<string>{
   return await this.notificationRepo.UpdateCheckerNotificationStatus(checkerId,payload)

@@ -1,8 +1,6 @@
 import express, { Request,Response } from 'express'
 import loginModel from '../model/loginModel'
-//import userRepo from '../repository/UserRepository'
-import registerModel from '../model/registerModel'
-import  { EmailValidator, ForgotPasswordValidator, ForgotPasswordVerifyValidator, LoginValidator, RefreshTokenValidator, VerifyEmailValidator, createPasswordValidator, resetPasswordValidator, validate,validator } from '../utilities/registerValidator'
+import  { EmailValidator, ForgotPasswordValidator, ForgotPasswordVerifyValidator, LoginValidator, RefreshTokenValidator, UpdateUserValidator, VerifyEmailValidator, createPasswordValidator, resetPasswordValidator, updatePasswordValidator, validate,validator } from '../utilities/registerValidator'
 import { body, validationResult } from 'express-validator'
 import mailRequestModel from '../model/mailRequestModel'
 import mailVerifyModel from '../model/MailVerifyModel'
@@ -13,7 +11,7 @@ import { HttpStatus } from '../utilities/HttpstatusCode'
 import userToken from '../model/DTOs/userToken'
 import { format } from 'date-fns/format'
 import { dateFormatter } from '../utilities/dateFormatter'
-import {createPasswordRequestModel, resetPasswordRequestModel} from '../model/resetPasswordRequestModel'
+import {createPasswordRequestModel, resetPasswordRequestModel, updatePasswordRequestModel} from '../model/resetPasswordRequestModel'
 import jwtHandler from '../utilities/jwtHandler'
 import refreshTokenRequestmodel from '../model/refreshTokenRequestModel'
 import { isValid } from 'date-fns'
@@ -32,6 +30,7 @@ import checker from '../services/Abstraction/checker'
 import UpdateEmailModel from '../model/UpdateEmailModel'
 import path from 'path'
 import { Authorize } from '../middleware/authorization'
+import { registerModel, updateUserModel } from '../model/registerModel'
 const router = express.Router()
 
 
@@ -123,6 +122,47 @@ const router = express.Router()
  *               message: Registration Successful
  */
 
+
+/**
+ * @swagger
+ * /api/setting/profile/update/{channel}:
+ *   post:
+ *     summary: Update User
+ *     tags: [User]
+ *     security: 
+ *      - APIKeyHeader: []
+ *     parameters:
+ *       - in: path
+ *         name: channel
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: channel of the user to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: file
+ *               FirstName:
+ *                 type: string
+ *               LastName:
+ *               Email:
+ *                 type: string
+ *           example:
+ *             Channel: JohnDoe
+ *             Password: john@example.com
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: user update Successful
+ */
 
 /**
  * @swagger
@@ -342,7 +382,7 @@ const router = express.Router()
 /**
  * @swagger
  * /api/createPassword:
- *   post:
+ *   put:
  *     summary: Create Password
  *     tags: [User]
  *     requestBody:
@@ -371,7 +411,37 @@ const router = express.Router()
 
 /**
  * @swagger
- * /api/account/delete/{Id}:
+ * /api/setting/password/update:
+ *   put:
+ *     summary: Update Password
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               OldPassword:
+ *                 type: string
+ *               NewPassword:
+ *                 type: string
+ *               Phone:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Password Updated  Successfully
+ */
+
+
+
+/**
+ * @swagger
+ * /api/setting/account/delete/{Id}:
  *   delete:
  *     summary: Delete Account using Id
  *     parameters:
@@ -396,7 +466,7 @@ const router = express.Router()
 
 /**
  * @swagger
- * /api/updateEmail:
+ * /api/setting/email/update:
  *   post:
  *     summary: Update Email
  *     tags: [User]
@@ -605,7 +675,7 @@ async (req:any,res:any)=>{
           return;
         }
           if(!(reqBody?.UserRole?.toUpperCase() in RolesEnum)){
-            return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Invalid role passed'})
+            return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Invalid user role passed'})
           }
             let userData = <registerModel[]>await userRepo.GetUserByPhone(reqBody.Phone)
             if(userData?.length > 0){
@@ -665,6 +735,89 @@ async (req:any,res:any)=>{
    
 
 })
+
+
+
+router.post('/setting/profile/update/:channel',upload.single('file'),UpdateUserValidator,
+async (req:any,res:any)=>{
+    try{
+     const param = req.params.channel
+      if (req.fileValidationError) {
+        return res.status(400).json({ message: req.fileValidationError.message });
+      }
+
+        const reqBody = <updateUserModel>req.body
+
+        //console.log('file Path',req.protocol + '://' + req.get('host') +req?.file?.path.replace('public',''))
+        reqBody.PhotoPath = req.protocol + '://' + req.get('host') +req?.file?.path.replace('public','')
+        const error = validationResult(req)
+        if(!error.isEmpty()){
+          res.status(HttpStatus.STATUS_400).json(error.array())
+          return;
+        }
+          if(!(reqBody?.UserRole?.toUpperCase() in RolesEnum)){
+            return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Invalid user role passed'})
+          }
+            // let userData = <registerModel[]>await userRepo.GetUserByEmailOrPhone(param)
+            // if(userData?.length > 0){
+            //     return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'User with this Phone number already exist'})
+                
+            // }
+            //start switch case
+            // switch(reqBody.UserRole.toUpperCase()){
+            //   case RolesEnum.CHECKER:
+            //    let checker = await  checkerRepo.getCheckersByPhoneOrEmail(reqBody.Phone)
+            //    if(checker?.length < 1){
+            //     return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Checker is not yet created. Please contact Admin'})
+            //     }
+                
+            //     break;
+              
+            //   case RolesEnum.COMMUNITY_ADMIN:
+                
+            //     break;
+
+            //   case RolesEnum.MEMBER:
+            //     let member = await  memberRepo.GetMemberByPhoneOrEmail(reqBody.Phone)
+            //    if(member?.length < 1){
+            //     return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Member is not yet created. Please contact Admin'})
+            //     }
+            //     break;
+              
+            //   case RolesEnum.SUB_ADMIN:
+                
+            //     break;
+
+
+            //   case RolesEnum.DEPENDANT:
+            //     let dependant = await  dependantRepo.GetDependantByPhoneOrEmail(reqBody.Phone)
+            //    if(dependant?.length < 1){
+            //     return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Dependant is not yet created. Please contact Admin'})
+            //     }
+            //     break;
+
+            // }
+
+            //end switch case
+
+          let response = await userRepo.updateUser(param,reqBody)
+          if(response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+            return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Error Updating user'})
+            
+          }
+          return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Updated user',data:reqBody})
+
+     
+
+    }
+    catch(err){
+        console.log('error creating user at controller side',err)
+        return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
+   
+
+})
+
+
 
 router.post('/register/sendMail',EmailValidator,async(req:Request,res:Response)=>{
   try{
@@ -924,7 +1077,7 @@ router.post('/resetPassword',resetPasswordValidator,async(req:Request,res:Respon
       return;
     }
         
-    let response = <userToken[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
+    let response = <registerModel[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
     if(response?.length < 1){
        res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
        return;
@@ -993,7 +1146,7 @@ router.post('/createPassword',createPasswordValidator,async(req:Request,res:Resp
       return;
     }
         
-    let response = <userToken[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
+    let response = <registerModel[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
     if(response?.length < 1){
        res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
        return;
@@ -1017,7 +1170,46 @@ router.post('/createPassword',createPasswordValidator,async(req:Request,res:Resp
 })
 
 
-router.delete('/account/delete/:Id',async(req:Request,res:Response)=>{
+
+router.put('/setting/password/update',updatePasswordValidator,async(req:Request,res:Response)=>{
+  try{
+
+    var reqBody = <updatePasswordRequestModel>req.body
+    const error = validationResult(req)
+    if(!error.isEmpty()){
+      res.status(HttpStatus.STATUS_400).json(error.array())
+      return;
+    }
+        
+    let response = <registerModel[]>await userRepo.GetUserByEmailOrPhone(reqBody.Phone)
+    if(response?.length < 1){
+       res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Phone Number Verification Failed, Please try again'})
+       return;
+    }
+    if(!(await bcrypt.compare(reqBody.OldPassword,response[0].Password))){
+      res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Old Password does not match current password'})
+      return;
+    }
+   
+        let result = await userRepo.UpdatePassword(reqBody)
+        if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+  
+            res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Password Update Failed, Please try again'})
+            return;
+        }
+        return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Password Updated Successful'})
+       
+  
+
+  }catch(err){
+    console.log('An error occurred resetting password',err)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+ 
+  
+})
+
+
+router.delete('/setting/account/delete/:Id',async(req:Request,res:Response)=>{
   try{
 
     var param = req.params.Id
@@ -1042,7 +1234,7 @@ router.delete('/account/delete/:Id',async(req:Request,res:Response)=>{
   
 })
 
-router.post('/updateEmail',async(req:Request,res:Response)=>{
+router.post('/setting/email/update',async(req:Request,res:Response)=>{
   try{
 
     var reqBody = <UpdateEmailModel>req.body

@@ -781,5 +781,53 @@ export default class communityRepositoryImpl implements communityRepository{
       
     }
 
+    async UpdateOrganization(CreatorPhone:string,Channel:string,payload:OrganizationModel):Promise<string>{
+   
+        let response : string = ''
+        try{
+
+            const connection =  await this.getConnection()
+            let result = await new Promise<string>((resolve,reject)=>{
+             
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                        console.log('connection error',err)
+                        reject(err)
+                    }
+                    
+                  
+                    const query = `UPDATE Organization set Name=?,Phone=?,Email=?,DateIncoporated=?,NatureOfBusiness=?,Address=?,PhotoPath=?) WHERE CreatorPhone=? and (Phone=? or Email=?)`
+                   
+                        connection?.query(query,[payload.Name,payload.Phone,payload.Email,payload.DateIncoporated,payload.NatureOfBusiness,payload.Address,payload.PhotoPath,CreatorPhone,Channel,Channel],(err,data)=>{
+                         connection.release()
+                            if(err){
+                                console.log('error querying database',err)
+                                response = 'Failed'
+                               
+                            }else{
+                                console.log('successfully query',data)
+                                response = 'Success'
+                               
+                               
+                            }
+                            resolve(response)
+                         })
+                       
+                    })
+
+            })
+
+           
+                return result
+
+        }
+        catch(error){
+            console.error('Error creating user:', error);
+            return 'Failed'
+        }
+           
+      
+    }
+
     
 }

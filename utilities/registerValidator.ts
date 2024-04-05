@@ -23,6 +23,15 @@ import { isAtLeast16YearsOld, isValidDateFormat } from './dateFormatter'
   //check('Email').optional().isEmail().withMessage('InValid Email').normalizeEmail(),
 ]
 
+
+export const UpdateUserValidator = 
+[
+  body('FirstName').notEmpty().trim().escape().withMessage('FirstName is required'),
+  body('LastName','LastName is required').notEmpty().trim().escape(),
+  body('UserRole','Please Pass the User Role').notEmpty().trim().escape(),
+  //check('Email').optional().isEmail().withMessage('InValid Email').normalizeEmail(),
+]
+
 export const EmailValidator = 
 [
   body('Channel','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
@@ -94,7 +103,22 @@ export const createPasswordValidator =
  
 ]
 
-export const CreatOrganisationValidator = 
+export const updatePasswordValidator = 
+[
+  body('Phone','Phone is required. In the form of Email or phone number').notEmpty().trim().escape(),
+  body('OldPassword','OldPassword is required').notEmpty().trim(),
+  body('NewPassword','NewPassword is required').notEmpty().trim(),
+  // body('NewPassword','NewPassword is required').notEmpty().trim().custom((value,{req})=>{
+  //    if(value !== req.body.NewPassword){
+  //      throw new Error('Password and Confirm Password must match')
+  //    }
+  //    return true
+  // }),
+ 
+]
+
+
+export const UpdateOrganisationValidator = 
 [
   body('Name').notEmpty().trim().escape().withMessage('Name is required'),
   check('Phone').optional().trim().isMobilePhone('any',{ strictMode: true }).withMessage('Invalid phone number'),
@@ -103,6 +127,19 @@ export const CreatOrganisationValidator =
   body('DateIncoporated').notEmpty().withMessage('Date of Incoporation is required').custom(isValidDateFormat).withMessage('Date of Birth must be in YYYY-MM-DD format').custom(isAtLeast16YearsOld).withMessage('You must be at least 16 years old'),
   body('NatureOfBusiness','Nature of business is required').notEmpty().trim().escape(),
   //check('Email').optional().isEmail().withMessage('InValid Email').normalizeEmail(),
+]
+
+
+export const CreateOrganisationValidator = 
+[
+  body('Name').notEmpty().trim().escape().withMessage('Name is required'),
+  check('Phone').optional().trim().isMobilePhone('any',{ strictMode: true }).withMessage('Invalid phone number'),
+  body('Address','Organisation office address is required').notEmpty().trim().escape(),
+  //body('DOB','Date of Birth is required').isDate().toDate(),
+  body('DateIncoporated').notEmpty().withMessage('Date of Incoporation is required').custom(isValidDateFormat).withMessage('Date of Birth must be in YYYY-MM-DD format').custom(isAtLeast16YearsOld).withMessage('You must be at least 16 years old'),
+  body('NatureOfBusiness','Nature of business is required').notEmpty().trim().escape(),
+  //check('Email').optional().isEmail().withMessage('InValid Email').normalizeEmail(),
+  body('CreatorPhone').notEmpty().trim().escape().withMessage('CreatorPhone is required'),
 ]
 
 

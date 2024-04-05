@@ -9,3 +9,9 @@ export  interface createPasswordRequestModel{
     ConfirmPassword:string,
     Channel:string
 }
+
+export  interface updatePasswordRequestModel{
+    OldPassword:string,
+    NewPassword:string,
+    Phone:string
+}

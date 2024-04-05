@@ -20,6 +20,7 @@ export default interface communityRepository{
     DeleteCommunity(Id:string):Promise<any | null>
     GetCommunityAdminProfile(Phone:string):Promise<any>
     CreateOrganization(payload:OrganizationModel):Promise<string>
+    UpdateOrganization(CreatorPhone:string,Channel:string,payload:OrganizationModel):Promise<string>
     //getCheckersByPhoneOrEmail(channel:string):Promise<any | null>
     
 

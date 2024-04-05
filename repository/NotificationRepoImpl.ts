@@ -281,7 +281,7 @@ export default class NotificationRepoImpl implements NotificationRepo{
 }
 
 
-async UpdateMemberNotificationStatus(dependantId:string,payload:memberModel):Promise<string>{
+async UpdateMemberNotificationStatus(memberId:string,payload:memberModel):Promise<string>{
     let response : string = ''
     try{
 
@@ -297,7 +297,7 @@ async UpdateMemberNotificationStatus(dependantId:string,payload:memberModel):Pro
               
                 const query = `UPDATE Member SET AllowPushNotification=?,AllowEmailNotification=?,AllowSMSNotification=? WHERE DependantId=?`
                
-                    connection?.query(query,[payload.AllowPushNotification,payload.AllowEmailNotification,payload.AllowSMSNotification,dependantId],(err,data)=>{
+                    connection?.query(query,[payload.AllowPushNotification,payload.AllowEmailNotification,payload.AllowSMSNotification,memberId],(err,data)=>{
                      connection.release()
                         if(err){
                             console.log('error querying database',err)

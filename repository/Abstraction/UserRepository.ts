@@ -1,7 +1,7 @@
 import UpdateEmailModel from "../../model/UpdateEmailModel"
-import registerModel from "../../model/registerModel"
+import { registerModel, updateUserModel } from "../../model/registerModel"
 import registerResponseModel from "../../model/registerResponseModel"
-import { createPasswordRequestModel } from "../../model/resetPasswordRequestModel"
+import { createPasswordRequestModel, updatePasswordRequestModel } from "../../model/resetPasswordRequestModel"
 
 export default interface UserRepository{
     GetUserByPhone(Phone:string):Promise<any | null>
@@ -11,10 +11,12 @@ export default interface UserRepository{
     UpdateUserRefreshToken(phone:string,token:string):Promise<any>
     UpdateUserToken(email:string,mailFor:string):Promise<string>
     createUser(payload:registerModel):Promise<registerResponseModel>
+    updateUser(channel:string,payload:updateUserModel):Promise<string>
     UpdateUserTokenTest(email:string,mailFor:string):Promise<string>
     UpdateUserPassword(newPassword:string,channel:string):Promise<any>
     GetUserToken(email:string,mailFor:string):Promise<any>
     CreatePassword(payload:createPasswordRequestModel):Promise<any>
+    UpdatePassword(payload:updatePasswordRequestModel):Promise<any>
     DeleteAccount(Id:number):Promise<string>
     UpdateEmail(payload:UpdateEmailModel):Promise<string>
 
