@@ -12,5 +12,6 @@ export default interface createCheckersModel{
     AllowEmailNotification:Boolean,
     AllowSMSNotification:Boolean
     IsActive:number,
-    CheckerId:string
+    CheckerId:string,
+    CreatorUserId:string
 }

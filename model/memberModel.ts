@@ -13,6 +13,7 @@ export default interface memberModel{
     AllowEmailNotification:Boolean,
     AllowSMSNotification:Boolean
     IsActive:number,
+    CreatorUserId:string
 
 
 

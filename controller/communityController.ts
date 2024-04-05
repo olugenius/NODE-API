@@ -416,7 +416,7 @@ router.get('/community/all/:creatorUserId',Authorize,async(req,res)=>{
   const param = req.params.creatorUserId
   var response = await community.GetCommunityByCreatorUserId(param)
   if(response?.length < 1){
-    return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Fetch Communities'})
+    return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Fetch Communities'})
   }
   return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Fetched Community',data:response})
        

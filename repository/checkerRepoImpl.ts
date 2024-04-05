@@ -35,9 +35,9 @@ export default class checkerRepoImpl implements checkerRepo{
                     }
                     
                   
-                    const query = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint,IsActive,CheckerId,CreatedAt) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)`
+                    const query = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint,IsActive,CheckerId,CreatedAt,CreatorUserId) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`
                      const checkerId = `Check-${GenerateUniqueId()}`
-                        connection?.query(query,[payload.FirstName,payload.LastName,payload.Phone,payload.Email,payload.DOB,payload.Gender,payload.NIN,payload.CommunityId,payload.CheckPoint,1,checkerId,GetNewDate()],(err,data)=>{
+                        connection?.query(query,[payload.FirstName,payload.LastName,payload.Phone,payload.Email,payload.DOB,payload.Gender,payload.NIN,payload.CommunityId,payload.CheckPoint,1,checkerId,GetNewDate(),payload.CreatorUserId],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)
@@ -148,7 +148,7 @@ export default class checkerRepoImpl implements checkerRepo{
                         reject(err)
                     }
                 })
-                    const placeholders = batchPayloads.map(() => '(?,?,?,?,?,?,?,?,?,?,?,?)').join(',');
+                    const placeholders = batchPayloads.map(() => '(?,?,?,?,?,?,?,?,?,?,?,?,?)').join(',');
                     const values = batchPayloads.flatMap(payload => [
                         payload.FirstName,
                         payload.LastName,
@@ -161,12 +161,13 @@ export default class checkerRepoImpl implements checkerRepo{
                         payload.CheckPoint,
                         1,
                         `Check-${GenerateUniqueId()}`,
-                        GetNewDate()
+                        GetNewDate(),
+                        payload.CreatorUserId
 
                     ])
                 
     
-                    const query = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint,IsActive,CheckerId,CreatedAt) VALUES ${placeholders}`;
+                    const query = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint,IsActive,CheckerId,CreatedAt,CreatorUserId) VALUES ${placeholders}`;
     
                         connection?.query(query,values,(err,data)=>{
                          //connection.release()
@@ -249,6 +250,44 @@ export default class checkerRepoImpl implements checkerRepo{
          
         }
     }
+
+    async getCheckersByCreatorId(creatorUserId:string):Promise<any | null>{
+        let result : any
+        try{
+            const connection =  await this.getConnection()  
+            let result =await new Promise<any>((resolve,reject)=>{
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+
+                    connection?.query(`SELECT * FROM Checkers WHERE CreatorUserId = ?`,[creatorUserId],(err,data)=>{
+                        connection.release()
+                        if(err){
+                           console.log('error querying database',err)           
+                        }
+                        else{
+                           console.log('successfully query',data)
+                           
+                        }
+                        resolve(data)
+                       })
+        
+
+                   
+                    
+                    })
+            })
+    
+             return result
+
+        }catch(error){
+         
+        }
+    }
+
+
     async getCheckersByCheckerId(checkerId:string):Promise<any | null>{
         let result : any
         try{

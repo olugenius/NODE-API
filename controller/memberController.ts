@@ -163,7 +163,7 @@ import { Authorize } from '../middleware/authorization'
  *         required: true
  *         schema:
  *           type: string
- *         description: ID of the checker to get
+ *         description: memberId of the member to get
  *     security: 
  *      - APIKeyHeader: []
  *     tags: [Member]
@@ -173,8 +173,34 @@ import { Authorize } from '../middleware/authorization'
  *         content:
  *           application/json:
  *             example:
- *               message:  Successfully got Checkers by communityId
+ *               message:  Successfully got member by communityId
  */
+
+
+/**
+ * @swagger
+ * /api/member/all/{creatorUserId}:
+ *   get:
+ *     summary: Get Members by creatorUserId
+ *     parameters:
+ *       - in: path
+ *         name: creatorUserId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: creatorUserId of the members to get
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Member]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got member by creatorUserId
+ */
+
 
 
 
@@ -313,6 +339,25 @@ router.post('/member/create',Authorize,async(req,res)=>{
  
   var response = <memberModel[]>await member.GetAllMembers()
   console.log('member data',response)
+  if(response?.length < 1){
+      return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Members'})
+    }
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Members',data:response})
+  
+    }catch(error){
+     console.error('An Error Occurred',error)
+     return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
+  
+  })
+
+
+  router.get('/member/all/:creatorUserId',Authorize,async(req,res)=>{
+    try{
+  const param = req?.params?.creatorUserId
+  if(!param){
+    return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid param'})
+  }
+  var response = await member.GetMemberByCreatorUserId(param)
   if(response?.length < 1){
       return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Members'})
     }

@@ -289,10 +289,10 @@ export default class memberRepositoryImpl implements memberRepository{
                         reject(err)
                     }
                     
-                    const memberId = `MEM- ${GenerateUniqueId()}`
-                    const query = `INSERT INTO Member(MemberId,FirstName,LastName,DOB,Gender,NIN,Email,Phone,IsActive) VALUES(?,?,?,?,?,?,?,?,?)`
+                    const memberId = `MEM-${GenerateUniqueId()}`
+                    const query = `INSERT INTO Member(MemberId,FirstName,LastName,DOB,Gender,NIN,Email,Phone,IsActive,CreatorUserId) VALUES(?,?,?,?,?,?,?,?,?,?)`
                    
-                        connection?.query(query,[memberId,payload.FirstName,payload.LastName,payload.DOB,payload.Gender,payload.NIN,payload.Email,payload.Phone,1],(err,data)=>{
+                        connection?.query(query,[memberId,payload.FirstName,payload.LastName,payload.DOB,payload.Gender,payload.NIN,payload.Email,payload.Phone,1,payload.CreatorUserId],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)
@@ -456,6 +456,44 @@ export default class memberRepositoryImpl implements memberRepository{
 
     }
 
+    async GetMemberByCreatorUserId(creatorUserId:string):Promise<any>{
+        let result : any
+        try{
+            const connection =  await this.getConnection()  
+            let result =await new Promise<any>((resolve,reject)=>{
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+
+                    connection?.query(`SELECT * FROM Member where CreatorUserId=?`,[creatorUserId],(err,data)=>{
+                        connection.release()
+                        if(err){
+                           console.log('error querying database',err)           
+                        }
+                        else{
+                           console.log('successfully query',data)
+                           
+                        }
+                        resolve(data)
+                       })
+        
+
+                   
+                    
+                    })
+            })
+    
+             return result
+
+        }catch(error){
+         
+        }
+
+    }
+
+
     async GetMemberByPhoneOrEmail(channel:string):Promise<any>{
         let result : any
         try{
@@ -560,7 +598,7 @@ export default class memberRepositoryImpl implements memberRepository{
                         reject(err)
                     }
                 })
-                    const placeholders = batchPayloads.map(() => '(?,?,?,?,?,?,?,?,?,?,?)').join(',');
+                    const placeholders = batchPayloads.map(() => '(?,?,?,?,?,?,?,?,?,?,?,?)').join(',');
                     const values = batchPayloads.flatMap(payload => [
                         payload.FirstName,
                         payload.LastName,
@@ -572,12 +610,13 @@ export default class memberRepositoryImpl implements memberRepository{
                         payload.CommunityId,
                         1,
                         `MEM-${GenerateUniqueId()}`,
-                        GetNewDate()
+                        GetNewDate(),
+                        payload.CreatorUserId
 
                     ])
                 
     
-                    const query = `INSERT INTO Member(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,IsActive,MemberId,CreatedAt) VALUES ${placeholders}`;
+                    const query = `INSERT INTO Member(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,IsActive,MemberId,CreatedAt,CreatorUserId) VALUES ${placeholders}`;
     
                         connection?.query(query,values,(err,data)=>{
                          //connection.release()

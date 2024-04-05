@@ -49,4 +49,8 @@ export default class checkerImpl implements checker{
       return await this.checkerRepo.createCheckersXls(payloads);
      }
 
+     async getCheckersByCreatorId(creatorUserId:string):Promise<any | null>{
+      return await this.checkerRepo.getCheckersByCheckerId(creatorUserId);
+     }
+
 }

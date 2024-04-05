@@ -13,4 +13,5 @@ export default interface checker{
     DeactivateCheckers(Id:string):Promise<any | null>
     DeleteCheckers(Id:string):Promise<any | null>
     createCheckersXls(payloads:createCheckersModel[]):Promise<string>
+    getCheckersByCreatorId(creatorUserId:string):Promise<any | null>
 }

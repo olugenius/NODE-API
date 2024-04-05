@@ -51,6 +51,8 @@ import { Authorize } from '../middleware/authorization'
  *                 type: string
  *               CheckPoint:
  *                 type: string
+ *               CreatorUserId:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Successful response
@@ -233,6 +235,31 @@ import { Authorize } from '../middleware/authorization'
  *           application/json:
  *             example:
  *               message:  Successfully got Checkers by communityId
+ */
+
+
+/**
+ * @swagger
+ * /api/checkers/all/{creatorUserId}:
+ *   get:
+ *     summary: Get Checkers by creatorUserId
+ *     parameters:
+ *       - in: path
+ *         name: creatorUserId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: creatorUserId of the checkers to get
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Checkers]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got Checkers by creatorUserId
  */
 
 
@@ -450,6 +477,25 @@ router.post('/checkers/create',Authorize,CreateCheckerValidator,async(req:any,re
           return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Checkers'})
         }
         return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Checkers',data:response[0]})
+  
+    }catch(error){
+      console.error('An Error Occurred',error)
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})      }
+      
+  })
+
+  router.get('/checkers/all/:creatorUserId',Authorize,async(req,res)=>{
+    try{
+      const param = req?.params?.creatorUserId
+      if(!param){
+        return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid param'})
+      }
+      console.log('checker param',param)
+      var response = await checker.getCheckersByCreatorId(param)
+      if(response?.length < 1){
+          return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Checkers'})
+        }
+        return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Checkers',data:response})
   
     }catch(error){
       console.error('An Error Occurred',error)

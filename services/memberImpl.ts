@@ -30,6 +30,9 @@ export default class MemberImpl implements Member{
      async createMembersXls(payloads:memberModel[]):Promise<string>{
       return await this.memberRepo.createMembersXls(payloads);
      }
+     async GetMemberByCreatorUserId(creatorUserId:string):Promise<any>{
+      return await this.memberRepo.GetMemberByCreatorUserId(creatorUserId);
+     }
   
    //   async CreateAppointment(payload:createAppointmentModel):Promise<string>{  
    //      return await this.memberRepo.createAppointment(payload)
