@@ -128,9 +128,6 @@ const router = express.Router()
  * /api/setting/profile/update/{channel}:
  *   put:
  *     summary: Update User
- *     tags: [User]
- *     security: 
- *      - APIKeyHeader: []
  *     parameters:
  *       - in: path
  *         name: channel
@@ -138,6 +135,9 @@ const router = express.Router()
  *         schema:
  *           type: string
  *         description: channel of the user to update
+ *     tags: [User]
+ *     security: 
+ *      - APIKeyHeader: []
  *     requestBody:
  *       required: true
  *       content:

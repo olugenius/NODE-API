@@ -28,7 +28,7 @@ export const UpdateUserValidator =
 [
   body('FirstName').notEmpty().trim().escape().withMessage('FirstName is required'),
   body('LastName','LastName is required').notEmpty().trim().escape(),
-  body('UserRole','Please Pass the User Role').notEmpty().trim().escape(),
+  //body('UserRole','Please Pass the User Role').notEmpty().trim().escape(),
   //check('Email').optional().isEmail().withMessage('InValid Email').normalizeEmail(),
 ]
 
