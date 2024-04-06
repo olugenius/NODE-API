@@ -126,7 +126,7 @@ const router = express.Router()
 /**
  * @swagger
  * /api/setting/profile/update/{channel}:
- *   post:
+ *   put:
  *     summary: Update User
  *     tags: [User]
  *     security: 
@@ -738,7 +738,7 @@ async (req:any,res:any)=>{
 
 
 
-router.post('/setting/profile/update/:channel',upload.single('file'),UpdateUserValidator,
+router.put('/setting/profile/update/:channel',upload.single('file'),UpdateUserValidator,
 async (req:any,res:any)=>{
     try{
      const param = req.params.channel
