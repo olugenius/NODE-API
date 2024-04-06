@@ -567,7 +567,7 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
                 }
                 
               const userId = GenerateUniqueId()
-                const query = `UPDATE Users SET FirstName=?,LastName=?,Email=?,PhotoPath=? WHERE (Phone=? or Email=?)) VALUES(?,?,?,?,?,?)`
+                const query = `UPDATE Users SET FirstName=?,LastName=?,Email=?,PhotoPath=? WHERE (Phone=? or Email=?)`
                
                     connection?.query(query,[payload.FirstName,payload.LastName,payload.Email ?? '',payload.PhotoPath,channel,channel],(err,data)=>{
                      connection.release()
