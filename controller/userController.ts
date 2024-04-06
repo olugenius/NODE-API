@@ -122,7 +122,6 @@ const router = express.Router()
  *               message: Registration Successful
  */
 
-
 /**
  * @swagger
  * /api/setting/profile/update/{channel}:
@@ -146,10 +145,11 @@ const router = express.Router()
  *             type: object
  *             properties:
  *               file:
- *                 type: file
+ *                 type: string  # Change type from file to string
  *               FirstName:
  *                 type: string
  *               LastName:
+ *                 type: string  # Add type for LastName
  *               Email:
  *                 type: string
  *           example:
@@ -163,6 +163,8 @@ const router = express.Router()
  *             example:
  *               message: user update Successful
  */
+
+
 
 /**
  * @swagger
@@ -755,9 +757,9 @@ async (req:any,res:any)=>{
           res.status(HttpStatus.STATUS_400).json(error.array())
           return;
         }
-          if(!(reqBody?.UserRole?.toUpperCase() in RolesEnum)){
-            return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Invalid user role passed'})
-          }
+          // if(!(reqBody?.UserRole?.toUpperCase() in RolesEnum)){
+          //   return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Invalid user role passed'})
+          // }
             // let userData = <registerModel[]>await userRepo.GetUserByEmailOrPhone(param)
             // if(userData?.length > 0){
             //     return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'User with this Phone number already exist'})
