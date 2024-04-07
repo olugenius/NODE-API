@@ -18,7 +18,7 @@ export const CreateCheckerValidator =
   //check('Email').optional().trim().isEmail().withMessage('invalid Email format').normalizeEmail(),
   body('DOB').notEmpty().withMessage('DOB field is required').trim().isDate().withMessage('invalid Date format'),
   body('Gender').notEmpty().withMessage('Gender field is required').trim(),
-  body('NIN').notEmpty().withMessage('NIN field is required').trim(),
+  //body('NIN').notEmpty().withMessage('NIN field is required').trim(),
   body('CheckPoint').notEmpty().withMessage('checkpoint field is required').trim(),
   body('CommunityId','Community field is required').notEmpty().trim().escape(),
  

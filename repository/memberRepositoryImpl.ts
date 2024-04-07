@@ -338,7 +338,7 @@ export default class memberRepositoryImpl implements memberRepository{
                     }
                     
                   
-                    const query = `UPDATE Member SET FirstName=?,LastName=?,NIN=?,DOB,?,Gender=?,CommunityId=?,Email=?,Phone=? WHERE MemberId=?`
+                    const query = `UPDATE Member SET FirstName=?,LastName=?,NIN=?,DOB=?,Gender=?,CommunityId=?,Email=?,Phone=? WHERE MemberId=?`
                    
                         connection?.query(query,[payload.FirstName,payload.LastName,payload.NIN,payload.DOB,payload.Gender,payload.CommunityId,payload.Email,payload.Phone,memberId],(err,data)=>{
                          connection.release()
