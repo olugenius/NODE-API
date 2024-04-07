@@ -546,11 +546,7 @@ export default class UserRepositoryImpl implements UserRepository{
             console.error('Error creating user:', error);
             return {status:'Failed'}
         }
-           
-               
-               
-
-                 
+              
         
     }
 async updateUser(channel:string,payload:updateUserModel):Promise<string>{
