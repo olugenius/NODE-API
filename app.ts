@@ -18,7 +18,13 @@ import DependantController from './controller/DependantController';
 import multer from 'multer';
 import NotificationController from './controller/NotificationController';
 //import swaggerDocs from   './utilities/user-swagger-doc'
-
+import {v2 as cloudinary} from 'cloudinary';
+          
+cloudinary.config({ 
+  cloud_name: process.env.cloud_name, 
+  api_key: process.env.api_key, 
+  api_secret: process.env.api_secret 
+});
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));

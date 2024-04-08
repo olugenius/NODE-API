@@ -15,7 +15,7 @@ import { CreateCheckerValidator, CreateCommunityValidator, CreateSubAdminValidat
 import OrganizationModel from '../model/OrganizationModel'
 import { Authorize } from '../middleware/authorization'
 import {CreateOrganisationValidator, UpdateOrganisationValidator } from '../utilities/registerValidator'
-
+import { v2 as cloudinary } from 'cloudinary';
 
 
 
@@ -672,13 +672,23 @@ router.post('/organization/create',CreateOrganisationValidator,OrganizationUploa
     //       res.status(HttpStatus.STATUS_400).json(error.array())
     //       return;
     //     }
-    reqBody.PhotoPath = req?.file?.path || ''
-    var response = await community.CreateOrganization(reqBody)
-    if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
-       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Organization'})
-    }
-    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Organization'})
-
+    cloudinary.uploader.upload(req.file.path, async (error:any, result:any) => {
+      if (error) {
+        // Handle error
+        console.error(error);
+        return res.status(500).json({status:'Failed',message:'File Upload failed'});
+      }
+      // File uploaded successfully, send back URL
+      console.log('photo url:',result.secure_url)
+      reqBody.PhotoPath = result.secure_url
+      var response = await community.CreateOrganization(reqBody)
+      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Organization'})
+      }
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Organization'})
+  
+    });
+    
   }catch(error){
     console.error('An Error Occurred',error)
     return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
@@ -697,13 +707,25 @@ router.put('/organization/update/:creatorPhone/:channel',UpdateOrganisationValid
     //       res.status(HttpStatus.STATUS_400).json(error.array())
     //       return;
     //     }
-    reqBody.PhotoPath = req?.file?.path || ''
-    var response = await community.UpdateOrganization(param1,param2,reqBody)
-    if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
-       return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update Organization'})
-    }
-    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Update Organization'})
+    cloudinary.uploader.upload(req.file.path, async (error:any, result:any) => {
+      if (error) {
+        // Handle error
+        console.error(error);
+        return res.status(500).json({status:'Failed',message:'File Upload failed'});
+      }
+      // File uploaded successfully, send back URL
+      console.log('photo url:',result.secure_url)
+      reqBody.PhotoPath = result.secure_url
+      var response = await community.UpdateOrganization(param1,param2,reqBody)
+      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update Organization'})
+      }
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Update Organization'})
+  
 
+    });
+    
+   
   }catch(error){
     console.error('An Error Occurred',error)
     return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
