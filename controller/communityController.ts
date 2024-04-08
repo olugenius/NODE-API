@@ -287,7 +287,7 @@ import {CreateOrganisationValidator, UpdateOrganisationValidator } from '../util
 /**
  * @swagger
  * /api/organization/update/{creatorPhone}/{channel}:
- *   post:
+ *   put:
  *     summary: Update Organization
  *     parameters:
  *       - in: path
@@ -686,7 +686,7 @@ router.post('/organization/create',CreateOrganisationValidator,OrganizationUploa
     
 })
 
-router.post('/organization/update/:creatorPhone/:channel',UpdateOrganisationValidator,OrganizationUpload.single('file'),async(req:any,res:any)=>{
+router.put('/organization/update/:creatorPhone/:channel',UpdateOrganisationValidator,OrganizationUpload.single('file'),async(req:any,res:any)=>{
   try{
 
     const reqBody = <OrganizationModel>req.body
