@@ -1274,8 +1274,7 @@ router.put('/setting/email/update',async(req:Request,res:Response)=>{
     }
         
     let response = <registerModel[]>await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
-    console.log('response from update email settings: ', response)
-    if(response?.length > 0 && response[0].UserRole.toUpperCase() === RolesEnum.SUPER_ADMIN){
+    if(response?.length > 0 && response[0].UserRole.toUpperCase() in RolesEnum){
       let result = await userRepo.UpdateEmail(reqBody)
       if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
 
