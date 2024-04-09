@@ -33,9 +33,9 @@ export default class subAdminRepoimpl implements subAdminRepo{
                     }
                     
                   
-                    const query = `INSERT INTO SubAdmin(FirstName,LastName,Phone,Email,PhotoPath,CommunityId,SubAdminId) VALUES(?,?,?,?,?,?,?)`
+                    const query = `INSERT INTO SubAdmin(FirstName,LastName,Phone,Email,PhotoPath,CommunityId,SubAdminId,CreatorUserId) VALUES(?,?,?,?,?,?,?,?)`
                     const subAdminId = `subAdmin-${GenerateUniqueId()}`
-                        connection?.query(query,[payload.FirstName,payload.LastName,payload.Phone,payload.Email,payload.PhotoPath,payload.CommunityId,subAdminId],(err,data)=>{
+                        connection?.query(query,[payload.FirstName,payload.LastName,payload.Phone,payload.Email,payload.PhotoPath,payload.CommunityId,subAdminId,payload.CreatorUserId ?? ''],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)
@@ -115,7 +115,7 @@ export default class subAdminRepoimpl implements subAdminRepo{
                     reject(err)
                     }
 
-                    connection?.query(`SELECT * FROM SubAdmin`,(err,data)=>{
+                    connection?.query(`SELECT a.*,(select Name from community where a.CommunityId = CommunityId ) as CommunityName FROM SubAdmin a `,(err,data)=>{
                         connection.release()
                         if(err){
                            console.log('error querying database',err)           
@@ -153,7 +153,7 @@ export default class subAdminRepoimpl implements subAdminRepo{
                     reject(err)
                     }
 
-                    connection?.query(`SELECT * FROM SubAdmin where CreatorUserId=?`,[creatorUserId],(err,data)=>{
+                    connection?.query(`SELECT a.*,(select Name from community where a.CommunityId = CommunityId ) as CommunityName FROM SubAdmin a where CreatorUserId=?`,[creatorUserId],(err,data)=>{
                         connection.release()
                         if(err){
                            console.log('error querying database',err)           

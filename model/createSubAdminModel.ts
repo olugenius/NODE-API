@@ -7,5 +7,6 @@ export default interface createSubAdminModel{
     CommunityId:string,
     AllowPushNotification:Boolean,
     AllowEmailNotification:Boolean,
-    AllowSMSNotification:Boolean
+    AllowSMSNotification:Boolean,
+    CreatorUserId:string
 }

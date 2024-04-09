@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./dist/app.js",
     "postinstall": "tsc",
-    "devstart": "tsc && node ./dist/app.js"
+    "devstart": "tsc && nodemon ./dist/app.js"
   },
   "author": "",
   "license": "ISC",

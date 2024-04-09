@@ -8,6 +8,7 @@ import createSubAdminModel from '../model/createSubAdminModel'
 import { CreateSubAdminValidator } from '../utilities/CommunityValidator'
 import multer from 'multer'
 import { Authorize } from '../middleware/authorization'
+import { v2 as cloudinary } from 'cloudinary';
 /**
  * @swagger
  * tags:
@@ -41,6 +42,8 @@ import { Authorize } from '../middleware/authorization'
  *               Email:
  *                 type: string
  *               CommunityId:
+ *                 type: string
+ *               CreatorUserId:
  *                 type: string
  *     responses:
  *       200:
@@ -176,12 +179,24 @@ router.post('/subAdmin/create',Authorize,SubAdminUpload.single('file'),CreateSub
             res.status(HttpStatus.STATUS_400).json(error.array())
             return;
           }
-      var response = await subAdmin.CreateSubAdmin(reqBody)
-      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
-         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create SubAdmin'})
-      }
-      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created SubAdmin'})
-  
+          cloudinary.uploader.upload(req.file.path, async (error:any, result:any) => {
+            if (error) {
+              // Handle error
+              console.error(error);
+              return res.status(500).json({status:'Failed',message:'File Upload failed'});
+            }
+            // File uploaded successfully, send back URL
+            console.log('photo url:',result.secure_url)
+            reqBody.PhotoPath = result.secure_url
+            var response = await subAdmin.CreateSubAdmin(reqBody)
+            if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+               return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create SubAdmin'})
+            }
+            return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created SubAdmin'})
+        
+   
+          });
+     
     }catch(error){
       console.error('An Error Occurred',error)
       return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
