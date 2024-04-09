@@ -722,17 +722,31 @@ async (req:any,res:any)=>{
                 break;
 
             }
-
+           
             //end switch case
-            cloudinary.uploader.upload(req.file.path, async (error:any, result:any) => {
-              if (error) {
-                // Handle error
-                console.error(error);
-                return res.status(500).json({status:'Failed',message:'File Upload failed'});
-              }
-              // File uploaded successfully, send back URL
-              console.log('photo url:',result.secure_url)
-              reqBody.PhotoPath = result.secure_url
+
+            if(req.file?.path !== undefined){
+
+              cloudinary.uploader.upload(req.file.path, async (error:any, result:any) => {
+                if (error) {
+                  // Handle error
+                  console.error(error);
+                  return res.status(500).json({status:'Failed',message:'File Upload failed'});
+                }
+                // File uploaded successfully, send back URL
+                console.log('photo url:',result.secure_url)
+                reqBody.PhotoPath = result.secure_url
+                let response = await userRepo.createUser(reqBody)
+                if(response?.status?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+                  return res.status(HttpStatus.STATUS_400).json({status: response.status,message:'Error registering user'})
+                  
+                }
+                return res.status(HttpStatus.STATUS_200).json({status:response.status,message:'Successfully registered user',data:reqBody})
+      
+              });
+
+            }else{
+              reqBody.PhotoPath = ''
               let response = await userRepo.createUser(reqBody)
               if(response?.status?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
                 return res.status(HttpStatus.STATUS_400).json({status: response.status,message:'Error registering user'})
@@ -740,7 +754,8 @@ async (req:any,res:any)=>{
               }
               return res.status(HttpStatus.STATUS_200).json({status:response.status,message:'Successfully registered user',data:reqBody})
     
-            });
+            }
+            
 
          
 
@@ -815,16 +830,28 @@ async (req:any,res:any)=>{
             // }
 
             //end switch case
-
-            cloudinary.uploader.upload(req.file.path, async (error:any, result:any) => {
-              if (error) {
-                // Handle error
-                console.error(error);
-                return res.status(500).json({status:'Failed',message:'File Upload failed'});
-              }
-              // File uploaded successfully, send back URL
-              console.log('photo url:',result.secure_url)
-              reqBody.PhotoPath = result.secure_url
+            if(req.file?.path !== undefined){
+              cloudinary.uploader.upload(req.file.path, async (error:any, result:any) => {
+                if (error) {
+                  // Handle error
+                  console.error(error);
+                  return res.status(500).json({status:'Failed',message:'File Upload failed'});
+                }
+                // File uploaded successfully, send back URL
+                console.log('photo url:',result.secure_url)
+                reqBody.PhotoPath = result.secure_url
+                let response = await userRepo.updateUser(param,reqBody)
+            if(response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+              return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Error Updating user'})
+              
+            }
+            return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Updated user',data:reqBody})
+  
+       
+      
+              });
+            }else{
+              reqBody.PhotoPath = ''
               let response = await userRepo.updateUser(param,reqBody)
           if(response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
             return res.status(HttpStatus.STATUS_400).json({status: HttpStatus.STATUS_FAILED,message:'Error Updating user'})
@@ -832,9 +859,8 @@ async (req:any,res:any)=>{
           }
           return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Updated user',data:reqBody})
 
-     
-    
-            });
+            }
+            
 
           
 
