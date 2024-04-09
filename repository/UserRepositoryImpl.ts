@@ -732,7 +732,7 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
                     
     
                         
-                            connection?.query(`UPDATE Users SET Email = ? where (Email=? or Phone=?)`,[true,payload.NewEmail,payload.Channel],(err,data)=>{
+                            connection?.query(`UPDATE Users SET Email = ? where (Email=? or Phone=?)`,[payload.NewEmail,payload.Channel,payload.Channel],(err,data)=>{
                                 if(err){
                                    console.log('error querying database',err)
                                    resolve('Failed')
