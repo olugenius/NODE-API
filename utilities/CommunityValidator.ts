@@ -31,5 +31,6 @@ export const CreateSubAdminValidator =
   body('Phone','Phone field is required').notEmpty().trim().isMobilePhone('any',{strictMode:true}).withMessage('invalid phone number'),
   //check('Email').optional().trim().isEmail().withMessage('invalid Email format').normalizeEmail(),
   body('CommunityId','Community field is required').notEmpty().trim().escape(),
+  body('CreatorUserId','CreatorUserId field is required').notEmpty().trim().escape(),
  
 ]
