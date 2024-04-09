@@ -27,5 +27,9 @@ export default class subAdminImpl implements subAdmin{
         return await this.subAdminRepo.GetSubAdminsByCommunityId(communityId)
         
        }
+
+       async GetAllSubAdminsByCreatorUserId(creatorUserId:string):Promise<any>{
+        return await this.subAdminRepo.GetAllSubAdminsByCreatorUserId(creatorUserId)
+       }
   
 }

@@ -122,6 +122,32 @@ import { Authorize } from '../middleware/authorization'
  */
 
 
+
+/**
+ * @swagger
+ * /api/subAdmin/all/{creatorUserId}:
+ *   get:
+ *     summary: Get SubAdmins by creatorUserId
+ *     parameters:
+ *       - in: path
+ *         name: creatorUserId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: creatorUserId of the subAdmin to get
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [SubAdmin]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got SubAdmin by creatorUserId
+ */
+
+
 const router = express.Router()
 // Set up storage for uploaded files
 
@@ -206,6 +232,24 @@ router.post('/subAdmin/create',Authorize,SubAdminUpload.single('file'),CreateSub
       return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch SubAdmins'})
     }
     return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch subAdmin',data:response[0]})
+  
+    }catch(error){
+     console.error('An Error Occurred',error)
+     return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
+  
+  })
+
+  router.get('/subAdmin/all/:creatorUserId',Authorize,async(req,res)=>{
+    try{
+  const param = req?.params?.creatorUserId
+  if(!param){
+    return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid param'})
+  }
+  var response = await subAdmin.GetAllSubAdminsByCreatorUserId(param)
+  if(response?.length < 1){
+      return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch SubAdmins'})
+    }
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch SubAdmin',data:response})
   
     }catch(error){
      console.error('An Error Occurred',error)
