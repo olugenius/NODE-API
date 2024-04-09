@@ -836,7 +836,7 @@ export default class communityRepositoryImpl implements communityRepository{
                     }
                     
                   
-                    const query = `UPDATE Organization set Name=?,Phone=?,Email=?,DateIncoporated=?,NatureOfBusiness=?,Address=?,PhotoPath=?) WHERE CreatorPhone=? and (Phone=? or Email=?)`
+                    const query = `UPDATE Organization set Name=?,Phone=?,Email=?,DateIncoporated=?,NatureOfBusiness=?,Address=?,PhotoPath=? WHERE CreatorPhone=? and (Phone=? or Email=?)`
                    
                         connection?.query(query,[payload.Name,payload.Phone,payload.Email,payload.DateIncoporated,payload.NatureOfBusiness,payload.Address,payload.PhotoPath,CreatorPhone,Channel,Channel],(err,data)=>{
                          connection.release()
