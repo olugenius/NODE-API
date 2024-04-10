@@ -19,14 +19,29 @@ async UpdateNotification(notificationId:string,payload:CreateNotificationModel):
 async UpdateDependantNotificationStatus(dependantId:string,payload:CreateDependantmodel):Promise<string>{
   return await this.notificationRepo.UpdateDependantNotificationStatus(dependantId,payload)
 }
+async UpdateAllDependantNotificationStatusByAdmin(CreatorUserId:string,payload:CreateDependantmodel):Promise<string>{
+  return await this.notificationRepo.UpdateAllDependantNotificationStatusByAdmin(CreatorUserId,payload)
+}
 async UpdateMemberNotificationStatus(memberId:string,payload:memberModel):Promise<string>{
   return await this.notificationRepo.UpdateMemberNotificationStatus(memberId,payload)
+}
+
+async UpdateAllMemberNotificationStatusByAdmin(CreatorUserId:string,payload:memberModel):Promise<string>{
+  return await this.notificationRepo.UpdateAllMemberNotificationStatusByAdmin(CreatorUserId,payload)
 }
 async UpdateCheckerNotificationStatus(checkerId:string,payload:createCheckersModel):Promise<string>{
   return await this.notificationRepo.UpdateCheckerNotificationStatus(checkerId,payload)
 }
+
+async UpdateAllCheckerNotificationStatusByAdmin(CreatorUserId:string,payload:createCheckersModel):Promise<string>{
+  return await this.notificationRepo.UpdateAllCheckerNotificationStatusByAdmin(CreatorUserId,payload)
+}
 async UpdateSubAdminNotificationStatus(subAdminId:string,payload:createSubAdminModel):Promise<string>{
   return await this.notificationRepo.UpdateSubAdminNotificationStatus(subAdminId,payload)
+}
+
+async UpdateAllSubAdminNotificationStatusByAdmin(CreatorUserId:string,payload:createSubAdminModel):Promise<string>{
+  return await this.notificationRepo.UpdateAllSubAdminNotificationStatusByAdmin(CreatorUserId,payload)
 }
 
 async  GetAllNotification():Promise<any>{

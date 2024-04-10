@@ -55,6 +55,44 @@ import memberModel from "../model/memberModel"
  *               message: Checker Notification Status Updated successfully
  */
 
+/**
+ * @swagger
+ * /api/notification/admin/checkers/update/{creatorUserId}:
+ *   put:
+ *     summary: Admin Update checker notification status
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Notification]
+ *     parameters:
+ *       - in: path
+ *         name: creatorUserId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: creatorUserId of the checker
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               AllowPushNotification:
+ *                 type: boolean
+ *               AllowEmailNotification:
+ *                 type: boolean
+ *               AllowSMSNotification:
+ *                 type: boolean
+ *               
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Checker Notification Status Updated successfully
+ */
+
 
 /**
  * @swagger
@@ -98,6 +136,45 @@ import memberModel from "../model/memberModel"
 
 /**
  * @swagger
+ * /api/notification/admin/dependant/update/{creatorUserId}:
+ *   put:
+ *     summary: Admin Update dependant notification status
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Notification]
+ *     parameters:
+ *       - in: path
+ *         name: creatorUserId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: creatorUserId of the Dependant
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               AllowPushNotification:
+ *                 type: boolean
+ *               AllowEmailNotification:
+ *                 type: boolean
+ *               AllowSMSNotification:
+ *                 type: boolean
+ *               
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Dependant Notification Status Updated successfully
+ */
+
+
+/**
+ * @swagger
  * /api/notification/member/update/{memberId}:
  *   put:
  *     summary: Update Member Notification status
@@ -135,6 +212,43 @@ import memberModel from "../model/memberModel"
  */
 
 
+/**
+ * @swagger
+ * /api/notification/admin/member/update/{creatorUserId}:
+ *   put:
+ *     summary: Admin Update Member Notification status
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Notification]
+ *     parameters:
+ *       - in: path
+ *         name: creatorUserId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: creatorUserId of the Member
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               AllowPushNotification:
+ *                 type: boolean
+ *               AllowEmailNotification:
+ *                 type: boolean
+ *               AllowSMSNotification:
+ *                 type: boolean
+ *               
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Member Notification Status Updated successfully
+ */
 
 
 /**
@@ -224,6 +338,45 @@ import memberModel from "../model/memberModel"
  *           application/json:
  *             example:
  *               message: Notification Updated successfully
+ */
+
+
+/**
+ * @swagger
+ * /api/notification/admin/subAdmin/update/{creatorUserId}:
+ *   put:
+ *     summary: Admin Update subAdmin notification status
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [Notification]
+ *     parameters:
+ *       - in: path
+ *         name: creatorUserId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: creatorUserId of the SubAdmin
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               AllowPushNotification:
+ *                 type: boolean
+ *               AllowEmailNotification:
+ *                 type: boolean
+ *               AllowSMSNotification:
+ *                 type: boolean
+ *               
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: SubAdmin Notification Status Updated successfully
  */
 
 
@@ -390,6 +543,74 @@ router.post('/notification/create',Authorize,async(req,res)=>{
       const reqBody = <createSubAdminModel>req.body
       const param = req.params.subAdminId
       var response = await notification.UpdateSubAdminNotificationStatus(param,reqBody)
+      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update subAdmin Notification status '})
+      }
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Updated subAdmin Notification status ',data:reqBody})
+  
+    }catch(error){
+      console.error('An Error Occurred',error)
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    
+    }
+      
+  })
+
+  router.put('/notification/admin/checkers/update/:creatorUserId',Authorize,async(req,res)=>{
+    try{
+      const reqBody = <createCheckersModel>req.body
+      const param = req.params.creatorUserId
+      var response = await notification.UpdateAllCheckerNotificationStatusByAdmin(param,reqBody)
+      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update checker  Notification status '})
+      }
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Updated checker Notification status ',data:reqBody})
+  
+    }catch(error){
+      console.error('An Error Occurred',error)
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    
+    }
+      
+  })
+
+  router.put('/notification/admin/dependant/update/:creatorUserId',Authorize,async(req,res)=>{
+    try{
+      const reqBody = <CreateDependantmodel>req.body
+      const param = req.params.creatorUserId
+      var response = await notification.UpdateAllDependantNotificationStatusByAdmin(param,reqBody)
+      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update dependant Notification status '})
+      }
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Updated dependant Notification status ',data:reqBody})
+  
+    }catch(error){
+      console.error('An Error Occurred',error)
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    
+    }
+      
+  })
+
+  router.put('/notification/admin/member/update/:creatorUserId',Authorize,async(req,res)=>{
+    try{
+      const reqBody = <memberModel>req.body
+      const param = req.params.creatorUserId
+      var response = await notification.UpdateAllMemberNotificationStatusByAdmin(param,reqBody)
+      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update member Notification status '})
+      }
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Updated member Notification status ',data:reqBody})
+  
+    }catch(error){
+      console.error('An Error Occurred',error)
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    
+    }
+      
+  })
+
+  router.put('/notification/admin/subAdmin/update/:creatorUserId',Authorize,async(req,res)=>{
+    try{
+      const reqBody = <createSubAdminModel>req.body
+      const param = req.params.creatorUserId
+      var response = await notification.UpdateAllSubAdminNotificationStatusByAdmin(param,reqBody)
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update subAdmin Notification status '})
       }

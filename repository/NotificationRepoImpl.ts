@@ -280,6 +280,52 @@ export default class NotificationRepoImpl implements NotificationRepo{
        
 }
 
+async UpdateAllDependantNotificationStatusByAdmin(CreatorUserId:string,payload:CreateDependantmodel):Promise<string>{
+    let response : string = ''
+    try{
+
+        const connection =  await this.getConnection()
+        let result = await new Promise<string>((resolve,reject)=>{
+         
+            connection?.getConnection((err,connection)=>{
+                if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                }
+                
+              
+                const query = `UPDATE Dependant SET AllowPushNotification=?,AllowEmailNotification=?,AllowSMSNotification=? WHERE CreatorUserId=?`
+               
+                    connection?.query(query,[payload.AllowPushNotification,payload.AllowEmailNotification,payload.AllowSMSNotification,CreatorUserId],(err,data)=>{
+                     connection.release()
+                        if(err){
+                            console.log('error querying database',err)
+                            response = 'Failed'
+                           
+                        }else{
+                            console.log('successfully query',data)
+                            response = 'Success'
+                           
+                           
+                        }
+                        resolve(response)
+                     })
+                   
+                })
+
+        })
+
+       
+            return result
+
+    }
+    catch(error){
+        console.error('Error creating user:', error);
+        return 'Failed'
+    }
+       
+}
+
 
 async UpdateMemberNotificationStatus(memberId:string,payload:memberModel):Promise<string>{
     let response : string = ''
@@ -298,6 +344,52 @@ async UpdateMemberNotificationStatus(memberId:string,payload:memberModel):Promis
                 const query = `UPDATE Member SET AllowPushNotification=?,AllowEmailNotification=?,AllowSMSNotification=? WHERE DependantId=?`
                
                     connection?.query(query,[payload.AllowPushNotification,payload.AllowEmailNotification,payload.AllowSMSNotification,memberId],(err,data)=>{
+                     connection.release()
+                        if(err){
+                            console.log('error querying database',err)
+                            response = 'Failed'
+                           
+                        }else{
+                            console.log('successfully query',data)
+                            response = 'Success'
+                           
+                           
+                        }
+                        resolve(response)
+                     })
+                   
+                })
+
+        })
+
+       
+            return result
+
+    }
+    catch(error){
+        console.error('Error creating user:', error);
+        return 'Failed'
+    }
+       
+}
+
+async UpdateAllMemberNotificationStatusByAdmin(CreatorUserId:string,payload:memberModel):Promise<string>{
+    let response : string = ''
+    try{
+
+        const connection =  await this.getConnection()
+        let result = await new Promise<string>((resolve,reject)=>{
+         
+            connection?.getConnection((err,connection)=>{
+                if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                }
+                
+              
+                const query = `UPDATE Member SET AllowPushNotification=?,AllowEmailNotification=?,AllowSMSNotification=? WHERE CreatorUserId=?`
+               
+                    connection?.query(query,[payload.AllowPushNotification,payload.AllowEmailNotification,payload.AllowSMSNotification,CreatorUserId],(err,data)=>{
                      connection.release()
                         if(err){
                             console.log('error querying database',err)
@@ -373,6 +465,52 @@ async UpdateCheckerNotificationStatus(checkerId:string,payload:createCheckersMod
        
 }
 
+async UpdateAllCheckerNotificationStatusByAdmin(CreatorUserId:string,payload:createCheckersModel):Promise<string>{
+    let response : string = ''
+    try{
+
+        const connection =  await this.getConnection()
+        let result = await new Promise<string>((resolve,reject)=>{
+         
+            connection?.getConnection((err,connection)=>{
+                if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                }
+                
+              
+                const query = `UPDATE checkers SET AllowPushNotification=?,AllowEmailNotification=?,AllowSMSNotification=? WHERE CreatorUserId=?`
+               
+                    connection?.query(query,[payload.AllowPushNotification,payload.AllowEmailNotification,payload.AllowSMSNotification,CreatorUserId],(err,data)=>{
+                     connection.release()
+                        if(err){
+                            console.log('error querying database',err)
+                            response = 'Failed'
+                           
+                        }else{
+                            console.log('successfully query',data)
+                            response = 'Success'
+                           
+                           
+                        }
+                        resolve(response)
+                     })
+                   
+                })
+
+        })
+
+       
+            return result
+
+    }
+    catch(error){
+        console.error('Error creating user:', error);
+        return 'Failed'
+    }
+       
+}
+
 async UpdateSubAdminNotificationStatus(subAdminId:string,payload:createSubAdminModel):Promise<string>{
     let response : string = ''
     try{
@@ -390,6 +528,52 @@ async UpdateSubAdminNotificationStatus(subAdminId:string,payload:createSubAdminM
                 const query = `UPDATE SubAdmin SET AllowPushNotification=?,AllowEmailNotification=?,AllowSMSNotification=? WHERE SubAdminId=?`
                
                     connection?.query(query,[payload.AllowPushNotification,payload.AllowEmailNotification,payload.AllowSMSNotification,subAdminId],(err,data)=>{
+                     connection.release()
+                        if(err){
+                            console.log('error querying database',err)
+                            response = 'Failed'
+                           
+                        }else{
+                            console.log('successfully query',data)
+                            response = 'Success'
+                           
+                           
+                        }
+                        resolve(response)
+                     })
+                   
+                })
+
+        })
+
+       
+            return result
+
+    }
+    catch(error){
+        console.error('Error creating user:', error);
+        return 'Failed'
+    }
+       
+}
+
+async UpdateAllSubAdminNotificationStatusByAdmin(CreatorUserId:string,payload:createSubAdminModel):Promise<string>{
+    let response : string = ''
+    try{
+
+        const connection =  await this.getConnection()
+        let result = await new Promise<string>((resolve,reject)=>{
+         
+            connection?.getConnection((err,connection)=>{
+                if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                }
+                
+              
+                const query = `UPDATE SubAdmin SET AllowPushNotification=?,AllowEmailNotification=?,AllowSMSNotification=? WHERE CreatorUserId=?`
+               
+                    connection?.query(query,[payload.AllowPushNotification,payload.AllowEmailNotification,payload.AllowSMSNotification,CreatorUserId],(err,data)=>{
                      connection.release()
                         if(err){
                             console.log('error querying database',err)
