@@ -786,6 +786,7 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
                     else{
                         console.log('SubAdmin data',data)
                         resData.push(data)
+                        resolve(resData)
                        
                        
                     }
@@ -805,6 +806,7 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
                     else{
                         console.log('Member data',data)
                         resData.push(data)
+                        resolve(resData)
                        
                        
                     }
@@ -822,6 +824,7 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
                     else{
                         console.log('Checker data',data)
                         resData.push(data)
+                        resolve(resData)
                        
                        
                     }
