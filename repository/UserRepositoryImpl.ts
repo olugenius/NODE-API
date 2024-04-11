@@ -765,7 +765,7 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
         
        
         try{
-            const resData:any = []
+            const resData:any[] = []
        const query1 = 'SELECT FirstName,LastName,PhotoPath  FROM subadmin where creatorUserId = ?'
        const query2 = 'select FirstName,LastName,Phone, (select PhotoPath from users where (Phone = a.Phone or Email = a.Email)) as PhotoPath from member a where a.CreatorUserId = ?'
        const query3 = 'select FirstName,LastName,Phone,(select PhotoPath from users where (Phone = a.Phone or Email = a.Email)) as PhotoPath  from checkers a  where a.CreatorUserId = ?'
@@ -786,10 +786,10 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
                     else{
                         console.log('SubAdmin data',data)
                         data.forEach((dt)=>{
-                            resData.push(...resData,dt)
+                            resData.push(dt)
 
                         })
-                        console.log('First data log',resData)
+                        resolve(resData)
                        
                        
                     }
@@ -809,10 +809,10 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
                     else{
                         console.log('Member data',data)
                         data.forEach((dt)=>{
-                            resData.push(...resData,dt)
+                            resData.push(dt)
 
                         })
-                        console.log('Second data log',resData)
+                        resolve(resData)
                        
                        
                     }
@@ -830,10 +830,10 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
                     else{
                         console.log('Checker data',data)
                         data.forEach((dt)=>{
-                            resData.push(...resData,dt)
+                            resData.push(dt)
 
                         })
-                        console.log('Third data log',resData)
+                        resolve(resData)
                         
                        
                        
