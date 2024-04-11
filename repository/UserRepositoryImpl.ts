@@ -886,9 +886,9 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
 
     async GetUserByCreatorUserId(creatorUserId:string):Promise<any | null>{
         
-       
+        const resData:any[] = []
         try{
-            const resData:any[] = []
+            
        const query1 = 'SELECT FirstName,LastName,PhotoPath  FROM subadmin where creatorUserId = ?'
        const query2 = 'select FirstName,LastName,Phone, (select PhotoPath from users where (Phone = a.Phone or Email = a.Email)) as PhotoPath from member a where a.CreatorUserId = ?'
        const query3 = 'select FirstName,LastName,Phone,(select PhotoPath from users where (Phone = a.Phone or Email = a.Email)) as PhotoPath  from checkers a  where a.CreatorUserId = ?'
@@ -947,7 +947,7 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
         memberData.forEach(dt => resData.push(dt));
         checkerData.forEach(dt => resData.push(dt));
 
-        console.log('Final user datas',resData)
+       
         return resData
                 
      })
@@ -980,7 +980,7 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
           console.error('An error occurred',error)
           
         }finally{
-            
+            console.log('Final user datas',resData)
         }
         
 
