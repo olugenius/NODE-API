@@ -1375,6 +1375,7 @@ router.get('/users/all/:creatorUserId',Authorize,async(req,res)=>{
       return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Id'})
     }
     var response = await userRepo.GetUserByCreatorUserId(param)
+    console.log('user details data at controller is',response)
     if(response?.length < 1){
         return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch UserDetails'})
       }
