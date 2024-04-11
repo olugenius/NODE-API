@@ -524,6 +524,32 @@ const router = express.Router()
 
 
 
+/**
+ * @swagger
+ * /api/users/all/{creatorUserId}:
+ *   get:
+ *     summary: Get user Users by creatorUserId
+ *     parameters:
+ *       - in: path
+ *         name: creatorUserId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: creatorUserId of the user to get
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: [User]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got user  by creatorUserId
+ */
+
+
+
 
 
 const userRepo = container.get<UserRepository>('UserRepository')
@@ -1331,6 +1357,24 @@ router.get('/profile/:channel',Authorize,async(req,res)=>{
       return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Id'})
     }
     var response = await userRepo.GetUserByEmailOrPhone(param)
+    if(response?.length < 1){
+        return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch UserDetails'})
+      }
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch UserDetails',data:response[0]})
+
+  }catch(error){
+    console.error('An Error Occurred',error)
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+    
+})
+
+router.get('/users/all/:creatorUserId',Authorize,async(req,res)=>{
+  try{
+    const param = req?.params?.creatorUserId
+    if(!param){
+      return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Id'})
+    }
+    var response = await userRepo.GetUserByCreatorUserId(param)
     if(response?.length < 1){
         return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch UserDetails'})
       }

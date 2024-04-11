@@ -761,5 +761,110 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
 
     }
 
+    async GetUserByCreatorUserId(creatorUserId:string):Promise<any | null>{
+        
+       
+        try{
+            const resData = []
+       const query1 = 'SELECT FirstName,LastName,PhotoPath  FROM subadmin where creatorUserId = ?'
+       const query2 = 'select FirstName,LastName,Phone, (select PhotoPath from users where (Phone = a.Phone or Email = a.Email)) as PhotoPath from member a where a.CreatorUserId = ?'
+       const query3 = 'select FirstName,LastName,Phone,(select PhotoPath from users where (Phone = a.Phone or Email = a.Email)) as PhotoPath  from checkers a  where a.CreatorUserId = ?'
+       const connection =  await this.getConnection()   
+        let result = await new Promise<any>((resolve,reject)=>{
+            connection?.getConnection((err,connection)=>{
+                if(err){
+                console.log('connection error',err)
+                reject(err)
+                }
+                connection?.query(query1,[creatorUserId],(err,data)=>{
+                    //connection.release()
+                    if(err){
+                       console.log('error querying database',err)
+                       
+       
+                    }
+                    else{
+                        resData.push(data)
+                       
+                       
+                    }
+                    resolve(data)
+                   })
+
+
+
+
+                   connection?.query(query2,[creatorUserId],(err,data)=>{
+                    //connection.release()
+                    if(err){
+                       console.log('error querying database',err)
+                       
+       
+                    }
+                    else{
+                        resData.push(data)
+                       
+                       
+                    }
+                    resolve(data)
+                   })
+
+
+                   connection?.query(query3,[creatorUserId],(err,data)=>{
+                    //connection.release()
+                    if(err){
+                       console.log('error querying database',err)
+                       
+       
+                    }
+                    else{
+                        resData.push(data)
+                       
+                       
+                    }
+                    resolve(data)
+                   })
+
+
+
+               connection.release()
+                
+                })
+                
+        })
+
+        //console.log('About to query Db after connection success')
+         //await new Promise<void>((resolve,reject)=>{
+
+            // connection?.query(`SELECT * FROM Users WHERE Email = ?`,[Email],(err,data)=>{
+            //     if(err){
+            //        console.log('error querying database',err)
+            //        reject(err)
+   
+            //     }
+            //     else{
+            //        console.log('successfully query',data)
+            //        result = data
+            //        resolve()
+            //     }
+            //    })
+
+
+         //})
+
+         return result
+
+        }catch(error){
+          console.error('An error occurred',error)
+          
+        }finally{
+            
+        }
+        
+
+         
+         
+    }
+
 
 }
