@@ -761,6 +761,129 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
 
     }
 
+    // async GetUserByCreatorUserId(creatorUserId:string):Promise<any | null>{
+        
+       
+    //     try{
+    //         const resData:any[] = []
+    //    const query1 = 'SELECT FirstName,LastName,PhotoPath  FROM subadmin where creatorUserId = ?'
+    //    const query2 = 'select FirstName,LastName,Phone, (select PhotoPath from users where (Phone = a.Phone or Email = a.Email)) as PhotoPath from member a where a.CreatorUserId = ?'
+    //    const query3 = 'select FirstName,LastName,Phone,(select PhotoPath from users where (Phone = a.Phone or Email = a.Email)) as PhotoPath  from checkers a  where a.CreatorUserId = ?'
+    //    const connection =  await this.getConnection()   
+    //     let result = await new Promise<any>((resolve,reject)=>{
+    //         connection?.getConnection((err,connection)=>{
+    //             if(err){
+    //             console.log('connection error',err)
+    //             reject(err)
+    //             }
+    //             connection?.query(query1,[creatorUserId],(err,data:any[])=>{
+    //                 //connection.release()
+    //                 if(err){
+    //                    console.log('error querying database',err)
+                       
+       
+    //                 }
+    //                 else{
+    //                     console.log('SubAdmin data',data)
+    //                     data.forEach((dt)=>{
+    //                         resData.push(dt)
+
+    //                     })
+    //                     resolve(resData)
+                       
+                       
+    //                 }
+    //                })
+
+
+
+
+    //                connection?.query(query2,[creatorUserId],(err,data:any[])=>{
+    //                 //connection.release()
+    //                 if(err){
+    //                    console.log('error querying database',err)
+                       
+       
+    //                 }
+    //                 else{
+    //                     console.log('Member data',data)
+    //                     data.forEach((dt)=>{
+    //                         resData.push(dt)
+
+    //                     })
+    //                     resolve(resData)
+                       
+                       
+    //                 }
+    //                })
+
+
+    //                connection?.query(query3,[creatorUserId],(err,data:any[])=>{
+    //                 //connection.release()
+    //                 if(err){
+    //                    console.log('error querying database',err)
+                       
+       
+    //                 }
+    //                 else{
+    //                     console.log('Checker data',data)
+    //                     data.forEach((dt)=>{
+    //                         resData.push(dt)
+
+    //                     })
+    //                     resolve(resData)
+                        
+                       
+                       
+    //                 }
+    //                })
+                  
+                  
+
+            
+    //            connection.release()
+                
+    //             })
+                
+    //     })
+
+    //     //console.log('About to query Db after connection success')
+    //      //await new Promise<void>((resolve,reject)=>{
+
+    //         // connection?.query(`SELECT * FROM Users WHERE Email = ?`,[Email],(err,data)=>{
+    //         //     if(err){
+    //         //        console.log('error querying database',err)
+    //         //        reject(err)
+   
+    //         //     }
+    //         //     else{
+    //         //        console.log('successfully query',data)
+    //         //        result = data
+    //         //        resolve()
+    //         //     }
+    //         //    })
+
+
+    //      //})
+    //      console.log('Final user datas',resData)
+    //      return result
+
+    //     }catch(error){
+    //       console.error('An error occurred',error)
+          
+    //     }finally{
+            
+    //     }
+        
+
+         
+         
+    // }
+
+
+
+
+
     async GetUserByCreatorUserId(creatorUserId:string):Promise<any | null>{
         
        
@@ -770,82 +893,71 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
        const query2 = 'select FirstName,LastName,Phone, (select PhotoPath from users where (Phone = a.Phone or Email = a.Email)) as PhotoPath from member a where a.CreatorUserId = ?'
        const query3 = 'select FirstName,LastName,Phone,(select PhotoPath from users where (Phone = a.Phone or Email = a.Email)) as PhotoPath  from checkers a  where a.CreatorUserId = ?'
        const connection =  await this.getConnection()   
-        let result = await new Promise<any>((resolve,reject)=>{
-            connection?.getConnection((err,connection)=>{
+      
+            connection?.getConnection(async(err,connection)=>{
                 if(err){
                 console.log('connection error',err)
-                reject(err)
+                
                 }
-                connection?.query(query1,[creatorUserId],(err,data:any[])=>{
-                    //connection.release()
-                    if(err){
-                       console.log('error querying database',err)
-                       
-       
-                    }
-                    else{
-                        console.log('SubAdmin data',data)
-                        data.forEach((dt)=>{
-                            resData.push(dt)
-
-                        })
-                        resolve(resData)
-                       
-                       
-                    }
-                   })
+                const [subadminData, memberData, checkerData] = await Promise.all([
+                new Promise<any[]>((resolve, reject) => {
+                    connection.query(query1, [creatorUserId], (err, data: any[]) => {
+                        if (err) {
+                            console.error('Error querying subadmin table:', err);
+                            reject(err);
+                        } else {
+                            console.log('SubAdmin data:', data);
+                            resolve(data);
+                        }
+                    });
+                }),
 
 
 
 
-                   connection?.query(query2,[creatorUserId],(err,data:any[])=>{
-                    //connection.release()
-                    if(err){
-                       console.log('error querying database',err)
-                       
-       
-                    }
-                    else{
-                        console.log('Member data',data)
-                        data.forEach((dt)=>{
-                            resData.push(dt)
-
-                        })
-                        resolve(resData)
-                       
-                       
-                    }
-                   })
-
-
-                   connection?.query(query3,[creatorUserId],(err,data:any[])=>{
-                    //connection.release()
-                    if(err){
-                       console.log('error querying database',err)
-                       
-       
-                    }
-                    else{
-                        console.log('Checker data',data)
-                        data.forEach((dt)=>{
-                            resData.push(dt)
-
-                        })
-                        resolve(resData)
-                        
-                       
-                       
-                    }
-                   })
-                  
-                  
-
-            
-               connection.release()
-                
+                new Promise<any[]>((resolve, reject) => {
+                    connection.query(query2, [creatorUserId], (err, data: any[]) => {
+                        if (err) {
+                            console.error('Error querying member table:', err);
+                            reject(err);
+                        } else {
+                            console.log('Member data:', data);
+                            resolve(data);
+                        }
+                    });
+                }),
+                new Promise<any[]>((resolve, reject) => {
+                    connection.query(query3, [creatorUserId], (err, data: any[]) => {
+                        if (err) {
+                            console.error('Error querying checkers table:', err);
+                            reject(err);
+                        } else {
+                            console.log('Checker data:', data);
+                            resolve(data);
+                        }
+                    });
                 })
+            //]);
+
+        ])
+       
+         connection.release()
+        // Push the data from all queries into resData
+
+        console.log('final sunadamin data',subadminData)
+        console.log('final member data',memberData)
+        console.log('final checker data',checkerData)
+        subadminData.forEach(dt => resData.push(dt));
+        memberData.forEach(dt => resData.push(dt));
+        checkerData.forEach(dt => resData.push(dt));
+
+
+        
                 
-        })
+     })
+                
+      
+
 
         //console.log('About to query Db after connection success')
          //await new Promise<void>((resolve,reject)=>{
@@ -866,7 +978,7 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
 
          //})
          console.log('Final user datas',resData)
-         return result
+         return resData
 
         }catch(error){
           console.error('An error occurred',error)
@@ -880,93 +992,6 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
          
     }
 
-
-
-
-
-    // async GetUserByCreatorUserId(creatorUserId: string): Promise<any | null> {
-    //     try {
-    //         const resData: any[] = [];
-    //         const query1 = 'SELECT FirstName, LastName, PhotoPath FROM subadmin WHERE creatorUserId = ?';
-    //         const query2 = 'SELECT FirstName, LastName, Phone, (SELECT PhotoPath FROM users WHERE (Phone = a.Phone OR Email = a.Email)) AS PhotoPath FROM member a WHERE a.CreatorUserId = ?';
-    //         const query3 = 'SELECT FirstName, LastName, Phone, (SELECT PhotoPath FROM users WHERE (Phone = a.Phone OR Email = a.Email)) AS PhotoPath FROM checkers a WHERE a.CreatorUserId = ?';
-    //         const connection = await this.getConnection();
-    
-            
-    //             connection?.getConnection(async (err,connection)=>{
-
-    //                 if(err){
-    //                     console.log('error connecting to database')
-
-    //                 }
-                    
-    //                 const [subadminData, memberData, checkerData] = await Promise.all([
-
-
-    //                 new Promise<any[]>((resolve, reject) => {
-    //                     connection.query(query1, [creatorUserId], (err, data: any[]) => {
-    //                         if (err) {
-    //                             console.error('Error querying subadmin table:', err);
-    //                             reject(err);
-    //                         } else {
-    //                             console.log('SubAdmin data:', data);
-    //                             resolve(data);
-    //                         }
-    //                     });
-    //                 }),
-    //                 new Promise<any[]>((resolve, reject) => {
-    //                     connection.query(query2, [creatorUserId], (err, data: any[]) => {
-    //                         if (err) {
-    //                             console.error('Error querying member table:', err);
-    //                             reject(err);
-    //                         } else {
-    //                             console.log('Member data:', data);
-    //                             resolve(data);
-    //                         }
-    //                     });
-    //                 }),
-    //                 new Promise<any[]>((resolve, reject) => {
-    //                     connection.query(query3, [creatorUserId], (err, data: any[]) => {
-    //                         if (err) {
-    //                             console.error('Error querying checkers table:', err);
-    //                             reject(err);
-    //                         } else {
-    //                             console.log('Checker data:', data);
-    //                             resolve(data);
-    //                         }
-    //                     });
-    //                 })
-                    
-
-
-    //             ]);
-
-    //             connection.release()
-                
-    //             // Push the data from all queries into resData
-    //             subadminData.forEach(dt => resData.push(dt));
-    //             memberData.forEach(dt => resData.push(dt));
-    //             checkerData.forEach(dt => resData.push(dt));
-
-
-    //             })
-                
-              
-           
-    
-            
-    
-           
-    
-    //         // Return the combined result
-    //         console.log('Final user data:', resData);
-    //         return resData;
-    
-    //     } catch (error) {
-    //         console.error('An error occurred:', error);
-    //         return null;
-    //     }
-    // }
     
 
 
