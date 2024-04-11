@@ -893,7 +893,7 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
        const query2 = 'select FirstName,LastName,Phone, (select PhotoPath from users where (Phone = a.Phone or Email = a.Email)) as PhotoPath from member a where a.CreatorUserId = ?'
        const query3 = 'select FirstName,LastName,Phone,(select PhotoPath from users where (Phone = a.Phone or Email = a.Email)) as PhotoPath  from checkers a  where a.CreatorUserId = ?'
        const connection =  await this.getConnection()   
-      
+       let result = await new Promise<any>((resolve,reject)=>{
             connection?.getConnection(async(err,connection)=>{
                 if(err){
                 console.log('connection error',err)
@@ -948,32 +948,16 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
         checkerData.forEach(dt => resData.push(dt));
 
        
-        return resData
                 
      })
-                
-      
+           if(resData.length > 0){
+             resolve(resData)
+           }else{
+            reject([])
+           }     
+       })
 
-
-        //console.log('About to query Db after connection success')
-         //await new Promise<void>((resolve,reject)=>{
-
-            // connection?.query(`SELECT * FROM Users WHERE Email = ?`,[Email],(err,data)=>{
-            //     if(err){
-            //        console.log('error querying database',err)
-            //        reject(err)
-   
-            //     }
-            //     else{
-            //        console.log('successfully query',data)
-            //        result = data
-            //        resolve()
-            //     }
-            //    })
-
-
-         //})
-         
+       return result
          
 
         }catch(error){
