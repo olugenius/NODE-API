@@ -765,7 +765,7 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
         
        
         try{
-            const resData = []
+            const resData:any = []
        const query1 = 'SELECT FirstName,LastName,PhotoPath  FROM subadmin where creatorUserId = ?'
        const query2 = 'select FirstName,LastName,Phone, (select PhotoPath from users where (Phone = a.Phone or Email = a.Email)) as PhotoPath from member a where a.CreatorUserId = ?'
        const query3 = 'select FirstName,LastName,Phone,(select PhotoPath from users where (Phone = a.Phone or Email = a.Email)) as PhotoPath  from checkers a  where a.CreatorUserId = ?'
@@ -788,7 +788,7 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
                        
                        
                     }
-                    resolve(data)
+                    //resolve(data)
                    })
 
 
@@ -806,7 +806,7 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
                        
                        
                     }
-                    resolve(data)
+                    //resolve(data)
                    })
 
 
@@ -822,11 +822,18 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
                        
                        
                     }
-                    resolve(data)
+                    //resolve(data)
                    })
+                   if(resData.length > 0){
+                    resolve(resData)
 
+                   }else{
+                    resolve([])
 
+                   }
+                  
 
+              console.log('Final user datas',resData)
                connection.release()
                 
                 })
