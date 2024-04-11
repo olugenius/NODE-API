@@ -943,16 +943,12 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
        
          connection.release()
         // Push the data from all queries into resData
-
-        console.log('final sunadamin data',subadminData)
-        console.log('final member data',memberData)
-        console.log('final checker data',checkerData)
         subadminData.forEach(dt => resData.push(dt));
         memberData.forEach(dt => resData.push(dt));
         checkerData.forEach(dt => resData.push(dt));
 
-
-        
+        console.log('Final user datas',resData)
+        return resData
                 
      })
                 
@@ -977,8 +973,8 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
 
 
          //})
-         console.log('Final user datas',resData)
-         return resData
+         
+         
 
         }catch(error){
           console.error('An error occurred',error)
