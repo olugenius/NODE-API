@@ -776,7 +776,7 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
                 console.log('connection error',err)
                 reject(err)
                 }
-                connection?.query(query1,[creatorUserId],(err,data)=>{
+                connection?.query(query1,[creatorUserId],(err,data:any[])=>{
                     //connection.release()
                     if(err){
                        console.log('error querying database',err)
@@ -785,7 +785,10 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
                     }
                     else{
                         console.log('SubAdmin data',data)
-                        resData.push(...resData,data)
+                        data.forEach((dt)=>{
+                            resData.push(...resData,dt)
+
+                        })
                         console.log('First data log',resData)
                        
                        
@@ -796,7 +799,7 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
 
 
 
-                   connection?.query(query2,[creatorUserId],(err,data)=>{
+                   connection?.query(query2,[creatorUserId],(err,data:any[])=>{
                     //connection.release()
                     if(err){
                        console.log('error querying database',err)
@@ -805,7 +808,10 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
                     }
                     else{
                         console.log('Member data',data)
-                        resData.push(...resData,data)
+                        data.forEach((dt)=>{
+                            resData.push(...resData,dt)
+
+                        })
                         console.log('Second data log',resData)
                        
                        
@@ -814,7 +820,7 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
                    })
 
 
-                   connection?.query(query3,[creatorUserId],(err,data)=>{
+                   connection?.query(query3,[creatorUserId],(err,data:any[])=>{
                     //connection.release()
                     if(err){
                        console.log('error querying database',err)
@@ -823,7 +829,10 @@ async updateUser(channel:string,payload:updateUserModel):Promise<string>{
                     }
                     else{
                         console.log('Checker data',data)
-                        resData.push(...resData,data)
+                        data.forEach((dt)=>{
+                            resData.push(...resData,dt)
+
+                        })
                         console.log('Third data log',resData)
                         
                        
