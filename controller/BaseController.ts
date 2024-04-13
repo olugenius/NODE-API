@@ -1295,7 +1295,7 @@ import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
  * /api/digital-registar/update/{registarId}:
  *   post:
  *     summary: Update digital-registar
-]*     parameters:
+ *     parameters:
  *       - in: path
  *         name: registarId
  *         required: true
