@@ -1,6 +1,7 @@
 import BusinessCategoryModel from "../../model/BusinessCategoryModel"
 import CommentModel from "../../model/CommentModel"
 import CreateForumModel from "../../model/CreateForumModel"
+import CreateIReportModel from "../../model/CreateIReportModel"
 import PostModel from "../../model/PostModel"
 import SupportCommentModel from "../../model/SupportCommentModel"
 import SupportModel from "../../model/SupportModel"
@@ -57,5 +58,9 @@ export default interface BaseService{
     UpdateSupportComment(Id:number,payload:SupportCommentModel):Promise<string>
     GetSupportCommentById(Id:number):Promise<any>
     GetAllSupportComment():Promise<any>
+    CreateIReport(PhotoPath:string[],payload:CreateIReportModel):Promise<string>
+    GetAllIReportByCreatorByUserId(creatorUserId:string):Promise<any>
+    GetAllIReport():Promise<any>
+    GetIReportPhotos(reportId:string):Promise<any>
         
 }

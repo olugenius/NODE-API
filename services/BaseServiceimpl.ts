@@ -13,6 +13,7 @@ import createServiceProviderModel from "../model/createServiceProviderModel";
 import BusinessCategoryModel from "../model/BusinessCategoryModel";
 import SupportModel from "../model/SupportModel";
 import SupportCommentModel from "../model/SupportCommentModel";
+import CreateIReportModel from "../model/CreateIReportModel";
 
 @injectable()
 export default class BaseServiceimpl implements BaseService{
@@ -171,5 +172,19 @@ export default class BaseServiceimpl implements BaseService{
    }
    async GetAllSupportComment():Promise<any>{
       return await this.baseRepo.GetAllSupportComment()
+   }
+
+   async CreateIReport(PhotoPath:string[],payload:CreateIReportModel):Promise<string>{
+      return await this.baseRepo.CreateIReport(PhotoPath,payload)
+   }
+
+   async GetAllIReportByCreatorByUserId(creatorUserId:string):Promise<any>{
+      return await this.baseRepo.GetAllIReportByCreatorByUserId(creatorUserId)
+   }
+   async GetAllIReport():Promise<any>{
+      return await this.baseRepo.GetAllIReport()
+   }
+   async GetIReportPhotos(reportId:string):Promise<any>{
+      return await this.baseRepo.GetIReportPhotos(reportId)
    }
 }
