@@ -1293,7 +1293,7 @@ import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
 /**
  * @swagger
  * /api/digital-registar/update/{registarId}:
- *   post:
+ *   putt:
  *     summary: Update digital-registar
  *     parameters:
  *       - in: path
@@ -3058,7 +3058,7 @@ router.post("/digital-registar/create", Authorize, async (req: any, res: any) =>
 
 
 
-router.post("/digital-registar/update/:registarId", Authorize, async (req: any, res: any) => {
+router.put("/digital-registar/update/:registarId", Authorize, async (req: any, res: any) => {
   try {
     const reqBody = <CreateDigitalRegistar>req.body;
     const param = req.params.registarId
