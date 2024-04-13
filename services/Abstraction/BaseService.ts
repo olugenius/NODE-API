@@ -1,5 +1,6 @@
 import BusinessCategoryModel from "../../model/BusinessCategoryModel"
 import CommentModel from "../../model/CommentModel"
+import CreateDigitalRegistar from "../../model/CreateDigitalRegistar"
 import CreateForumModel from "../../model/CreateForumModel"
 import CreateIReportModel from "../../model/CreateIReportModel"
 import PostModel from "../../model/PostModel"
@@ -62,5 +63,10 @@ export default interface BaseService{
     GetAllIReportByCreatorByUserId(creatorUserId:string):Promise<any>
     GetAllIReport():Promise<any>
     GetIReportPhotos(reportId:string):Promise<any>
+
+    CreateDigitalRegistar(payload:CreateDigitalRegistar):Promise<string>
+    UpdateDigitalRegistar(registarId:string,payload:CreateDigitalRegistar):Promise<string>
+    GetAllDigitalRegistar():Promise<any>
+    GetDigitalRegistarByRegistarId(registarId:string):Promise<any>
         
 }

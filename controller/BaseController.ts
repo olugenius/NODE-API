@@ -25,6 +25,7 @@ import SupportModel from "../model/SupportModel";
 import SupportCommentModel from "../model/SupportCommentModel";
 import CreateIReportModel from "../model/CreateIReportModel";
 import { v2 as cloudinary } from "cloudinary";
+import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
 
 /**
  * @swagger
@@ -1232,7 +1233,7 @@ import { v2 as cloudinary } from "cloudinary";
  * @swagger
  * /api/i-report-photos/{reportId}:
  *   get:
- *     summary: Get I-Report-Photos by ticketId
+ *     summary: Get I-Report-Photos by reportId
  *     parameters:
  *       - in: path
  *         name: reportId
@@ -1251,6 +1252,124 @@ import { v2 as cloudinary } from "cloudinary";
  *             example:
  *               message:  Successfully got I-Report-Photos by reportId
  */
+
+
+
+/**
+ * @swagger
+ * /api/digital-registar/create:
+ *   post:
+ *     summary: Create digital-registar
+ *     security:
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Name:
+ *                 type: string
+ *               ClockedInTime:
+ *                 type: date
+ *               ClockedInByUserId:
+ *                 type: string
+ *               Role:
+ *                 type: string
+ *
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: digital-registar Created successfully
+ */
+
+
+
+/**
+ * @swagger
+ * /api/digital-registar/update/{registarId}:
+ *   post:
+ *     summary: Update digital-registar
+]*     parameters:
+ *       - in: path
+ *         name: registarId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: registarId of the digital-registar to update
+ *     security:
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               ClockedOutTime:
+ *                 type: date
+ *               ClockedOutByUserId:
+ *                 type: string
+ *
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: digital-registar Updated successfully
+ */
+
+
+/**
+ * @swagger
+ * /api/digital-registar/all:
+ *   get:
+ *     summary: Get All digital-registar
+ *     security:
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got All digital-registar
+ *               data: []
+ */
+
+
+/**
+ * @swagger
+ * /api/digital-registar/{registarId}:
+ *   get:
+ *     summary: Get digital-registar by registarId
+ *     parameters:
+ *       - in: path
+ *         name: registarId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: registarId of the digital-registar to get
+ *     security:
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got digital-registar by registarId
+ */
+
 
 const router = express.Router();
 let AppointmentUploadXls = multer({
@@ -2495,11 +2614,11 @@ router.delete(
 router.post("/support/create", Authorize, async (req: any, res: any) => {
   try {
     const reqBody = <SupportModel>req.body;
-    const error = validationResult(req);
-    if (!error.isEmpty()) {
-      res.status(HttpStatus.STATUS_400).json(error.array());
-      return;
-    }
+    // const error = validationResult(req);
+    // if (!error.isEmpty()) {
+    //   res.status(HttpStatus.STATUS_400).json(error.array());
+    //   return;
+    // }
     var response = await baseService.CreateSupport(reqBody);
     if (response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS) {
       return res
@@ -2614,11 +2733,11 @@ router.get("/support/:ticketId", Authorize, async (req, res) => {
 router.post("/supportComment/create", Authorize, async (req: any, res: any) => {
   try {
     const reqBody = <SupportCommentModel>req.body;
-    const error = validationResult(req);
-    if (!error.isEmpty()) {
-      res.status(HttpStatus.STATUS_400).json(error.array());
-      return;
-    }
+    // const error = validationResult(req);
+    // if (!error.isEmpty()) {
+    //   res.status(HttpStatus.STATUS_400).json(error.array());
+    //   return;
+    // }
     var response = await baseService.CreateSupportComment(reqBody);
     if (response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS) {
       return res
@@ -2821,6 +2940,7 @@ router.post(
     }
   }
 );
+
 router.get("/i-report/all", Authorize, async (req, res) => {
   try {
 
@@ -2894,6 +3014,130 @@ router.get("/i-report-photos/:reportId", Authorize, async (req, res) => {
         status: HttpStatus.STATUS_SUCCESS,
         message: "Successfully fetch I-Report-Photos",
         data: response,
+      });
+  } catch (error) {
+    console.error("An Error Occurred", error);
+    return res
+      .status(HttpStatus.STATUS_500)
+      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+  }
+});
+
+
+router.post("/digital-registar/create", Authorize, async (req: any, res: any) => {
+  try {
+    const reqBody = <CreateDigitalRegistar>req.body;
+    // const error = validationResult(req);
+    // if (!error.isEmpty()) {
+    //   res.status(HttpStatus.STATUS_400).json(error.array());
+    //   return;
+    // }
+    var response = await baseService.CreateDigitalRegistar(reqBody);
+    if (response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS) {
+      return res
+        .status(HttpStatus.STATUS_400)
+        .json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "Failed to create Digital Registar",
+        });
+    }
+    return res
+      .status(HttpStatus.STATUS_200)
+      .json({
+        status: HttpStatus.STATUS_SUCCESS,
+        message: "Successfully Created Digital Registar",
+        data: reqBody,
+      });
+  } catch (error) {
+    console.error("An Error Occurred", error);
+    return res
+      .status(HttpStatus.STATUS_500)
+      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+  }
+});
+
+
+
+router.post("/digital-registar/update/:registarId", Authorize, async (req: any, res: any) => {
+  try {
+    const reqBody = <CreateDigitalRegistar>req.body;
+    const param = req.params.registarId
+    // const error = validationResult(req);
+    // if (!error.isEmpty()) {
+    //   res.status(HttpStatus.STATUS_400).json(error.array());
+    //   return;
+    // }
+    var response = await baseService.UpdateDigitalRegistar(param,reqBody);
+    if (response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS) {
+      return res
+        .status(HttpStatus.STATUS_400)
+        .json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "Failed to update Digital Registar",
+        });
+    }
+    return res
+      .status(HttpStatus.STATUS_200)
+      .json({
+        status: HttpStatus.STATUS_SUCCESS,
+        message: "Successfully update Digital Registar",
+        data: reqBody,
+      });
+  } catch (error) {
+    console.error("An Error Occurred", error);
+    return res
+      .status(HttpStatus.STATUS_500)
+      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+  }
+});
+
+
+router.get("/digital-registar/all", Authorize, async (req, res) => {
+  try {
+    var response = await baseService.GetAllDigitalRegistar();
+    if (response?.length < 1) {
+      res
+        .status(HttpStatus.STATUS_404)
+        .json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "Failed to fetch Digital Registar ",
+        });
+    }
+    return res
+      .status(HttpStatus.STATUS_200)
+      .json({
+        status: HttpStatus.STATUS_SUCCESS,
+        message: "Successfully fetch Digital Registar",
+        data: response,
+      });
+  } catch (error) {
+    console.error("An Error Occurred", error);
+    return res
+      .status(HttpStatus.STATUS_500)
+      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+  }
+});
+
+
+router.get("/digital-registar/:registarId", Authorize, async (req, res) => {
+  try {
+    const param = req.params.registarId
+    var response = await baseService.GetDigitalRegistarByRegistarId(param);
+    
+    if (response?.length < 1) {
+      res
+        .status(HttpStatus.STATUS_404)
+        .json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "Failed to fetch Digital Registar ",
+        });
+    }
+    return res
+      .status(HttpStatus.STATUS_200)
+      .json({
+        status: HttpStatus.STATUS_SUCCESS,
+        message: "Successfully fetch Digital Registar",
+        data: response[0],
       });
   } catch (error) {
     console.error("An Error Occurred", error);

@@ -18,6 +18,7 @@ import getCurrentDate from "../utilities/GetNewDate";
 import SupportModel from "../model/SupportModel";
 import SupportCommentModel from "../model/SupportCommentModel";
 import CreateIReportModel from "../model/CreateIReportModel";
+import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
 
 @injectable()
 export default class baseRepositoryImpl implements BaseRepository {
@@ -1879,6 +1880,153 @@ export default class baseRepositoryImpl implements BaseRepository {
        } catch (error) {
          console.error("Error Getting Support:", error);
        }
+     }
+
+     async CreateDigitalRegistar(payload:CreateDigitalRegistar):Promise<string>{
+        let response: string = "";
+        try {
+          const connection = await this.getConnection();
+          let result = await new Promise<string>((resolve, reject) => {
+            connection?.getConnection((err, connection) => {
+              if (err) {
+                console.log("connection error", err);
+                reject(err);
+              }
+             const registarId = `registar-${GenerateUniqueId()}`
+              const query = `INSERT INTO DigitalRegistar(Name,ClockedInTime,ClockedInByUserId,Role,CreatedAt,IsActive,RegistarId) VALUES(?,?,?,?,?,?,?)`;
+    
+              connection?.query(
+                query,
+                [
+                  payload.Name,
+                  payload.ClockedInTime,
+                  payload.ClockedInByUserId,
+                  payload.Role,
+                  getCurrentDate(),
+                  1,
+                  registarId
+                ],
+                (err, data) => {
+                  connection.release();
+                  if (err) {
+                    console.log("error querying database", err);
+                    response = "Failed";
+                  } else {
+                    console.log("successfully query", data);
+                    response = "Success";
+                  }
+                  resolve(response);
+                }
+              );
+            });
+          });
+    
+          return result;
+        } catch (error) {
+          console.error("Error creating user:", error);
+          return "Failed";
+        }
+     }
+
+     async UpdateDigitalRegistar(registarId:string,payload:CreateDigitalRegistar):Promise<string>{
+        let response: string = "";
+        try {
+          const connection = await this.getConnection();
+          let result = await new Promise<string>((resolve, reject) => {
+            connection?.getConnection((err, connection) => {
+              if (err) {
+                console.log("connection error", err);
+                reject(err);
+              }
+    
+              const query = `UPDATE DigitalRegistar SET ClockedOutTime=?,ClockedOutByUserId=?,UpdatedAt=?,IsActive=? WHERE RegistarId=?`;
+    
+              connection?.query(
+                query,
+                [
+                  payload.ClockedOutTime,
+                  payload.ClockedOutByUserId,
+                  getCurrentDate(),
+                  2,
+                  registarId
+                ],
+                (err, data) => {
+                  connection.release();
+                  if (err) {
+                    console.log("error querying database", err);
+                    response = "Failed";
+                  } else {
+                    console.log("successfully query", data);
+                    response = "Success";
+                  }
+                  resolve(response);
+                }
+              );
+            });
+          });
+    
+          return result;
+        } catch (error) {
+          console.error("Error creating user:", error);
+          return "Failed";
+        }
+     }
+
+     async GetAllDigitalRegistar():Promise<any>{
+        let result: any;
+        try {
+          const connection = await this.getConnection();
+          let result = await new Promise<any>((resolve, reject) => {
+            connection?.getConnection((err, connection) => {
+              if (err) {
+                console.log("connection error", err);
+                reject(err);
+              }
+    
+              connection?.query(`SELECT * FROM DigitalRegistar`, (err, data) => {
+                connection.release();
+                if (err) {
+                  console.log("error querying database", err);
+                } else {
+                  console.log("successfully query", data);
+                }
+                resolve(data);
+              });
+            });
+          });
+    
+          return result;
+        } catch (error) {
+          console.error("Error Getting Support:", error);
+        }
+     }
+     async GetDigitalRegistarByRegistarId(registarId:string):Promise<any>{
+        let result: any;
+        try {
+          const connection = await this.getConnection();
+          let result = await new Promise<any>((resolve, reject) => {
+            connection?.getConnection((err, connection) => {
+              if (err) {
+                console.log("connection error", err);
+                reject(err);
+              }
+    
+              connection?.query(`SELECT * FROM DigitalRegistar WHERE RegistarId=?`,[registarId], (err, data) => {
+                connection.release();
+                if (err) {
+                  console.log("error querying database", err);
+                } else {
+                  console.log("successfully query", data);
+                }
+                resolve(data);
+              });
+            });
+          });
+    
+          return result;
+        } catch (error) {
+          console.error("Error Getting Support:", error);
+        }
      }
 
 }

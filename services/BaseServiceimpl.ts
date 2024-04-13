@@ -14,6 +14,7 @@ import BusinessCategoryModel from "../model/BusinessCategoryModel";
 import SupportModel from "../model/SupportModel";
 import SupportCommentModel from "../model/SupportCommentModel";
 import CreateIReportModel from "../model/CreateIReportModel";
+import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
 
 @injectable()
 export default class BaseServiceimpl implements BaseService{
@@ -186,5 +187,19 @@ export default class BaseServiceimpl implements BaseService{
    }
    async GetIReportPhotos(reportId:string):Promise<any>{
       return await this.baseRepo.GetIReportPhotos(reportId)
+   }
+
+   async CreateDigitalRegistar(payload:CreateDigitalRegistar):Promise<string>{
+      return await this.baseRepo.CreateDigitalRegistar(payload)
+   }
+   async UpdateDigitalRegistar(registarId:string,payload:CreateDigitalRegistar):Promise<string>{
+      return await this.baseRepo.UpdateDigitalRegistar(registarId,payload)
+   }
+
+   async GetAllDigitalRegistar():Promise<any>{
+      return await this.baseRepo.GetAllDigitalRegistar()
+   }
+   async GetDigitalRegistarByRegistarId(registarId:string):Promise<any>{
+      return await this.baseRepo.GetDigitalRegistarByRegistarId(registarId)
    }
 }
