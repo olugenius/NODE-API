@@ -746,12 +746,19 @@ export default class UserRepositoryImpl implements UserRepository {
   async GetUserByCreatorUserId(creatorUserId: string): Promise<any | null> {
     const resData: any[] = [];
     try {
-      const query1 =
-        "SELECT FirstName,LastName,PhotoPath  FROM subadmin where creatorUserId = ?";
-      const query2 =
-        "select FirstName,LastName,Phone, (select PhotoPath from users where (Phone = a.Phone or Email = a.Email)) as PhotoPath from member a where a.CreatorUserId = ?";
-      const query3 =
-        "select FirstName,LastName,Phone,(select PhotoPath from users where (Phone = a.Phone or Email = a.Email)) as PhotoPath  from checkers a  where a.CreatorUserId = ?";
+    //   const query1 =
+    //     "SELECT FirstName,LastName,PhotoPath  FROM subadmin where creatorUserId = ?";
+    //   const query2 =
+    //     "select FirstName,LastName,Phone, (select PhotoPath from users where (Phone = a.Phone or Email = a.Email)) as PhotoPath from member a where a.CreatorUserId = ?";
+    //   const query3 =
+    //     "select FirstName,LastName,Phone,(select PhotoPath from users where (Phone = a.Phone or Email = a.Email)) as PhotoPath  from checkers a  where a.CreatorUserId = ?";
+
+    const query1 =
+    "SELECT FirstName,LastName,PhotoPath,(select userId from users where (Phone = a.Phone or Email = a.Email))  FROM subadmin a where a.creatorUserId = ?";
+  const query2 =
+    "select FirstName,LastName,Phone, (select PhotoPath from users where (Phone = a.Phone or Email = a.Email)) as PhotoPath,(select userId from users where (Phone = a.Phone or Email = a.Email)) as UserId  from member a where a.CreatorUserId = ?";
+  const query3 =
+    "select FirstName,LastName,Phone,(select PhotoPath from users where (Phone = a.Phone or Email = a.Email)) as PhotoPath,(select userId from users where (Phone = a.Phone or Email = a.Email)) as UserId  from checkers a  where a.CreatorUserId = ?";
       const connection = await this.getConnection();
       let result = await new Promise<any>((resolve, reject) => {
         connection?.getConnection(async (err, connection) => {

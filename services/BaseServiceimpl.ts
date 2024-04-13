@@ -93,8 +93,8 @@ export default class BaseServiceimpl implements BaseService{
       return await this.baseRepo.createAppointment(payload)
    }
 
-   async UpdateAppointment(payload:createAppointmentModel):Promise<string>{  
-    return await this.baseRepo.updateAppointment(payload)
+   async UpdateAppointment(AppointmentId:string,payload:createAppointmentModel):Promise<string>{  
+    return await this.baseRepo.updateAppointment(AppointmentId,payload)
  }
  async DeleteAppointment(Id:number):Promise<string>{  
     return await this.baseRepo.deleteAppointment(Id)

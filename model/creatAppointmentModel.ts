@@ -6,5 +6,7 @@ export default interface createAppointmentModel{
     Venue:string,
     Description:string,
     PhotoPath:string,
-    CommunityId:string
+    CommunityId:string,
+    CreatorUserId:string
+    UserIds:string
 }

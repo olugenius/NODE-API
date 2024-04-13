@@ -617,6 +617,8 @@ import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
  *                 type: string
  *               CommunityId:
  *                 type: string
+ *               CreatorUserId:
+ *                 type: string
  *           example:
  *             Channel: JohnDoe
  *             Password: john@example.com
@@ -631,9 +633,16 @@ import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
 
 /**
  * @swagger
- * /api/appointment/update:
+ * /api/appointment/update/{appointmentId}:
  *   put:
  *     summary: Update Appointment
+ *     parameters:
+ *       - in: path
+ *         name: appointmentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: appointmentId of the Appointment to update
  *     tags: [Base]
  *     requestBody:
  *       required: true
@@ -2127,13 +2136,13 @@ router.post(
 );
 
 router.put(
-  "/appointment/update",
+  "/appointment/update/:appointmentId",
   Authorize,
   AppointmentUploadXls.single("file"),
   async (req, res) => {
     try {
       const reqBody = <createAppointmentModel>req.body;
-
+      const param = req.params.appointmentId
       if (req?.file?.path !== undefined) {
         cloudinary.uploader.upload(
           req?.file?.path,
@@ -2147,7 +2156,7 @@ router.put(
             }
             // File uploaded successfully, send back URL
             reqBody.PhotoPath = result.secure_url;
-            var response = await baseService.UpdateAppointment(reqBody);
+            var response = await baseService.UpdateAppointment(param,reqBody);
             if (response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS) {
               return res
                 .status(HttpStatus.STATUS_400)
@@ -2167,7 +2176,7 @@ router.put(
         );
       } else {
         reqBody.PhotoPath = "";
-        var response = await baseService.UpdateAppointment(reqBody);
+        var response = await baseService.UpdateAppointment(param,reqBody);
         if (response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS) {
           return res
             .status(HttpStatus.STATUS_400)

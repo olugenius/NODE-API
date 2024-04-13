@@ -836,6 +836,7 @@ export default class baseRepositoryImpl implements BaseRepository {
 
   async createAppointment(payload: createAppointmentModel): Promise<string> {
     let response: string = "";
+    let errorLog:any[] = []
     try {
       const connection = await this.getConnection();
       let result = await new Promise<string>((resolve, reject) => {
@@ -844,11 +845,15 @@ export default class baseRepositoryImpl implements BaseRepository {
             console.log("connection error", err);
             reject(err);
           }
-
-          const query = `INSERT INTO Appointment(Title,Date,Time,Venue,Description,PhotoPath,CommunityId) VALUES(?,?,?,?,?,?,?)`;
-
+          connection.beginTransaction((err)=>{
+            reject(err)
+          })
+          const appointUsers = JSON.parse(payload.UserIds)
+          const appointmentId = `Appoint-${GenerateUniqueId()}`
+          const query1 = `INSERT INTO Appointment(Title,Date,Time,Venue,Description,PhotoPath,CommunityId,CreatorUserId,CreatedAt,AppointmentId,IsActive) VALUES(?,?,?,?,?,?,?,?,?,?,?)`;
+          const query2 = 'INSERT INTO AppointmentUsers(UserId,AppointmentId) VALUES(?,?)'
           connection?.query(
-            query,
+            query1,
             [
               payload.Title,
               payload.Date,
@@ -857,19 +862,51 @@ export default class baseRepositoryImpl implements BaseRepository {
               payload.Description,
               payload.PhotoPath,
               payload.CommunityId,
+              payload.CreatorUserId,
+              getCurrentDate(),
+              appointmentId,
+              1
             ],
             (err, data) => {
-              connection.release();
               if (err) {
+                errorLog.push(err)
                 console.log("error querying database", err);
-                response = "Failed";
-              } else {
-                console.log("successfully query", data);
-                response = "Success";
-              }
-              resolve(response);
+                connection.rollback((error)=>{
+                    console.log('error rolling back transaction',error)
+                })
+              } 
             }
           );
+        for(let i=0;i<appointUsers.length;i++){
+                connection.query(query2,[appointUsers[i],appointmentId],(err,data)=>{
+                if(err){
+                    errorLog.push(err)
+                    connection.rollback((error)=>{
+                        console.log('error rolling back transaction',error)
+                    })
+ 
+                }
+         })
+        }
+
+
+        connection.commit((err)=>{
+            connection.release()
+          if(err){
+            errorLog.push(err)
+            connection.rollback((error)=>{
+                console.log('error rolling back transaction',error)
+            })
+
+          }
+        })
+
+        if(errorLog.length < 0){
+           resolve('Success')
+        }else{
+            resolve('Failed')
+        }
+
         });
       });
 
@@ -880,7 +917,7 @@ export default class baseRepositoryImpl implements BaseRepository {
     }
   }
 
-  async updateAppointment(payload: createAppointmentModel): Promise<string> {
+  async updateAppointment(AppointmentId:string,payload: createAppointmentModel): Promise<string> {
     let response: string = "";
     try {
       const connection = await this.getConnection();
@@ -891,7 +928,7 @@ export default class baseRepositoryImpl implements BaseRepository {
             reject(err);
           }
 
-          const query = `UPDATE Appointment SET Title=?,Date=?,Time=?,Venue=?,Description=?,PhotoPath=?,CommunityId=? WHERE Id= ?`;
+          const query = `UPDATE Appointment SET Title=?,Date=?,Time=?,Venue=?,Description=?,PhotoPath=?,CommunityId=?,UpdatedAt=? WHERE AppointmentId= ?`;
 
           connection?.query(
             query,
@@ -903,7 +940,8 @@ export default class baseRepositoryImpl implements BaseRepository {
               payload.Description,
               payload.PhotoPath,
               payload.CommunityId,
-              payload.Id,
+              getCurrentDate(),
+              AppointmentId,
             ],
             (err, data) => {
               connection.release();
@@ -1769,6 +1807,7 @@ export default class baseRepositoryImpl implements BaseRepository {
           }
 
           connection.commit((err) => {
+          connection.release()
             errorLog.push(err);
             console.log("error during commit", err);
             connection.rollback((error) => {
