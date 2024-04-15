@@ -6,9 +6,9 @@ import { isAtLeast16YearsOld, isValidDateFormat } from './dateFormatter'
 
   export const validator = 
 [
-  body('FirstName').notEmpty().trim().escape().withMessage('FirstName is required'),
-  body('LastName','LastName is required').notEmpty().trim().escape(),
-  body('Gender','Gender is required').notEmpty().trim().escape(),
+  body('FirstName').notEmpty().trim().escape().withMessage('FirstName is required').matches(/^[a-zA-Z]+$/).withMessage('FirstName must contain only alphabetic characters'),
+  body('LastName','LastName is required').notEmpty().trim().escape().matches(/^[a-zA-Z]+$/).withMessage('LastName must contain only alphabetic characters'),
+  body('Gender','Gender is required').notEmpty().trim().escape().matches(/^[a-zA-Z]+$/).withMessage('Gender must contain only alphabetic characters'),
   body('Address','Address is required').notEmpty().trim().escape(),
   body('Phone').notEmpty().withMessage('PhoneNumber is required').trim().isMobilePhone('any',{ strictMode: true }).withMessage('Invalid phone number'),
   //body('PhotoPath').notEmpty().trim().escape(),
@@ -26,8 +26,8 @@ import { isAtLeast16YearsOld, isValidDateFormat } from './dateFormatter'
 
 export const UpdateUserValidator = 
 [
-  body('FirstName').notEmpty().trim().escape().withMessage('FirstName is required'),
-  body('LastName','LastName is required').notEmpty().trim().escape(),
+  body('FirstName').notEmpty().trim().escape().withMessage('FirstName is required').matches(/^[a-zA-Z]+$/).withMessage('FirstName must contain only alphabetic characters'),
+  body('LastName','LastName is required').notEmpty().trim().escape().matches(/^[a-zA-Z]+$/).withMessage('LastName must contain only alphabetic characters'),
   //body('UserRole','Please Pass the User Role').notEmpty().trim().escape(),
   //check('Email').optional().isEmail().withMessage('InValid Email').normalizeEmail(),
 ]
@@ -120,7 +120,7 @@ export const updatePasswordValidator =
 
 export const UpdateOrganisationValidator = 
 [
-  body('Name').notEmpty().trim().escape().withMessage('Name is required'),
+  body('Name').notEmpty().trim().escape().withMessage('Name is required').matches(/^[a-zA-Z]+$/).withMessage('Organization Name must contain only alphabetic characters'),
   check('Phone').optional().trim().isMobilePhone('any',{ strictMode: true }).withMessage('Invalid phone number'),
   body('Address','Organisation office address is required').notEmpty().trim().escape(),
   //body('DOB','Date of Birth is required').isDate().toDate(),
@@ -132,7 +132,7 @@ export const UpdateOrganisationValidator =
 
 export const CreateOrganisationValidator = 
 [
-  body('Name').notEmpty().trim().escape().withMessage('Name is required'),
+  body('Name').notEmpty().trim().escape().withMessage('Name is required').matches(/^[a-zA-Z]+$/).withMessage('Organization Name must contain only alphabetic characters'),
   check('Phone').optional().trim().isMobilePhone('any',{ strictMode: true }).withMessage('Invalid phone number'),
   body('Address','Organisation office address is required').notEmpty().trim().escape(),
   //body('DOB','Date of Birth is required').isDate().toDate(),
