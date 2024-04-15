@@ -788,7 +788,7 @@ async (req:any,res:any)=>{
     }
     catch(err){
         console.log('error creating user at controller side',err)
-        return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
+        return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})      }
    
 
 })
@@ -893,7 +893,7 @@ async (req:any,res:any)=>{
     }
     catch(err){
         console.log('error creating user at controller side',err)
-        return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
+        return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})      }
    
 
 })
@@ -945,7 +945,7 @@ router.post('/register/sendMail',EmailValidator,async(req:Request,res:Response)=
   }
   catch(err){
     console.log('error creating user at controller side',err)
-    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    }
     
     
 })
@@ -1017,7 +1017,7 @@ router.post('/register/verify',VerifyEmailValidator,async(req:Request,res:Respon
 
   }catch(err){
     console.log('An error occurred verifying token',err)
-    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    }
    
     
 })
@@ -1070,7 +1070,7 @@ router.post('/forgotPassword/sendMail',ForgotPasswordValidator,async(req:Request
 
   }catch(err){
     console.log('An error occurred sending mail/sms',err)
-    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    }
    
    
 })
@@ -1144,7 +1144,7 @@ router.post('/forgotPassword/verify',ForgotPasswordVerifyValidator,async(req:Req
 
   }catch(err){
     console.log('An error occurred verifying token',err)
-    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    }
    
 })
 
@@ -1176,7 +1176,7 @@ router.post('/resetPassword',resetPasswordValidator,async(req:Request,res:Respon
 
   }catch(err){
     console.log('An error occurred resetting password',err)
-    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    }
  
   
 })
@@ -1211,7 +1211,7 @@ router.post('/superAdmin/createPassword',createPasswordValidator,async(req:Reque
 
   }catch(err){
     console.log('An error occurred resetting password',err)
-    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    }
  
   
 })
@@ -1245,7 +1245,7 @@ router.post('/createPassword',createPasswordValidator,async(req:Request,res:Resp
 
   }catch(err){
     console.log('An error occurred resetting password',err)
-    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    }
  
   
 })
@@ -1284,7 +1284,7 @@ router.put('/setting/password/update',updatePasswordValidator,async(req:Request,
 
   }catch(err){
     console.log('An error occurred resetting password',err)
-    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    }
  
   
 })
@@ -1310,7 +1310,7 @@ router.delete('/setting/account/delete/:Id',async(req:Request,res:Response)=>{
 
   }catch(err){
     console.log('An error occurred resetting password',err)
-    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    }
  
   
 })
@@ -1344,7 +1344,7 @@ router.put('/setting/email/update',async(req:Request,res:Response)=>{
 
   }catch(err){
     console.log('An error occurred resetting password',err)
-    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    }
  
   
 })
@@ -1364,7 +1364,7 @@ router.get('/profile/:channel',Authorize,async(req,res)=>{
 
   }catch(error){
     console.error('An Error Occurred',error)
-    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    }
     
 })
 
@@ -1382,7 +1382,7 @@ router.get('/users/all/:creatorUserId',Authorize,async(req,res)=>{
 
   }catch(error){
     console.error('An Error Occurred',error)
-    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    }
     
 })
 

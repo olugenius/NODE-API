@@ -311,7 +311,7 @@ router.post('/member/create',Authorize,async(req,res)=>{
     return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Members'})
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    
     }
       
   })
@@ -330,7 +330,7 @@ router.post('/member/create',Authorize,async(req,res)=>{
   
     }catch(error){
      console.error('An Error Occurred',error)
-     return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
+     return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})      }
   
   })
 
@@ -346,7 +346,7 @@ router.post('/member/create',Authorize,async(req,res)=>{
   
     }catch(error){
      console.error('An Error Occurred',error)
-     return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
+     return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})      }
   
   })
 
@@ -365,7 +365,7 @@ router.post('/member/create',Authorize,async(req,res)=>{
   
     }catch(error){
      console.error('An Error Occurred',error)
-     return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
+     return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})      }
   
   })
   

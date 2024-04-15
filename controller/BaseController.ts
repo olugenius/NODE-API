@@ -1774,7 +1774,7 @@ router.get("/forum/all", Authorize, async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -1809,7 +1809,7 @@ router.get("/forum/:forumId", Authorize, async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -1841,7 +1841,7 @@ router.post("/post/create", Authorize, async (req: any, res: any) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -1867,7 +1867,7 @@ router.get("/post/all", Authorize, async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -1899,7 +1899,7 @@ router.get("/post/:Id", Authorize, async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -1931,7 +1931,7 @@ router.post("/comment/create", Authorize, async (req: any, res: any) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -1964,7 +1964,7 @@ router.put("/comment/update/:Id", Authorize, async (req: any, res: any) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -1995,7 +1995,7 @@ router.delete("/comment/delete/:Id", Authorize, async (req: any, res: any) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -2021,7 +2021,7 @@ router.get("/comment/all", Authorize, async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -2056,7 +2056,7 @@ router.get("/comment/:Id", Authorize, async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -2205,7 +2205,7 @@ router.put(
         .status(HttpStatus.STATUS_500)
         .json({
           status: HttpStatus.STATUS_500,
-          Message: "Something went wrong",
+          message: "Something went wrong",
         });
     }
   }
@@ -2233,7 +2233,7 @@ router.delete("/appointment/delete/:Id", Authorize, async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -2260,7 +2260,7 @@ router.get("/appointment/all", Authorize, async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -2295,7 +2295,7 @@ router.get("/appointment/:Id", Authorize, async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 router.get("/appointment/:communityId", Authorize, async (req, res) => {
@@ -2329,7 +2329,7 @@ router.get("/appointment/:communityId", Authorize, async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 router.post("/transaction/create", Authorize, async (req: any, res: any) => {
@@ -2356,7 +2356,7 @@ router.post("/transaction/create", Authorize, async (req: any, res: any) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -2388,7 +2388,7 @@ router.delete(
         .status(HttpStatus.STATUS_500)
         .json({
           status: HttpStatus.STATUS_500,
-          Message: "Something went wrong",
+          message: "Something went wrong",
         });
     }
   }
@@ -2416,7 +2416,7 @@ router.get("/transaction/all", Authorize, async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -2443,7 +2443,7 @@ router.get("/transaction/:transactionId", Authorize, async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -2481,7 +2481,7 @@ router.post(
         .status(HttpStatus.STATUS_500)
         .json({
           status: HttpStatus.STATUS_500,
-          Message: "Something went wrong",
+          message: "Something went wrong",
         });
     }
   }
@@ -2525,7 +2525,7 @@ router.post(
         .status(HttpStatus.STATUS_500)
         .json({
           status: HttpStatus.STATUS_500,
-          Message: "Something went wrong",
+          message: "Something went wrong",
         });
     }
   }
@@ -2555,7 +2555,7 @@ router.get("/businessCategory/all", async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -2582,7 +2582,7 @@ router.get("/businessCategory/:Id", async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -2614,7 +2614,7 @@ router.delete(
         .status(HttpStatus.STATUS_500)
         .json({
           status: HttpStatus.STATUS_500,
-          Message: "Something went wrong",
+          message: "Something went wrong",
         });
     }
   }
@@ -2680,7 +2680,7 @@ router.put(
         .status(HttpStatus.STATUS_500)
         .json({
           status: HttpStatus.STATUS_500,
-          Message: "Something went wrong",
+          message: "Something went wrong",
         });
     }
   }
@@ -2708,7 +2708,7 @@ router.get("/support/all", Authorize, async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -2735,7 +2735,7 @@ router.get("/support/:ticketId", Authorize, async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -2767,7 +2767,7 @@ router.post("/supportComment/create", Authorize, async (req: any, res: any) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -2802,7 +2802,7 @@ router.put(
         .status(HttpStatus.STATUS_500)
         .json({
           status: HttpStatus.STATUS_500,
-          Message: "Something went wrong",
+          message: "Something went wrong",
         });
     }
   }
@@ -2831,7 +2831,7 @@ router.get("/supportComment/:Id", Authorize, async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -2859,7 +2859,7 @@ router.get("/supportComment/all", Authorize, async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -2944,7 +2944,7 @@ router.post(
         .status(HttpStatus.STATUS_500)
         .json({
           status: HttpStatus.STATUS_500,
-          Message: "Something went wrong",
+          message: "Something went wrong",
         });
     }
   }
@@ -2973,7 +2973,7 @@ router.get("/i-report/all", Authorize, async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -3001,7 +3001,7 @@ router.get("/i-report/all/:creatorUserId", Authorize, async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -3028,7 +3028,7 @@ router.get("/i-report-photos/:reportId", Authorize, async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -3061,7 +3061,7 @@ router.post("/digital-registar/create", Authorize, async (req: any, res: any) =>
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -3096,7 +3096,7 @@ router.put("/digital-registar/update/:registarId", Authorize, async (req: any, r
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -3123,7 +3123,7 @@ router.get("/digital-registar/all", Authorize, async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 
@@ -3152,7 +3152,7 @@ router.get("/digital-registar/:registarId", Authorize, async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
-      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
 

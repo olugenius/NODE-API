@@ -464,7 +464,7 @@ router.post('/notification/create',Authorize,async(req,res)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    
     }
       
   })
@@ -482,7 +482,7 @@ router.post('/notification/create',Authorize,async(req,res)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    
     }
       
   })
@@ -499,7 +499,7 @@ router.post('/notification/create',Authorize,async(req,res)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    
     }
       
   })
@@ -516,7 +516,7 @@ router.post('/notification/create',Authorize,async(req,res)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    
     }
       
   })
@@ -567,7 +567,7 @@ router.post('/notification/create',Authorize,async(req,res)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    
     }
       
   })
@@ -584,7 +584,7 @@ router.post('/notification/create',Authorize,async(req,res)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    
     }
       
   })
@@ -601,7 +601,7 @@ router.post('/notification/create',Authorize,async(req,res)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    
     }
       
   })
@@ -618,7 +618,7 @@ router.post('/notification/create',Authorize,async(req,res)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    
     }
       
   })
@@ -633,7 +633,7 @@ router.post('/notification/create',Authorize,async(req,res)=>{
   
     }catch(error){
       console.error('An Error Occurred',error)
-      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    }
       
   })
 

@@ -376,7 +376,7 @@ router.post('/community/create',Authorize,CreateCommunityValidator,async (req:an
 
   }catch(error){
    console.error('An Error Occurred during create Community',error)
-   return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+   return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    }
     
 })
 
@@ -390,7 +390,7 @@ router.get('/community',Authorize,async(req:any,res)=>{
 
   }catch(error){
     console.error('An Error Occurred',error)
-    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    }
   
 })
 
@@ -423,7 +423,7 @@ router.get('/community/all/:creatorUserId',Authorize,async(req,res)=>{
 
   }catch(error){
     console.error('An Error Occurred',error)
-    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    }
 
 })
 
@@ -441,7 +441,7 @@ router.get('/community/admin/profile/:phone',Authorize,async(req,res)=>{
 
   }catch(error){
     console.error('An Error Occurred',error)
-    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    }
 
 })
 
@@ -456,7 +456,7 @@ router.delete('/community/delete/:CommunityId',Authorize,async(req,res)=>{
 
   }catch(error){
     console.error('An Error Occurred',error)
-    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    }
     
 })
 
@@ -471,7 +471,7 @@ router.patch('/community/activate/:CommunityId',Authorize,async(req,res)=>{
 
   }catch(error){
     console.error('An Error Occurred',error)
-    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    }
     
 })
 
@@ -486,7 +486,7 @@ router.patch('/community/deactivate/:CommunityId',Authorize,async(req,res)=>{
 
   }catch(error){
     console.error('An Error Occurred',error)
-    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    }
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    }
     
 })
 
@@ -703,7 +703,7 @@ router.post('/organization/create',CreateOrganisationValidator,OrganizationUploa
     
   }catch(error){
     console.error('An Error Occurred',error)
-    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})  
   }
     
 })
@@ -751,7 +751,7 @@ router.put('/organization/update/:creatorPhone/:channel',UpdateOrganisationValid
    
   }catch(error){
     console.error('An Error Occurred',error)
-    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})  
+    return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})  
   }
     
 })
