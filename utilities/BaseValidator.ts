@@ -19,7 +19,7 @@ export const StaticAccessCodeModelValidator =
   body('Name','Name field is required').notEmpty().trim(),
   //body('Phone','Phone field is required').notEmpty().trim().isMobilePhone('any',{strictMode:true}).withMessage('invalid phone number'),
   //check('Email').optional().trim().isEmail().withMessage('invalid Email format').normalizeEmail(),
-  body('Category','Name field is required').notEmpty().trim(),
+  body('Category','Category field is required').notEmpty().trim(),
   
  
 ]

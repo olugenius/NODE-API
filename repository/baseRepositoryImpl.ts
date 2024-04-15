@@ -2022,7 +2022,8 @@ export default class baseRepositoryImpl implements BaseRepository {
                 reject(err);
               }
     
-              connection?.query(`SELECT * FROM DigitalRegistar`, (err, data) => {
+              connection?.query(`select a.*,b.FirstName as ClockedInUserName,b.UserRole as ClockInUserRole,c.FirstName as ClockedOutUserName,c.UserRole as ClockOutUserRole from digitalregistar a  left join users b on b.UserId = a.ClockedInByUserId left join users c on c.UserId = a.ClockedOutByUserId
+              `, (err, data) => {
                 connection.release();
                 if (err) {
                   console.log("error querying database", err);
@@ -2050,7 +2051,7 @@ export default class baseRepositoryImpl implements BaseRepository {
                 reject(err);
               }
     
-              connection?.query(`SELECT * FROM DigitalRegistar WHERE RegistarId=?`,[registarId], (err, data) => {
+              connection?.query(`select a.*,b.FirstName as ClockedInUserName,b.UserRole as ClockInUserRole,c.FirstName as ClockedOutUserName,c.UserRole as ClockOutUserRole from digitalregistar a left join users b on b.UserId = a.ClockedInByUserId left join users c on c.UserId = a.ClockedOutByUserId  WHERE a.RegistarId=?`,[registarId], (err, data) => {
                 connection.release();
                 if (err) {
                   console.log("error querying database", err);
