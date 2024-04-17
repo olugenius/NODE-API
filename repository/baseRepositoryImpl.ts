@@ -19,6 +19,7 @@ import SupportModel from "../model/SupportModel";
 import SupportCommentModel from "../model/SupportCommentModel";
 import CreateIReportModel from "../model/CreateIReportModel";
 import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
+import { BeginTransaction, CommitTransaction, QueryTransaction } from "./dbContext/Transactions";
 
 @injectable()
 export default class baseRepositoryImpl implements BaseRepository {
@@ -911,79 +912,100 @@ export default class baseRepositoryImpl implements BaseRepository {
     try {
       const connection = await this.getConnection();
       let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
+        connection?.getConnection(async(err, connection) => {
           if (err) {
             console.log("connection error", err);
             reject(err);
           }
-          connection?.beginTransaction((err) => {
-            reject(err);
-          });
+          // connection?.beginTransaction((err) => {
+          //   reject(err);
+          // });
+          await BeginTransaction(connection)
           const appointUsers = JSON.parse(payload.UserIds);
           const appointmentId = `Appoint-${GenerateUniqueId()}`;
           const query1 = `INSERT INTO Appointment(Title,Date,Time,Venue,Description,PhotoPath,CommunityId,CreatorUserId,CreatedAt,AppointmentId,IsActive) VALUES(?,?,?,?,?,?,?,?,?,?,?)`;
           const query2 =
             "INSERT INTO AppointmentUsers(UserId,AppointmentId) VALUES(?,?)";
-          connection?.query(
-            query1,
-            [
-              payload.Title,
-              payload.Date,
-              payload.Time,
-              payload.Venue,
-              payload.Description,
-              payload.PhotoPath,
-              payload.CommunityId,
-              payload.CreatorUserId,
-              getCurrentDate(),
-              appointmentId,
-              1,
-            ],
-            (err, data) => {
-              if (err) {
-                errorLog.push(err);
-                console.log("error querying database", err);
-                connection?.rollback((error) => {
-                  console.log("error rolling back transaction", error);
-                });
-              }
-            }
-          );
+          // connection?.query(
+          //   query1,
+          //   [
+          //     payload.Title,
+          //     payload.Date,
+          //     payload.Time,
+          //     payload.Venue,
+          //     payload.Description,
+          //     payload.PhotoPath,
+          //     payload.CommunityId,
+          //     payload.CreatorUserId,
+          //     getCurrentDate(),
+          //     appointmentId,
+          //     1,
+          //   ],
+          //   (err, data) => {
+          //     if (err) {
+          //       errorLog.push(err);
+          //       console.log("error querying database", err);
+          //       connection?.rollback((error) => {
+          //         console.log("error rolling back transaction", error);
+          //       });
+          //     }
+          //   }
+          // );
+
+
+          await QueryTransaction(connection,query1,[
+            payload.Title,
+            payload.Date,
+            payload.Time,
+            payload.Venue,
+            payload.Description,
+            payload.PhotoPath,
+            payload.CommunityId,
+            payload.CreatorUserId,
+            getCurrentDate(),
+            appointmentId,
+            1,
+          ])
+
           for (let i = 0; i < appointUsers.length; i++) {
-            connection?.query(
-              query2,
-              [appointUsers[i], appointmentId],
-              (err, data) => {
-                if (err) {
-                  errorLog.push(err);
-                  console.log("error querying database", err)
-                  connection.rollback((error) => {
-                    console.log("error rolling back transaction", error);
-                  });
-                }
-              }
-            );
+            // connection?.query(
+            //   query2,
+            //   [appointUsers[i], appointmentId],
+            //   (err, data) => {
+            //     if (err) {
+            //       errorLog.push(err);
+            //       console.log("error querying database", err)
+            //       connection.rollback((error) => {
+            //         console.log("error rolling back transaction", error);
+            //       });
+            //     }
+            //   }
+            // );
+
+            await QueryTransaction(connection,query2,[appointUsers[i], appointmentId])
           }
 
-          connection?.commit((err) => {
-            connection?.release();
-            if (err) {
-              errorLog.push(err);
-              console.log("error committing changes", err);
-              connection?.rollback((error) => {
-                console.log("error rolling back transaction", error);
-              });
-            }
+          // connection?.commit((err) => {
+          //   connection?.release();
+          //   if (err) {
+          //     errorLog.push(err);
+          //     console.log("error committing changes", err);
+          //     connection?.rollback((error) => {
+          //       console.log("error rolling back transaction", error);
+          //     });
+          //   }
 
-            if (errorLog.length < 0) {
-              console.log('total error logged',errorLog)
-              resolve("Success");
-            } else {
-              resolve("Failed");
-            }
+          //   if (errorLog.length < 0) {
+          //     console.log('total error logged',errorLog)
+          //     resolve("Success");
+          //   } else {
+          //     resolve("Failed");
+          //   }
 
-          });
+          // });
+          await CommitTransaction(connection)
 
+           resolve('Success')
          
         });
 
