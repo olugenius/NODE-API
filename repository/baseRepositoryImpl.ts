@@ -57,7 +57,7 @@ export default class baseRepositoryImpl implements BaseRepository {
               payload.Phone,
               payload.Email,
               payload.CreatorUserId,
-              1
+              1,
             ],
             (err, data) => {
               connection.release();
@@ -107,7 +107,7 @@ export default class baseRepositoryImpl implements BaseRepository {
               payload.Email,
               payload.Category,
               payload.CreatorUserId,
-              1
+              1,
             ],
             (err, data) => {
               connection.release();
@@ -158,7 +158,7 @@ export default class baseRepositoryImpl implements BaseRepository {
               payload.Email,
               payload.NoOfParticipants,
               payload.CreatorUserId,
-              1
+              1,
             ],
             (err, data) => {
               connection.release();
@@ -193,15 +193,18 @@ export default class baseRepositoryImpl implements BaseRepository {
             reject(err);
           }
 
-          connection?.query(`SELECT a.*,b.FirstName as CreatorName,b.Phone as CreatorPhone FROM AccessCode a left join users b ON b.UserId = a.CreatorUserId`, (err, data) => {
-            connection.release();
-            if (err) {
-              console.log("error querying database", err);
-            } else {
-              console.log("successfully query", data);
+          connection?.query(
+            `SELECT a.*,b.FirstName as CreatorName,b.Phone as CreatorPhone FROM AccessCode a left join users b ON b.UserId = a.CreatorUserId`,
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+              } else {
+                console.log("successfully query", data);
+              }
+              resolve(data);
             }
-            resolve(data);
-          });
+          );
         });
       });
 
@@ -209,7 +212,7 @@ export default class baseRepositoryImpl implements BaseRepository {
     } catch (error) {}
   }
 
-  async getAllAccessCodeByCreatorUserId(creatorUserId:string): Promise<any> {
+  async getAllAccessCodeByCreatorUserId(creatorUserId: string): Promise<any> {
     let result: any;
     try {
       const connection = await this.getConnection();
@@ -220,22 +223,25 @@ export default class baseRepositoryImpl implements BaseRepository {
             reject(err);
           }
 
-          connection?.query(`SELECT a.*,b.FirstName as CreatorName,b.Phone as CreatorPhone FROM AccessCode a left join users b ON b.UserId = a.CreatorUserId WHERE a.CreatorUserId = ?`,[creatorUserId], (err, data) => {
-            connection.release();
-            if (err) {
-              console.log("error querying database", err);
-            } else {
-              console.log("successfully query", data);
+          connection?.query(
+            `SELECT a.*,b.FirstName as CreatorName,b.Phone as CreatorPhone FROM AccessCode a left join users b ON b.UserId = a.CreatorUserId WHERE a.CreatorUserId = ?`,
+            [creatorUserId],
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+              } else {
+                console.log("successfully query", data);
+              }
+              resolve(data);
             }
-            resolve(data);
-          });
+          );
         });
       });
 
       return result;
     } catch (error) {}
   }
-
 
   async getAccessCodeByAccessCode(accessCode: string): Promise<any> {
     let result: any;
@@ -267,7 +273,6 @@ export default class baseRepositoryImpl implements BaseRepository {
       return result;
     } catch (error) {}
   }
-
 
   async getAccessCodeByid(Id: number): Promise<any> {
     let result: any;
@@ -902,7 +907,7 @@ export default class baseRepositoryImpl implements BaseRepository {
 
   async createAppointment(payload: createAppointmentModel): Promise<string> {
     let response: string = "";
-    let errorLog:any[] = []
+    let errorLog: any[] = [];
     try {
       const connection = await this.getConnection();
       let result = await new Promise<string>((resolve, reject) => {
@@ -911,13 +916,14 @@ export default class baseRepositoryImpl implements BaseRepository {
             console.log("connection error", err);
             reject(err);
           }
-          connection.beginTransaction((err)=>{
-            reject(err)
-          })
-          const appointUsers = JSON.parse(payload.UserIds)
-          const appointmentId = `Appoint-${GenerateUniqueId()}`
+          connection?.beginTransaction((err) => {
+            reject(err);
+          });
+          const appointUsers = JSON.parse(payload.UserIds);
+          const appointmentId = `Appoint-${GenerateUniqueId()}`;
           const query1 = `INSERT INTO Appointment(Title,Date,Time,Venue,Description,PhotoPath,CommunityId,CreatorUserId,CreatedAt,AppointmentId,IsActive) VALUES(?,?,?,?,?,?,?,?,?,?,?)`;
-          const query2 = 'INSERT INTO AppointmentUsers(UserId,AppointmentId) VALUES(?,?)'
+          const query2 =
+            "INSERT INTO AppointmentUsers(UserId,AppointmentId) VALUES(?,?)";
           connection?.query(
             query1,
             [
@@ -931,48 +937,48 @@ export default class baseRepositoryImpl implements BaseRepository {
               payload.CreatorUserId,
               getCurrentDate(),
               appointmentId,
-              1
+              1,
             ],
             (err, data) => {
               if (err) {
-                errorLog.push(err)
+                errorLog.push(err);
                 console.log("error querying database", err);
-                connection.rollback((error)=>{
-                    console.log('error rolling back transaction',error)
-                })
-              } 
+                connection?.rollback((error) => {
+                  console.log("error rolling back transaction", error);
+                });
+              }
             }
           );
-        for(let i=0;i<appointUsers.length;i++){
-                connection.query(query2,[appointUsers[i],appointmentId],(err,data)=>{
-                if(err){
-                    errorLog.push(err)
-                    connection.rollback((error)=>{
-                        console.log('error rolling back transaction',error)
-                    })
- 
+          for (let i = 0; i < appointUsers.length; i++) {
+            connection?.query(
+              query2,
+              [appointUsers[i], appointmentId],
+              (err, data) => {
+                if (err) {
+                  errorLog.push(err);
+                  connection.rollback((error) => {
+                    console.log("error rolling back transaction", error);
+                  });
                 }
-         })
-        }
-
-
-        connection.commit((err)=>{
-            connection.release()
-          if(err){
-            errorLog.push(err)
-            connection.rollback((error)=>{
-                console.log('error rolling back transaction',error)
-            })
-
+              }
+            );
           }
-        })
 
-        if(errorLog.length < 0){
-           resolve('Success')
-        }else{
-            resolve('Failed')
-        }
+          connection?.commit((err) => {
+            connection?.release();
+            if (err) {
+              errorLog.push(err);
+              connection?.rollback((error) => {
+                console.log("error rolling back transaction", error);
+              });
+            }
+          });
 
+          if (errorLog.length < 0) {
+            resolve("Success");
+          } else {
+            resolve("Failed");
+          }
         });
       });
 
@@ -983,7 +989,10 @@ export default class baseRepositoryImpl implements BaseRepository {
     }
   }
 
-  async updateAppointment(AppointmentId:string,payload: createAppointmentModel): Promise<string> {
+  async updateAppointment(
+    AppointmentId: string,
+    payload: createAppointmentModel
+  ): Promise<string> {
     let response: string = "";
     try {
       const connection = await this.getConnection();
@@ -1873,7 +1882,7 @@ export default class baseRepositoryImpl implements BaseRepository {
           }
 
           connection.commit((err) => {
-          connection.release()
+            connection.release();
             errorLog.push(err);
             console.log("error during commit", err);
             connection.rollback((error) => {
@@ -1896,10 +1905,8 @@ export default class baseRepositoryImpl implements BaseRepository {
     }
   }
 
-
-
-  async GetAllIReportByCreatorByUserId(creatorUserId:string):Promise<any>{
- let result: any;
+  async GetAllIReportByCreatorByUserId(creatorUserId: string): Promise<any> {
+    let result: any;
     try {
       const connection = await this.getConnection();
       let result = await new Promise<any>((resolve, reject) => {
@@ -1909,15 +1916,19 @@ export default class baseRepositoryImpl implements BaseRepository {
             reject(err);
           }
 
-          connection?.query(`SELECT * FROM I-Report WHERE CreatorUserId=?`,[creatorUserId], (err, data) => {
-            connection.release();
-            if (err) {
-              console.log("error querying database", err);
-            } else {
-              console.log("successfully query", data);
+          connection?.query(
+            `SELECT * FROM I-Report WHERE CreatorUserId=?`,
+            [creatorUserId],
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+              } else {
+                console.log("successfully query", data);
+              }
+              resolve(data);
             }
-            resolve(data);
-          });
+          );
         });
       });
 
@@ -1927,8 +1938,7 @@ export default class baseRepositoryImpl implements BaseRepository {
     }
   }
 
-  async GetAllIReport():Promise<any>{
-
+  async GetAllIReport(): Promise<any> {
     let result: any;
     try {
       const connection = await this.getConnection();
@@ -1955,184 +1965,196 @@ export default class baseRepositoryImpl implements BaseRepository {
     } catch (error) {
       console.error("Error Getting Support:", error);
     }
-
   }
 
-  async GetIReportPhotos(reportId:string):Promise<any>{
+  async GetIReportPhotos(reportId: string): Promise<any> {
     let result: any;
-       try {
-         const connection = await this.getConnection();
-         let result = await new Promise<any>((resolve, reject) => {
-           connection?.getConnection((err, connection) => {
-             if (err) {
-               console.log("connection error", err);
-               reject(err);
-             }
-   
-             connection?.query(`SELECT * FROM I-Report-Photos WHERE ReportId=?`,[reportId], (err, data) => {
-               connection.release();
-               if (err) {
-                 console.log("error querying database", err);
-               } else {
-                 console.log("successfully query", data);
-               }
-               resolve(data);
-             });
-           });
-         });
-   
-         return result;
-       } catch (error) {
-         console.error("Error Getting Support:", error);
-       }
-     }
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<any>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
 
-     async CreateDigitalRegistar(payload:CreateDigitalRegistar):Promise<string>{
-        let response: string = "";
-        try {
-          const connection = await this.getConnection();
-          let result = await new Promise<string>((resolve, reject) => {
-            connection?.getConnection((err, connection) => {
+          connection?.query(
+            `SELECT * FROM I-Report-Photos WHERE ReportId=?`,
+            [reportId],
+            (err, data) => {
+              connection.release();
               if (err) {
-                console.log("connection error", err);
-                reject(err);
+                console.log("error querying database", err);
+              } else {
+                console.log("successfully query", data);
               }
-             const registarId = `registar-${GenerateUniqueId()}`
-              const query = `INSERT INTO DigitalRegistar(Name,ClockedInTime,ClockedInByUserId,Role,CreatedAt,IsActive,RegistarId) VALUES(?,?,?,?,?,?,?)`;
-    
-              connection?.query(
-                query,
-                [
-                  payload.Name,
-                  payload.ClockedInTime,
-                  payload.ClockedInByUserId,
-                  payload.Role,
-                  getCurrentDate(),
-                  1,
-                  registarId
-                ],
-                (err, data) => {
-                  connection.release();
-                  if (err) {
-                    console.log("error querying database", err);
-                    response = "Failed";
-                  } else {
-                    console.log("successfully query", data);
-                    response = "Success";
-                  }
-                  resolve(response);
-                }
-              );
-            });
-          });
-    
-          return result;
-        } catch (error) {
-          console.error("Error creating user:", error);
-          return "Failed";
-        }
-     }
+              resolve(data);
+            }
+          );
+        });
+      });
 
-     async UpdateDigitalRegistar(registarId:string,payload:CreateDigitalRegistar):Promise<string>{
-        let response: string = "";
-        try {
-          const connection = await this.getConnection();
-          let result = await new Promise<string>((resolve, reject) => {
-            connection?.getConnection((err, connection) => {
-              if (err) {
-                console.log("connection error", err);
-                reject(err);
-              }
-    
-              const query = `UPDATE DigitalRegistar SET ClockedOutTime=?,ClockedOutByUserId=?,UpdatedAt=?,IsActive=? WHERE RegistarId=?`;
-    
-              connection?.query(
-                query,
-                [
-                  payload.ClockedOutTime,
-                  payload.ClockedOutByUserId,
-                  getCurrentDate(),
-                  2,
-                  registarId
-                ],
-                (err, data) => {
-                  connection.release();
-                  if (err) {
-                    console.log("error querying database", err);
-                    response = "Failed";
-                  } else {
-                    console.log("successfully query", data);
-                    response = "Success";
-                  }
-                  resolve(response);
-                }
-              );
-            });
-          });
-    
-          return result;
-        } catch (error) {
-          console.error("Error creating user:", error);
-          return "Failed";
-        }
-     }
+      return result;
+    } catch (error) {
+      console.error("Error Getting Support:", error);
+    }
+  }
 
-     async GetAllDigitalRegistar():Promise<any>{
-        let result: any;
-        try {
-          const connection = await this.getConnection();
-          let result = await new Promise<any>((resolve, reject) => {
-            connection?.getConnection((err, connection) => {
-              if (err) {
-                console.log("connection error", err);
-                reject(err);
-              }
-    
-              connection?.query(`select a.*,b.FirstName as ClockedInUserName,b.UserRole as ClockInUserRole,c.FirstName as ClockedOutUserName,c.UserRole as ClockOutUserRole from digitalregistar a  left join users b on b.UserId = a.ClockedInByUserId left join users c on c.UserId = a.ClockedOutByUserId
-              `, (err, data) => {
-                connection.release();
-                if (err) {
-                  console.log("error querying database", err);
-                } else {
-                  console.log("successfully query", data);
-                }
-                resolve(data);
-              });
-            });
-          });
-    
-          return result;
-        } catch (error) {
-          console.error("Error Getting Support:", error);
-        }
-     }
-     async GetDigitalRegistarByRegistarId(registarId:string):Promise<any>{
-        let result: any;
-        try {
-          const connection = await this.getConnection();
-          let result = await new Promise<any>((resolve, reject) => {
-            connection?.getConnection((err, connection) => {
-              if (err) {
-                console.log("connection error", err);
-                reject(err);
-              }
-    
-              connection?.query(`select a.*,b.FirstName as ClockedInUserName,b.UserRole as ClockInUserRole,c.FirstName as ClockedOutUserName,c.UserRole as ClockOutUserRole from digitalregistar a left join users b on b.UserId = a.ClockedInByUserId left join users c on c.UserId = a.ClockedOutByUserId  WHERE a.RegistarId=?`,[registarId], (err, data) => {
-                connection.release();
-                if (err) {
-                  console.log("error querying database", err);
-                } else {
-                  console.log("successfully query", data);
-                }
-                resolve(data);
-              });
-            });
-          });
-    
-          return result;
-        } catch (error) {
-          console.error("Error Getting Support:", error);
-        }
-     }
+  async CreateDigitalRegistar(payload: CreateDigitalRegistar): Promise<string> {
+    let response: string = "";
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<string>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+          const registarId = `registar-${GenerateUniqueId()}`;
+          const query = `INSERT INTO DigitalRegistar(Name,ClockedInTime,ClockedInByUserId,Role,CreatedAt,IsActive,RegistarId) VALUES(?,?,?,?,?,?,?)`;
 
+          connection?.query(
+            query,
+            [
+              payload.Name,
+              payload.ClockedInTime,
+              payload.ClockedInByUserId,
+              payload.Role,
+              getCurrentDate(),
+              1,
+              registarId,
+            ],
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+                response = "Failed";
+              } else {
+                console.log("successfully query", data);
+                response = "Success";
+              }
+              resolve(response);
+            }
+          );
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error creating user:", error);
+      return "Failed";
+    }
+  }
+
+  async UpdateDigitalRegistar(
+    registarId: string,
+    payload: CreateDigitalRegistar
+  ): Promise<string> {
+    let response: string = "";
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<string>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+
+          const query = `UPDATE DigitalRegistar SET ClockedOutTime=?,ClockedOutByUserId=?,UpdatedAt=?,IsActive=? WHERE RegistarId=?`;
+
+          connection?.query(
+            query,
+            [
+              payload.ClockedOutTime,
+              payload.ClockedOutByUserId,
+              getCurrentDate(),
+              2,
+              registarId,
+            ],
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+                response = "Failed";
+              } else {
+                console.log("successfully query", data);
+                response = "Success";
+              }
+              resolve(response);
+            }
+          );
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error creating user:", error);
+      return "Failed";
+    }
+  }
+
+  async GetAllDigitalRegistar(): Promise<any> {
+    let result: any;
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<any>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+
+          connection?.query(
+            `select a.*,b.FirstName as ClockedInUserName,b.UserRole as ClockInUserRole,c.FirstName as ClockedOutUserName,c.UserRole as ClockOutUserRole from digitalregistar a  left join users b on b.UserId = a.ClockedInByUserId left join users c on c.UserId = a.ClockedOutByUserId
+              `,
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+              } else {
+                console.log("successfully query", data);
+              }
+              resolve(data);
+            }
+          );
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error Getting Support:", error);
+    }
+  }
+  async GetDigitalRegistarByRegistarId(registarId: string): Promise<any> {
+    let result: any;
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<any>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+
+          connection?.query(
+            `select a.*,b.FirstName as ClockedInUserName,b.UserRole as ClockInUserRole,c.FirstName as ClockedOutUserName,c.UserRole as ClockOutUserRole from digitalregistar a left join users b on b.UserId = a.ClockedInByUserId left join users c on c.UserId = a.ClockedOutByUserId  WHERE a.RegistarId=?`,
+            [registarId],
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+              } else {
+                console.log("successfully query", data);
+              }
+              resolve(data);
+            }
+          );
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error Getting Support:", error);
+    }
+  }
 }

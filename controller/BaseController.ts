@@ -652,6 +652,8 @@ import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
  * /api/appointment/create:
  *   post:
  *     summary: Create Appointment
+ *     security:
+ *      - APIKeyHeader: []
  *     tags: [Base]
  *     requestBody:
  *       required: true
@@ -676,6 +678,8 @@ import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
  *                 type: string
  *               CreatorUserId:
  *                 type: string
+ *               UserIds:
+ *                 type: string
  *           example:
  *             Channel: JohnDoe
  *             Password: john@example.com
@@ -693,6 +697,8 @@ import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
  * /api/appointment/update/{appointmentId}:
  *   put:
  *     summary: Update Appointment
+ *     security:
+ *      - APIKeyHeader: []
  *     parameters:
  *       - in: path
  *         name: appointmentId
@@ -2187,8 +2193,8 @@ router.get("/comment/:Id", Authorize, async (req, res) => {
 router.post(
   "/appointment/create",
   Authorize,
-  CreateAppointmentValidator,
   AppointmentUploadXls.single("file"),
+  CreateAppointmentValidator,
   async (req: any, res: any) => {
     try {
       const reqBody = <createAppointmentModel>req.body;
@@ -2197,7 +2203,7 @@ router.post(
         res.status(HttpStatus.STATUS_400).json(error.array());
         return;
       }
-      if (req.file.path !== undefined) {
+      if (req?.file?.path !== undefined) {
         cloudinary.uploader.upload(
           req.file.path,
           async (error: any, result: any) => {
