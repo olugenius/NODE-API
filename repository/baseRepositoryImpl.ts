@@ -1128,7 +1128,7 @@ export default class baseRepositoryImpl implements BaseRepository {
             reject(err);
           }
 
-          connection?.query(`SELECT * FROM Appointment`, (err, data) => {
+          connection?.query(`SELECT a.*,b.FirstName as CreatorName FROM Appointment a left join users b ON b.UserId = a.CreatorUserId`, (err, data) => {
             connection.release();
             if (err) {
               console.log("error querying database", err);
@@ -1156,7 +1156,7 @@ export default class baseRepositoryImpl implements BaseRepository {
           }
 
           connection?.query(
-            `SELECT * FROM Appointment where Id=?`,
+            `SELECT a.*,b.FirstName as CreatorName FROM Appointment a left join users b ON b.UserId = a.CreatorUserId where Id=?`,
             [Id],
             (err, data) => {
               connection.release();
