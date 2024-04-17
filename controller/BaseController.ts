@@ -768,7 +768,7 @@ import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
 
 /**
  * @swagger
- * /api/appointment/{Id}:
+ * /api/appointment/single/{Id}:
  *   get:
  *     summary: Get Appointment by Id
  *     parameters:
@@ -792,7 +792,7 @@ import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
 
 /**
  * @swagger
- * /api/appointment/{communityId}:
+ * /api/appointment/community/{communityId}:
  *   get:
  *     summary: Get Appointment by communityId
  *     parameters:
@@ -2394,7 +2394,7 @@ router.get("/appointment/all", Authorize, async (req, res) => {
   }
 });
 
-router.get("/appointment/:Id", Authorize, async (req, res) => {
+router.get("/appointment/single/:Id", Authorize, async (req, res) => {
   try {
     const param = req?.params?.Id;
     if (!param) {
@@ -2428,7 +2428,7 @@ router.get("/appointment/:Id", Authorize, async (req, res) => {
       .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
-router.get("/appointment/:communityId", Authorize, async (req, res) => {
+router.get("/appointment/community/:communityId", Authorize, async (req, res) => {
   try {
     const param = req?.params?.communityId;
     if (!param) {
