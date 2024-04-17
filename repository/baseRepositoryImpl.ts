@@ -19,7 +19,7 @@ import SupportModel from "../model/SupportModel";
 import SupportCommentModel from "../model/SupportCommentModel";
 import CreateIReportModel from "../model/CreateIReportModel";
 import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
-import { BeginTransaction, CommitTransaction, QueryTransaction } from "./dbContext/Transactions";
+import { BeginTransaction, CommitTransaction, QueryTransaction, ReleaseTransaction } from "./dbContext/Transactions";
 
 @injectable()
 export default class baseRepositoryImpl implements BaseRepository {
@@ -1004,6 +1004,7 @@ export default class baseRepositoryImpl implements BaseRepository {
 
           // });
           await CommitTransaction(connection)
+          await ReleaseTransaction(connection)
 
            resolve('Success')
          
