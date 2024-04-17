@@ -974,12 +974,15 @@ export default class baseRepositoryImpl implements BaseRepository {
               });
             }
 
+            if (errorLog.length < 0) {
+              console.log('total error logged',errorLog)
+              resolve("Success");
+            } else {
+              resolve("Failed");
+            }
+
           });
-          if (errorLog.length < 0) {
-            resolve("Success");
-          } else {
-            resolve("Failed");
-          }
+
          
         });
 
