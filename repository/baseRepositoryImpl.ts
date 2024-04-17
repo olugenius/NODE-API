@@ -956,6 +956,7 @@ export default class baseRepositoryImpl implements BaseRepository {
               (err, data) => {
                 if (err) {
                   errorLog.push(err);
+                  console.log("error querying database", err)
                   connection.rollback((error) => {
                     console.log("error rolling back transaction", error);
                   });
