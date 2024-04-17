@@ -1156,7 +1156,7 @@ export default class baseRepositoryImpl implements BaseRepository {
           }
 
           connection?.query(
-            `SELECT a.*,b.FirstName as CreatorName FROM Appointment a left join users b ON b.UserId = a.CreatorUserId where Id=?`,
+            `SELECT a.*,b.FirstName as CreatorName FROM Appointment a left join users b ON b.UserId = a.CreatorUserId where a.Id=?`,
             [Id],
             (err, data) => {
               connection.release();
