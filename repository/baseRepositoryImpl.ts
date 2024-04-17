@@ -973,16 +973,17 @@ export default class baseRepositoryImpl implements BaseRepository {
                 console.log("error rolling back transaction", error);
               });
             }
-          });
 
+          });
+          if (errorLog.length < 0) {
+            resolve("Success");
+          } else {
+            resolve("Failed");
+          }
          
         });
 
-        if (errorLog.length < 0) {
-          resolve("Success");
-        } else {
-          resolve("Failed");
-        }
+      
       });
 
       return result;
