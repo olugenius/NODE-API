@@ -42,7 +42,7 @@ export default class baseRepositoryImpl implements BaseRepository {
           }
 
           var AccessCode = `Access- ${GenerateUniqueId()}`;
-          const query = `INSERT INTO AccessCode(CodeType,Code,Purpose,StartTime,EndTime,Name,Date,Phone,Email) VALUES(?,?,?,?,?,?,?,?,?)`;
+          const query = `INSERT INTO AccessCode(CodeType,Code,Purpose,StartTime,EndTime,Name,Date,Phone,Email,CreatorUserId,IsActive) VALUES(?,?,?,?,?,?,?,?,?,?,?)`;
 
           connection?.query(
             query,
@@ -56,6 +56,8 @@ export default class baseRepositoryImpl implements BaseRepository {
               payload.Date,
               payload.Phone,
               payload.Email,
+              payload.CreatorUserId,
+              1
             ],
             (err, data) => {
               connection.release();
@@ -91,7 +93,7 @@ export default class baseRepositoryImpl implements BaseRepository {
           }
 
           var AccessCode = `Access- ${GenerateUniqueId()}`;
-          const query = `INSERT INTO AccessCode(CodeType,Code,DateRange,Frequency,Name,Phone,Email,Category) VALUES(?,?,?,?,?,?,?,?)`;
+          const query = `INSERT INTO AccessCode(CodeType,Code,DateRange,Frequency,Name,Phone,Email,Category,CreatorUserId,IsActive) VALUES(?,?,?,?,?,?,?,?,?,?)`;
 
           connection?.query(
             query,
@@ -104,6 +106,8 @@ export default class baseRepositoryImpl implements BaseRepository {
               payload.Phone,
               payload.Email,
               payload.Category,
+              payload.CreatorUserId,
+              1
             ],
             (err, data) => {
               connection.release();
@@ -139,7 +143,7 @@ export default class baseRepositoryImpl implements BaseRepository {
           }
 
           var AccessCode = `Access- ${GenerateUniqueId()}`;
-          const query = `INSERT INTO AccessCode(CodeType,Code,Date,StartTime,EndTime,AppointmentTitle,Phone,Email,NoOfParticipants) VALUES(?,?,?,?,?,?,?,?,?)`;
+          const query = `INSERT INTO AccessCode(CodeType,Code,Date,StartTime,EndTime,AppointmentTitle,Phone,Email,NoOfParticipants,CreatorUserId,IsActive) VALUES(?,?,?,?,?,?,?,?,?,?,?)`;
 
           connection?.query(
             query,
@@ -153,6 +157,8 @@ export default class baseRepositoryImpl implements BaseRepository {
               payload.Phone,
               payload.Email,
               payload.NoOfParticipants,
+              payload.CreatorUserId,
+              1
             ],
             (err, data) => {
               connection.release();
@@ -187,7 +193,7 @@ export default class baseRepositoryImpl implements BaseRepository {
             reject(err);
           }
 
-          connection?.query(`SELECT * FROM AccessCode`, (err, data) => {
+          connection?.query(`SELECT a.*,b.FirstName as CreatorName,b.Phone as CreatorPhone FROM AccessCode a left join users b ON b.UserId = a.CreatorUserId`, (err, data) => {
             connection.release();
             if (err) {
               console.log("error querying database", err);
@@ -203,6 +209,66 @@ export default class baseRepositoryImpl implements BaseRepository {
     } catch (error) {}
   }
 
+  async getAllAccessCodeByCreatorUserId(creatorUserId:string): Promise<any> {
+    let result: any;
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<any>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+
+          connection?.query(`SELECT a.*,b.FirstName as CreatorName,b.Phone as CreatorPhone FROM AccessCode a left join users b ON b.UserId = a.CreatorUserId WHERE a.CreatorUserId = ?`,[creatorUserId], (err, data) => {
+            connection.release();
+            if (err) {
+              console.log("error querying database", err);
+            } else {
+              console.log("successfully query", data);
+            }
+            resolve(data);
+          });
+        });
+      });
+
+      return result;
+    } catch (error) {}
+  }
+
+
+  async getAccessCodeByAccessCode(accessCode: string): Promise<any> {
+    let result: any;
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<any>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+
+          connection?.query(
+            `SELECT a.*,b.FirstName as CreatorName,b.Phone as CreatorPhone FROM AccessCode a left join users b ON b.UserId = a.CreatorUserId WHERE a.Code = ?`,
+            [accessCode],
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+              } else {
+                console.log("successfully query", data);
+              }
+              resolve(data);
+            }
+          );
+        });
+      });
+
+      return result;
+    } catch (error) {}
+  }
+
+
   async getAccessCodeByid(Id: number): Promise<any> {
     let result: any;
     try {
@@ -215,7 +281,7 @@ export default class baseRepositoryImpl implements BaseRepository {
           }
 
           connection?.query(
-            `SELECT * FROM AccessCode WHERE Id = ?`,
+            `SELECT a.*,b.FirstName as CreatorName,b.Phone as CreatorPhone FROM AccessCode a left join users b ON b.UserId = a.CreatorUserId WHERE a.Id = ?`,
             [Id],
             (err, data) => {
               connection.release();

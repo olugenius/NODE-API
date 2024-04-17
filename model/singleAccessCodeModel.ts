@@ -5,5 +5,6 @@ export default interface singleAccessCodeModel{
     Name:string,
     Date:Date,
     Phone:string,
-    Email:string
+    Email:string,
+    CreatorUserId:string
 }

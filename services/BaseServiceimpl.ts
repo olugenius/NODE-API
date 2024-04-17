@@ -39,6 +39,13 @@ export default class BaseServiceimpl implements BaseService{
         return await this.baseRepo.getAllAccessCode()
     }
 
+    async getAllAccessCodeByCreatorUserId(creatorUserId:string): Promise<any> {
+      return await this.baseRepo.getAllAccessCodeByCreatorUserId(creatorUserId)
+    }
+    async getAccessCodeByAccessCode(accessCode: string): Promise<any> {
+      return await this.baseRepo.getAccessCodeByAccessCode(accessCode)
+    }
+
     async GetAccessCodeByid(Id:number): Promise<any>{
         return await this.baseRepo.getAccessCodeByid(Id)
     }

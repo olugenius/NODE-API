@@ -6,4 +6,5 @@ export default interface staticAccessCodeModel{
     Phone:string,
     Email:Date,
     Category:string,
+    CreatorUserId:string
 }

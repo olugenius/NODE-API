@@ -18,6 +18,8 @@ export default interface BaseService{
     CreateStaticCode(payload:staticAccessCodeModel):Promise<string>
     CreateBulkCode(payload:bulkAccessCodeModel):Promise<string>
     GetAllAccessCode():Promise<any>
+    getAllAccessCodeByCreatorUserId(creatorUserId:string): Promise<any> 
+    getAccessCodeByAccessCode(accessCode: string): Promise<any> 
     GetAccessCodeByid(Id:number):Promise<any>
     CreateForum(payload:CreateForumModel): Promise<string>
      UpdateForum(Id:string,payload:CreateForumModel): Promise<string>

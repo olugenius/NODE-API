@@ -19,6 +19,8 @@ export default interface BaseRepository{
      createStaticCode(payload:staticAccessCodeModel):Promise<string>
      createBulkCode(payload:bulkAccessCodeModel):Promise<string>
      getAllAccessCode():Promise<any>
+     getAllAccessCodeByCreatorUserId(creatorUserId:string): Promise<any> 
+     getAccessCodeByAccessCode(accessCode: string): Promise<any> 
      getAccessCodeByid(Id:number):Promise<any>
      CreateForum(payload:CreateForumModel): Promise<string>
      UpdateForum(Id:string,payload:CreateForumModel): Promise<string>

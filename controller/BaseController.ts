@@ -63,6 +63,8 @@ import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
  *                 type: string
  *               Email:
  *                 type: string
+ *               CreatorUserId:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Successful response
@@ -98,6 +100,8 @@ import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
  *               Email:
  *                 type: string
  *               Category:
+ *                 type: string
+ *               CreatorUserId:
  *                 type: string
  *     responses:
  *       200:
@@ -137,6 +141,8 @@ import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
  *                 type: string
  *               NoOfParticipants:
  *                 type: string
+ *               CreatorUserId:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Successful response
@@ -162,6 +168,57 @@ import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
  *             example:
  *               message:  Successfully got All Access Code
  *               data: []
+ */
+
+
+/**
+ * @swagger
+ * /api/accessCode/all/{creatorUserId}:
+ *   get:
+ *     summary: Get All Access Code
+ *     parameters:
+ *       - in: path
+ *         name: creatorUserId
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: creatorUserId of the Access Code to get
+ *     security:
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got All Access Code by creatorUserId
+ *               data: []
+ */
+
+
+/**
+ * @swagger
+ * /api/accessCode/code/{accessCode}:
+ *   get:
+ *     summary: Get Access Code by accessCode
+ *     parameters:
+ *       - in: path
+ *         name: accessCode
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: accessCode of the Access Code to get
+ *     security:
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got Access Code by accessCode
  */
 
 /**
@@ -1505,7 +1562,7 @@ router.post(
         .status(HttpStatus.STATUS_500)
         .json({
           status: HttpStatus.STATUS_500,
-          Message: "Something went wrong",
+          message: "Something went wrong",
         });
     }
   }
@@ -1533,9 +1590,76 @@ router.get("/accessCode/all", Authorize, async (req, res) => {
     console.error("An Error Occurred", error);
     return res
       .status(HttpStatus.STATUS_500)
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
+  }
+});
+
+
+
+router.get("/accessCode/all/:creatorUserId", Authorize, async (req, res) => {
+  try {
+    const param = req.params.creatorUserId
+    var response = await baseService.getAllAccessCodeByCreatorUserId(param);
+    if (response?.length < 1) {
+      res
+        .status(HttpStatus.STATUS_404)
+        .json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "Failed to fetch Access Codes ",
+        });
+    }
+    return res
+      .status(HttpStatus.STATUS_200)
+      .json({
+        status: HttpStatus.STATUS_SUCCESS,
+        message: "Successfully fetch Access Codes",
+        data: response,
+      });
+  } catch (error) {
+    console.error("An Error Occurred", error);
+    return res
+      .status(HttpStatus.STATUS_500)
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
+  }
+});
+
+
+
+router.get("/accessCode/code/:accessCodeId", Authorize, async (req, res) => {
+  try {
+    const param = req?.params?.accessCodeId;
+    if (!param) {
+      return res
+        .status(HttpStatus.STATUS_404)
+        .json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "Invalid Access CODE Id",
+        });
+    }
+    var response = await baseService.getAccessCodeByAccessCode(param);
+    if (response?.length < 1) {
+      return res
+        .status(HttpStatus.STATUS_404)
+        .json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "Failed to fetch Access code",
+        });
+    }
+    return res
+      .status(HttpStatus.STATUS_200)
+      .json({
+        status: HttpStatus.STATUS_SUCCESS,
+        message: "Successfully fetch Access Code",
+        data: response[0],
+      });
+  } catch (error) {
+    console.error("An Error Occurred", error);
+    return res
+      .status(HttpStatus.STATUS_500)
       .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
   }
 });
+
 
 router.get("/accessCode/:Id", Authorize, async (req, res) => {
   try {

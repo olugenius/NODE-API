@@ -6,5 +6,6 @@ export default interface bulkAccessCodeModel{
     AppointmentTitle:string,
     Phone:string,
     Email:string
-    NoOfParticipants: string
+    NoOfParticipants: string,
+    CreatorUserId:string
 }
