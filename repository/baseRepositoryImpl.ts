@@ -969,6 +969,7 @@ export default class baseRepositoryImpl implements BaseRepository {
             connection?.release();
             if (err) {
               errorLog.push(err);
+              console.log("error committing changes", err);
               connection?.rollback((error) => {
                 console.log("error rolling back transaction", error);
               });
@@ -991,7 +992,7 @@ export default class baseRepositoryImpl implements BaseRepository {
 
       return result;
     } catch (error) {
-      console.error("Error creating user:", error);
+      console.error("Error creating appointment:", error);
       return "Failed";
     }
   }
