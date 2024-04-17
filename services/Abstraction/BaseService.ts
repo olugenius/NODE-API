@@ -38,7 +38,7 @@ export default interface BaseService{
      GetCommentById(Id:number):Promise<any>
      CreateAppointment(payload:createAppointmentModel):Promise<string>
     UpdateAppointment(AppointmentId:string,payload:createAppointmentModel):Promise<string>
-    DeleteAppointment(Id:number):Promise<string>
+    DeleteAppointment(appointmentId:string):Promise<string>
     GetAllAppointment():Promise<any>
     GetAppointmentId(Id:number):Promise<string>
     GetAppointmentCommunityId(communityId:string):Promise<string>

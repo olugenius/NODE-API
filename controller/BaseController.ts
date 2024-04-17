@@ -744,16 +744,16 @@ import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
 
 /**
  * @swagger
- * /api/appointment/delete/{Id}:
+ * /api/appointment/delete/{appointmentId}:
  *   delete:
- *     summary: Delete Appointment by Id
+ *     summary: Delete Appointment by appointmentId
  *     parameters:
  *       - in: path
- *         name: Id
+ *         name: appointmentId
  *         required: true
  *         schema:
- *           type: number
- *         description: ID of the Appointment to Delete
+ *           type: string
+ *         description: appointmentId of the Appointment to Delete
  *     security:
  *      - APIKeyHeader: []
  *     tags: [Base]
@@ -2341,10 +2341,10 @@ router.put(
   }
 );
 
-router.delete("/appointment/delete/:Id", Authorize, async (req, res) => {
+router.delete("/appointment/delete/:appointmentId", Authorize, async (req, res) => {
   try {
-    const Id = req.params.Id;
-    var response = await baseService.DeleteAppointment(Number(Id));
+    const param = req.params.appointmentId;
+    var response = await baseService.DeleteAppointment(param);
     if (response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS) {
       return res
         .status(HttpStatus.STATUS_400)

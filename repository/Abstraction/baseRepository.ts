@@ -39,7 +39,7 @@ export default interface BaseRepository{
      GetCommentById(Id:number):Promise<any>
      createAppointment(payload:createAppointmentModel):Promise<string>
     updateAppointment(AppointmentId:string,payload:createAppointmentModel):Promise<string>
-    deleteAppointment(Id:number):Promise<string>
+    deleteAppointment(appointmentId: string):Promise<string>
     GetAllAppointment():Promise<any>
     GetAppointmentId(Id:number):Promise<any>
     GetAppointmentCommunityId(CommunityId:string):Promise<any>

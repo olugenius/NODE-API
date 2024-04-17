@@ -1071,30 +1071,42 @@ export default class baseRepositoryImpl implements BaseRepository {
     }
   }
 
-  async deleteAppointment(Id: number): Promise<string> {
+  async deleteAppointment(appointmentId: string): Promise<string> {
     let response: string = "";
     try {
       const connection = await this.getConnection();
       let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
+        connection?.getConnection(async (err, connection) => {
           if (err) {
             console.log("connection error", err);
             reject(err);
           }
 
-          const query = `DELETE FROM  Appointment WHERE Id= ?`;
+          const query1 = `DELETE FROM  Appointment WHERE AppointmentId= ?`;
+          const query2 = `DELETE FROM  AppointmentUsers WHERE AppointmentId= ?`;
 
-          connection?.query(query, [Id], (err, data) => {
-            connection.release();
-            if (err) {
-              console.log("error querying database", err);
-              response = "Failed";
-            } else {
-              console.log("successfully query", data);
-              response = "Success";
-            }
-            resolve(response);
-          });
+          await BeginTransaction(connection)
+
+          // connection?.query(query, [appointmentId], (err, data) => {
+          //   connection.release();
+          //   if (err) {
+          //     console.log("error querying database", err);
+          //     response = "Failed";
+          //   } else {
+          //     console.log("successfully query", data);
+          //     response = "Success";
+          //   }
+          //   resolve(response);
+          // });
+
+          await QueryTransaction(connection,query1,[appointmentId])
+
+          await QueryTransaction(connection,query2,[appointmentId])
+
+          await CommitTransaction(connection)
+
+          await ReleaseTransaction(connection)
+          resolve('Success')
         });
       });
 
