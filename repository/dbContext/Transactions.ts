@@ -1,9 +1,16 @@
 import { PoolConnection } from "mysql2";
 
 export const BeginTransaction = (connection:PoolConnection)=>{
-    return new Promise((resolve,reject)=>{
+    return new Promise<void>((resolve,reject)=>{
         connection?.beginTransaction((err) => {
-            reject(err);
+            if(err){
+                console.log('Error beginning transaction',err)
+
+                reject(err);
+            }else{
+                resolve()
+            }
+            
           });
     })
     
@@ -13,6 +20,7 @@ export const CommitTransaction = (connection:PoolConnection)=>{
     return new Promise<void>((resolve,reject)=>{
         connection?.commit((err) => {
             if(err){
+                console.log('Error comminting changes',err)
                 reject(err);
               }else{
               resolve()
@@ -26,10 +34,12 @@ export const CommitTransaction = (connection:PoolConnection)=>{
 
 export const QueryTransaction = (connection:PoolConnection,sql:string,payloads:any[])=>{
     return new Promise<void>((resolve,reject)=>{
-        connection.query(sql, payloads, (err) => {
+        connection.query(sql, payloads, (err,data) => {
             if (err) {
+                console.log('Error query database',err)
                 reject(err);
             } else {
+                console.log('successfully query database',data)
                 resolve();
             }
         });
