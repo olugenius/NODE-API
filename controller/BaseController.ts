@@ -1578,7 +1578,7 @@ router.get("/accessCode/all", Authorize, async (req, res) => {
   try {
     var response = await baseService.GetAllAccessCode();
     if (response?.length < 1) {
-      res
+      return res
         .status(HttpStatus.STATUS_404)
         .json({
           status: HttpStatus.STATUS_FAILED,
@@ -1607,7 +1607,7 @@ router.get("/accessCode/all/:creatorUserId", Authorize, async (req, res) => {
     const param = req.params.creatorUserId
     var response = await baseService.getAllAccessCodeByCreatorUserId(param);
     if (response?.length < 1) {
-      res
+     return res
         .status(HttpStatus.STATUS_404)
         .json({
           status: HttpStatus.STATUS_FAILED,
