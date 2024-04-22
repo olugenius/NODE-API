@@ -672,7 +672,7 @@ router.post('/organization/create',CreateOrganisationValidator,OrganizationUploa
     //       res.status(HttpStatus.STATUS_400).json(error.array())
     //       return;
     //     }
-    if(req.file.path !== undefined){
+    if(req?.file?.path !== undefined){
       cloudinary.uploader.upload(req.file.path, async (error:any, result:any) => {
         if (error) {
           // Handle error

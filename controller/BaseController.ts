@@ -207,7 +207,7 @@ import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
  *         name: accessCode
  *         required: true
  *         schema:
- *           type: number
+ *           type: string
  *         description: accessCode of the Access Code to get
  *     security:
  *      - APIKeyHeader: []
