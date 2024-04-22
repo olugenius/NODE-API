@@ -121,7 +121,7 @@ export const updatePasswordValidator =
 export const UpdateOrganisationValidator = 
 [
   body('Name').notEmpty().trim().escape().withMessage('Name is required').matches(/^[a-zA-Z]+$/).withMessage('Organization Name must contain only alphabetic characters'),
-  check('Phone').notEmpty().trim().isMobilePhone('any',{ strictMode: true }).withMessage('Invalid phone number'),
+  check('Phone','phone number is required').notEmpty().trim().isMobilePhone('any',{ strictMode: true }).withMessage('Invalid phone number'),
   body('Address','Organisation office address is required').notEmpty().trim().escape(),
   //body('DOB','Date of Birth is required').isDate().toDate(),
   body('DateIncoporated').notEmpty().withMessage('Date of Incoporation is required').custom(isValidDateFormat).withMessage('Date of Birth must be in YYYY-MM-DD format').custom(isAtLeast16YearsOld).withMessage('You must be at least 16 years old'),
@@ -133,7 +133,7 @@ export const UpdateOrganisationValidator =
 export const CreateOrganisationValidator = 
 [
   body('Name').notEmpty().trim().escape().withMessage('Name is required').matches(/^[a-zA-Z]+$/).withMessage('Organization Name must contain only alphabetic characters'),
-  check('Phone').optional().trim().isMobilePhone('any',{ strictMode: true }).withMessage('Invalid phone number'),
+  check('Phone','phone is required').notEmpty().trim().isMobilePhone('any',{ strictMode: true }).withMessage('Invalid phone number'),
   body('Address','Organisation office address is required').notEmpty().trim().escape(),
   //body('DOB','Date of Birth is required').isDate().toDate(),
   body('DateIncoporated').notEmpty().withMessage('Date of Incoporation is required').custom(isValidDateFormat).withMessage('Date of Birth must be in YYYY-MM-DD format').custom(isAtLeast16YearsOld).withMessage('You must be at least 16 years old'),
