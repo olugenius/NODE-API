@@ -392,18 +392,21 @@ router.post('/checkers/create',Authorize,CreateCheckerValidator,async(req:any,re
   router.post('/checkers/createXls',Authorize,uploadXls.single('file'),async(req:any,res:any)=>{
     try{
     
-      
-      const workbook = XLSX.readFile(req?.file?.path);
-    const sheet_name = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheet_name];
-    const data = <createCheckersModel[]>XLSX.utils.sheet_to_json(sheet);
-      var response = await checker.createCheckersXls(data)
-      if(response?.toLowerCase() ===  HttpStatus.STATUS_SUCCESS){
-        return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Checkers',data:data})
-
+      if(req?.file?.path !== undefined){
+        const workbook = XLSX.readFile(req?.file?.path);
+        const sheet_name = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheet_name];
+        const data = <createCheckersModel[]>XLSX.utils.sheet_to_json(sheet);
+          var response = await checker.createCheckersXls(data)
+          if(response?.toLowerCase() ===  HttpStatus.STATUS_SUCCESS){
+            return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Checkers',data:data})
+    
+          }
+          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Checkers'})    
       }
-      return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Checkers'})
-  
+      return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create checkers due to file upload failure'})    
+
+      
 
     }catch(err){
       console.error('An Error Occurred',err)

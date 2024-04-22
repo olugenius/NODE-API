@@ -180,7 +180,7 @@ router.post('/subAdmin/create',Authorize,SubAdminUpload.single('file'),CreateSub
             return;
           }
 
-          if(req.file?.path !== undefined){
+          if(req?.file?.path !== undefined){
             cloudinary.uploader.upload(req.file.path, async (error:any, result:any) => {
               if (error) {
                 // Handle error

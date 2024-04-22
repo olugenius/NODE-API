@@ -287,28 +287,32 @@ router.post('/member/create',Authorize,async(req,res)=>{
   
   router.post('/member/createXLs',Authorize,uploadXls.single('file'),async(req:any,res:any)=>{
     try{
-      const workbook = XLSX.readFile(req.file.path);
-    const sheet_name = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheet_name];
-    const data = <memberModel[]>XLSX.utils.sheet_to_json(sheet);
-    let successArray:memberModel[] = []
-    // for(let req of data){
-    //   req.MemberId = `MEM- ${GenerateUniqueId()}`
-    //   var response = await member.CreateMember(req)
-    //   if(response?.toLowerCase() ===  HttpStatus.STATUS_SUCCESS){
-    //     successArray.push(req)
-    //   }
-    // }
-    // if(successArray.length < 1){
-    //   return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Member'})
-    // }
-    // return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created the following Member',data:successArray})
-    var response = await member.createMembersXls(data)
-    if(response?.toLowerCase() ===  HttpStatus.STATUS_SUCCESS){
-      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Members',data:data})
-
-    }
-    return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Members'})
+      if(req.file?.path !== undefined){
+        const workbook = XLSX.readFile(req.file.path);
+        const sheet_name = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheet_name];
+        const data = <memberModel[]>XLSX.utils.sheet_to_json(sheet);
+        let successArray:memberModel[] = []
+        // for(let req of data){
+        //   req.MemberId = `MEM- ${GenerateUniqueId()}`
+        //   var response = await member.CreateMember(req)
+        //   if(response?.toLowerCase() ===  HttpStatus.STATUS_SUCCESS){
+        //     successArray.push(req)
+        //   }
+        // }
+        // if(successArray.length < 1){
+        //   return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Member'})
+        // }
+        // return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created the following Member',data:successArray})
+        var response = await member.createMembersXls(data)
+        if(response?.toLowerCase() ===  HttpStatus.STATUS_SUCCESS){
+          return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Members',data:data})
+    
+        }
+        return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Members'})
+      }
+      return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Members due to file upload failure'})
+     
     }catch(error){
       console.error('An Error Occurred',error)
       return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    

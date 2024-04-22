@@ -904,7 +904,7 @@ router.put(
       // }
 
       //end switch case
-      if (req.file?.path !== undefined) {
+      if (req?.file?.path !== undefined) {
         cloudinary.uploader.upload(
           req.file.path,
           async (error: any, result: any) => {
