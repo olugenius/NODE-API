@@ -8,6 +8,7 @@ export const SingleAccessCodeModelValidator =
   body('Name','Name field is required').notEmpty().trim(),
   check('Email').optional().trim().isEmail().withMessage('invalid Email format').normalizeEmail(),
   body('Date').notEmpty().withMessage('Date field is required').trim().isDate().withMessage('invalid Date format'),
+  body('CreatorUserId','CreatorUserId field is required').notEmpty().trim(),
   
  
 ]
@@ -20,6 +21,7 @@ export const StaticAccessCodeModelValidator =
   body('Phone','Phone field is required').optional().trim().isMobilePhone('any',{strictMode:true}).withMessage('invalid phone number'),
   check('Email').optional().trim().isEmail().withMessage('invalid Email format').normalizeEmail(),
   body('Category','Category field is required').notEmpty().trim(),
+  body('CreatorUserId','CreatorUserId field is required').notEmpty().trim(),
   
  
 ]
@@ -34,5 +36,6 @@ export const BulkAccessCodeModelValidator =
   check('Email').optional().trim().isEmail().withMessage('invalid Email format').normalizeEmail(),
   body('Date').notEmpty().withMessage('Date field is required').trim().isDate().withMessage('invalid Date format'),
   body('NoOfParticipants','NoOfParticipants field is required').notEmpty().trim().escape(),
+  body('CreatorUserId','CreatorUserId field is required').notEmpty().trim(),
  
 ]
