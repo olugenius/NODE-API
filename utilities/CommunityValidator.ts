@@ -2,10 +2,11 @@ import { body, check } from "express-validator";
 
 export const CreateCommunityValidator = 
 [
-  body('Name','Name field is required').notEmpty().trim().escape().matches(/^[a-zA-Z]+$/).withMessage('Community Name must contain only alphabetic characters'),
+  body('Name','Name field is required').notEmpty().trim().escape(),
   body('Address','Address field is required').notEmpty().trim().escape(),
   body('Phone','Phone field is required').notEmpty().trim().isMobilePhone('any',{strictMode:true}).withMessage('invalid phone number'),
   check('Email').optional().trim().isEmail().withMessage('invalid Email').normalizeEmail(),
+  body('CreatorUserId','CreatorUserId field is required').notEmpty().trim().escape(),
   //body('CommunityId','Community field is required').notEmpty().trim().escape(),
  
 ]
@@ -21,6 +22,7 @@ export const CreateCheckerValidator =
   body('NIN').optional().trim(),
   body('CheckPoint').notEmpty().withMessage('checkpoint field is required').trim(),
   body('CommunityId','Community field is required').notEmpty().trim().escape(),
+  body('CreatorUserId','CreatorUserId field is required').notEmpty().trim().escape(),
  
 ]
 
