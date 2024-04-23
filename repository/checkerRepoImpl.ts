@@ -5,6 +5,8 @@ import createCheckersModel from "../model/createcheckersModel";
 import { injectable } from "inversify";
 import { GenerateUniqueId } from "../utilities/GenerateUniqueId";
 import GetNewDate from "../utilities/GetNewDate";
+import { BeginTransaction, CommitTransaction, QueryTransaction, ReleaseTransaction } from "./dbContext/Transactions";
+import { generateHTML } from "swagger-ui-express";
 
 @injectable()
 export default class checkerRepoImpl implements checkerRepo{
@@ -28,29 +30,37 @@ export default class checkerRepoImpl implements checkerRepo{
             const connection =  await this.getConnection()
             let result = await new Promise<string>((resolve,reject)=>{
              
-                connection?.getConnection((err,connection)=>{
+                connection?.getConnection(async(err,connection)=>{
                     if(err){
                         console.log('connection error',err)
                         reject(err)
                     }
                     
                   
-                    const query = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint,IsActive,CheckerId,CreatedAt,CreatorUserId) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`
-                     const checkerId = `Check-${GenerateUniqueId()}`
-                        connection?.query(query,[payload.FirstName,payload.LastName,payload.Phone,payload.Email,payload.DOB,payload.Gender,payload.NIN,payload.CommunityId,payload.CheckPoint,1,checkerId,GetNewDate(),payload.CreatorUserId],(err,data)=>{
-                         connection.release()
-                            if(err){
-                                console.log('error querying database',err)
-                                response = 'Failed'
+                    const query1 = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint,IsActive,CheckerId,CreatedAt,CreatorUserId) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`
+                    const query2 = 'INSERT INTO temp_user(FirstName,LastName,Role,Phone,Email,TempPass) VALUES(?,?,?,?,?)'
+                    const checkerId = `Check-${GenerateUniqueId()}`
+                        // connection?.query(query,[payload.FirstName,payload.LastName,payload.Phone,payload.Email,payload.DOB,payload.Gender,payload.NIN,payload.CommunityId,payload.CheckPoint,1,checkerId,GetNewDate(),payload.CreatorUserId],(err,data)=>{
+                        //  connection.release()
+                        //     if(err){
+                        //         console.log('error querying database',err)
+                        //         response = 'Failed'
                                
-                            }else{
-                                console.log('successfully query',data)
-                                response = 'Success'
+                        //     }else{
+                        //         console.log('successfully query',data)
+                        //         response = 'Success'
                                
                                
-                            }
-                            resolve(response)
-                         })
+                        //     }
+                        //     resolve(response)
+                        //  })
+                    
+
+                         await BeginTransaction(connection)
+                         await QueryTransaction(connection,query1,[payload.FirstName,payload.LastName,payload.Phone,payload.Email,payload.DOB,payload.Gender,payload.NIN,payload.CommunityId,payload.CheckPoint,1,checkerId,GetNewDate(),payload.CreatorUserId])
+                         await QueryTransaction(connection,query2,[payload.FirstName,payload.LastName,'CHECKER',payload.Phone,payload.Email,GenerateUniqueId(4)])
+                         await CommitTransaction(connection)
+                         await ReleaseTransaction(connection)
                        
                     })
 
@@ -123,7 +133,7 @@ export default class checkerRepoImpl implements checkerRepo{
             const connection =  await this.getConnection()
              let result = await new Promise<string>((resolve,reject)=>{
              
-                connection?.getConnection((err,connection)=>{
+                connection?.getConnection(async(err,connection)=>{
                     if(err){
                         console.log('connection error',err)
                         reject(err)
@@ -142,12 +152,12 @@ export default class checkerRepoImpl implements checkerRepo{
                 const end = (i + 1) * batchSize;
                 const batchPayloads = payloads.slice(start, end);
     
-                connection?.beginTransaction((err)=>{
-                    if(err){
-                        console.log('error beginning transaction',err)
-                        reject(err)
-                    }
-                })
+                // connection?.beginTransaction((err)=>{
+                //     if(err){
+                //         console.log('error beginning transaction',err)
+                //         reject(err)
+                //     }
+                // })
                     const placeholders = batchPayloads.map(() => '(?,?,?,?,?,?,?,?,?,?,?,?,?)').join(',');
                     const values = batchPayloads.flatMap(payload => [
                         payload.FirstName,
@@ -165,40 +175,56 @@ export default class checkerRepoImpl implements checkerRepo{
                         payload.CreatorUserId
 
                     ])
+
+                    const values2 = batchPayloads.flatMap(payload => [
+                        payload.FirstName,
+                        payload.LastName,
+                        'CHECKER',
+                        payload.Phone,
+                        payload.Email,
+                        GenerateUniqueId(4)
+
+                    ])
                 
     
-                    const query = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint,IsActive,CheckerId,CreatedAt,CreatorUserId) VALUES ${placeholders}`;
-    
-                        connection?.query(query,values,(err,data)=>{
-                         //connection.release()
-                            if(err){
-                                errorLog.push(err.message)
-                                console.log('error querying database',err)
-                                connection.rollback((err)=>{
-                                    console.log('error rolling back transaction',err)
-                                    })
-                            }
-                         })
-                       
+                    const query1 = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint,IsActive,CheckerId,CreatedAt,CreatorUserId) VALUES ${placeholders}`;
+                    const query2 = 'INSERT INTO temp_user(FirstName,LastName,Role,Phone,Email.TempPass) VALUES(?,?,?,?,?)'
+                        // connection?.query(query1,values,(err,data)=>{
+                        //  //connection.release()
+                        //     if(err){
+                        //         errorLog.push(err.message)
+                        //         console.log('error querying database',err)
+                        //         connection.rollback((err)=>{
+                        //             console.log('error rolling back transaction',err)
+                        //             })
+                        //     }
+                        //  })
+
+                         await BeginTransaction(connection)
+                         await QueryTransaction(connection,query1,values)
+                         await QueryTransaction(connection,query2,values2)
                 
                 
             }
-            connection.commit((error)=>{
-                connection.release()
-             if(error){
-                errorLog.push(error.message)
-             connection.rollback((err)=>{
-             console.log('error rolling back transaction',err)
-             })
-             }
-             if(errorLog.length < 1){
-                resolve('Success')
+          await CommitTransaction(connection)
+          await ReleaseTransaction(connection)
+          resolve('success')
+            // connection.commit((error)=>{
+            //     connection.release()
+            //  if(error){
+            //     errorLog.push(error.message)
+            //  connection.rollback((err)=>{
+            //  console.log('error rolling back transaction',err)
+            //  })
+            //  }
+            //  if(errorLog.length < 1){
+            //     resolve('Success')
 
-             }else{
-                resolve('Failed')
-             }
+            //  }else{
+            //     resolve('Failed')
+            //  }
              
-            })
+            // })
             
                 
             })

@@ -592,11 +592,22 @@ router.post("/login", LoginValidator, async (req: Request, res: Response) => {
       await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
     );
     if (response?.length < 1) {
-      res.status(HttpStatus.STATUS_400).json({
+      const tempUser = await userRepo.GetTempUserByEmailOrPhone(reqBody.Channel)
+      if(tempUser?.length > 1 && tempUser[0].TempPass === reqBody.Password){
+        return res.status(HttpStatus.STATUS_200).json({
+          status: HttpStatus.STATUS_SUCCESS,
+          message: "Login Successful",
+          IsOnboarded:'False',
+          UserId: tempUser[0]?.UserId,
+          Channel: reqBody.Channel,
+          UserRole: tempUser[0]?.Role,
+        });
+      }
+     return  res.status(HttpStatus.STATUS_400).json({
         status: HttpStatus.STATUS_FAILED,
         message: "invalid Phone Number or Password",
       });
-      return;
+    
     }
 
     let IValid = await bcrypt.compare(reqBody.Password, response[0].Password);
@@ -630,6 +641,7 @@ router.post("/login", LoginValidator, async (req: Request, res: Response) => {
       message: "Login Successful",
       UserId: response[0]?.UserId,
       Channel: reqBody.Channel,
+      IsOnboarded:'True',
       UserRole: response[0]?.UserRole,
       accessToken: accessToken,
       refreshToken: refreshToken,

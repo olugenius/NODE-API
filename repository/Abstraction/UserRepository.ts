@@ -6,6 +6,7 @@ import { createPasswordRequestModel, updatePasswordRequestModel } from "../../mo
 export default interface UserRepository{
     GetUserByPhone(Phone:string):Promise<any | null>
     GetUserByEmailOrPhone(Email:string):Promise<any | null>
+    GetTempUserByEmailOrPhone(Email: string): Promise<any | null>
     GetUserByCreatorUserId(creatorUserId:string):Promise<any | null>
     GetUserByEmail(Email:string):Promise<any | null>
     AddToken(email:string,mailFor:string,token:string,medium:string):Promise<string>

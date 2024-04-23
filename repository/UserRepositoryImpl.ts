@@ -18,6 +18,7 @@ import {
 import UpdateEmailModel from "../model/UpdateEmailModel";
 import { GenerateUniqueId } from "../utilities/GenerateUniqueId";
 import { registerModel, updateUserModel } from "../model/registerModel";
+import { BeginTransaction, CommitTransaction, QueryTransaction, ReleaseTransaction } from "./dbContext/Transactions";
 
 @injectable()
 export default class UserRepositoryImpl implements UserRepository {
@@ -122,7 +123,56 @@ export default class UserRepositoryImpl implements UserRepository {
       console.error("An error occurred", error);
     }
   }
+  async GetTempUserByEmailOrPhone(Email: string): Promise<any | null> {
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<any>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+          connection?.query(
+            `SELECT * FROM temp_user WHERE (Email = ? or Phone =?)`,
+            [Email, Email],
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+              } else {
+                console.log("successfully query", data);
+              }
+              resolve(data);
+            }
+          );
 
+          console.log("connection success");
+        });
+      });
+
+      //console.log('About to query Db after connection success')
+      //await new Promise<void>((resolve,reject)=>{
+
+      // connection?.query(`SELECT * FROM Users WHERE Email = ?`,[Email],(err,data)=>{
+      //     if(err){
+      //        console.log('error querying database',err)
+      //        reject(err)
+
+      //     }
+      //     else{
+      //        console.log('successfully query',data)
+      //        result = data
+      //        resolve()
+      //     }
+      //    })
+
+      //})
+
+      return result;
+    } catch (error) {
+      console.error("An error occurred", error);
+    }
+  }
   async GetUserByEmail(Email: string): Promise<any | null> {
     try {
       const connection = await this.getConnection();
@@ -412,47 +462,79 @@ export default class UserRepositoryImpl implements UserRepository {
       const connection = await this.getConnection();
       let result = await new Promise<registerResponseModel>(
         (resolve, reject) => {
-          connection?.getConnection((err, connection) => {
+          connection?.getConnection(async(err, connection) => {
             if (err) {
               console.log("connection error", err);
               reject(err);
             }
 
-            const userId = GenerateUniqueId();
-            const query = `INSERT INTO Users(FirstName,LastName,DOB,Gender,Address,Phone,Email,PhotoPath,Password,IsVerified,Language,CompanyType,UserRole,UserId) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+          
 
-            connection?.query(
-              query,
-              [
-                payload.FirstName,
-                payload.LastName,
-                dateFormat,
-                payload.Gender,
-                payload.Address,
-                payload.Phone,
-                payload.Email ?? "",
-                payload.PhotoPath,
-                passwordEncrypt,
-                false,
-                payload.Language,
-                payload.CompanyType,
-                payload.UserRole,
-                userId,
-              ],
-              (err, data) => {
-                connection.release();
-                if (err) {
-                  console.log("error querying database", err);
-                  response.status = "Failed";
-                } else {
-                  console.log("successfully query", data);
-                  response.status = "Success";
-                }
-                resolve(response);
-              }
-            );
+            
+
+            const userId = GenerateUniqueId();
+            const query1 = `INSERT INTO Users(FirstName,LastName,DOB,Gender,Address,Phone,Email,PhotoPath,Password,IsVerified,Language,CompanyType,UserRole,UserId) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+            const query2 = 'DELETE FROM temp_user WHERE Phone=?'
+            // connection?.query(
+            //   query,
+            //   [
+            //     payload.FirstName,
+            //     payload.LastName,
+            //     dateFormat,
+            //     payload.Gender,
+            //     payload.Address,
+            //     payload.Phone,
+            //     payload.Email ?? "",
+            //     payload.PhotoPath,
+            //     passwordEncrypt,
+            //     false,
+            //     payload.Language,
+            //     payload.CompanyType,
+            //     payload.UserRole,
+            //     userId,
+            //   ],
+            //   (err, data) => {
+            //     connection.release();
+            //     if (err) {
+            //       console.log("error querying database", err);
+            //       response.status = "Failed";
+            //     } else {
+            //       console.log("successfully query", data);
+            //       response.status = "Success";
+            //     }
+            //     resolve(response);
+            //   }
+            // );
+
+            await BeginTransaction(connection)
+            await QueryTransaction(connection,query1,[
+              payload.FirstName,
+              payload.LastName,
+              dateFormat,
+              payload.Gender,
+              payload.Address,
+              payload.Phone,
+              payload.Email ?? "",
+              payload.PhotoPath,
+              passwordEncrypt,
+              false,
+              payload.Language,
+              payload.CompanyType,
+              payload.UserRole,
+              userId,
+            ])
+
+            await QueryTransaction(connection,query2,[payload.Phone])
+
+            await CommitTransaction(connection)
+
+            await ReleaseTransaction(connection)
+            response.status = 'Success'
+            resolve(response)
           });
         }
+         
+        
       );
 
       return result;

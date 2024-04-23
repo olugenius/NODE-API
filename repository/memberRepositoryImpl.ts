@@ -6,6 +6,7 @@ import { injectable } from "inversify"
 import { GenerateUniqueId } from "../utilities/GenerateUniqueId"
 import memberModel from "../model/memberModel"
 import GetNewDate from "../utilities/GetNewDate"
+import { BeginTransaction, CommitTransaction, QueryTransaction, ReleaseTransaction } from "./dbContext/Transactions"
 
 
 @injectable()
@@ -283,30 +284,36 @@ export default class memberRepositoryImpl implements memberRepository{
             const connection =  await this.getConnection()
             let result = await new Promise<string>((resolve,reject)=>{
              
-                connection?.getConnection((err,connection)=>{
+                connection?.getConnection(async(err,connection)=>{
                     if(err){
                         console.log('connection error',err)
                         reject(err)
                     }
                     
                     const memberId = `MEM-${GenerateUniqueId()}`
-                    const query = `INSERT INTO Member(MemberId,FirstName,LastName,DOB,Gender,NIN,Email,Phone,IsActive,CreatorUserId) VALUES(?,?,?,?,?,?,?,?,?,?)`
-                   
-                        connection?.query(query,[memberId,payload.FirstName,payload.LastName,payload.DOB,payload.Gender,payload.NIN,payload.Email,payload.Phone,1,payload.CreatorUserId],(err,data)=>{
-                         connection.release()
-                            if(err){
-                                console.log('error querying database',err)
-                                response = 'Failed'
+                    const query1 = `INSERT INTO Member(MemberId,FirstName,LastName,DOB,Gender,NIN,Email,Phone,IsActive,CreatorUserId) VALUES(?,?,?,?,?,?,?,?,?,?)`
+                    const query2 = 'INSERT INTO temp_user(FirstName,LastName,Role,Phone,Email,TempPass) VALUES(?,?,?,?,?)'
+                        // connection?.query(query,[memberId,payload.FirstName,payload.LastName,payload.DOB,payload.Gender,payload.NIN,payload.Email,payload.Phone,1,payload.CreatorUserId],(err,data)=>{
+                        //  connection.release()
+                        //     if(err){
+                        //         console.log('error querying database',err)
+                        //         response = 'Failed'
                                
-                            }else{
-                                console.log('successfully query',data)
-                                response = 'Success'
+                        //     }else{
+                        //         console.log('successfully query',data)
+                        //         response = 'Success'
                                
                                
-                            }
-                            resolve(response)
-                         })
-                       
+                        //     }
+                        //     resolve(response)
+                        //  })
+
+                         await BeginTransaction(connection)
+                         await QueryTransaction(connection,query1,[memberId,payload.FirstName,payload.LastName,payload.DOB,payload.Gender,payload.NIN,payload.Email,payload.Phone,1,payload.CreatorUserId])
+                         await QueryTransaction(connection,query2,[memberId,payload.FirstName,payload.LastName,'MEMBER',payload.Phone,payload.Email,GenerateUniqueId(4)])
+                         await CommitTransaction(connection)
+                         await ReleaseTransaction(connection)
+                         resolve('Success')
                     })
 
             })
@@ -576,7 +583,7 @@ export default class memberRepositoryImpl implements memberRepository{
             const connection =  await this.getConnection()
              let result = await new Promise<string>((resolve,reject)=>{
              
-                connection?.getConnection((err,connection)=>{
+                connection?.getConnection(async(err,connection)=>{
                     if(err){
                         console.log('connection error',err)
                         reject(err)
@@ -614,40 +621,57 @@ export default class memberRepositoryImpl implements memberRepository{
                         payload.CreatorUserId
 
                     ])
-                
+                    const values2 = batchPayloads.flatMap(payload => [
+                        payload.FirstName,
+                        payload.LastName,
+                        'MEMBER',
+                        payload.Phone,
+                        payload.Email,
+                        GenerateUniqueId(4)
+
+                    ])
     
-                    const query = `INSERT INTO Member(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,IsActive,MemberId,CreatedAt,CreatorUserId) VALUES ${placeholders}`;
-    
-                        connection?.query(query,values,(err,data)=>{
-                         //connection.release()
-                            if(err){
-                                errorLog.push(err.message)
-                                console.log('error querying database',err)
-                                connection.rollback((err)=>{
-                                    console.log('error rolling back transaction',err)
-                                    })
-                            }
-                         })
+                    const query1 = `INSERT INTO Member(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,IsActive,MemberId,CreatedAt,CreatorUserId) VALUES ${placeholders}`;
+                    const query2 = 'INSERT INTO temp_user(FirstName,LastName,Role,Phone,Email,TempPass) VALUES(?,?,?,?,?)'
+                        // connection?.query(query1,values,(err,data)=>{
+                        //  //connection.release()
+                        //     if(err){
+                        //         errorLog.push(err.message)
+                        //         console.log('error querying database',err)
+                        //         connection.rollback((err)=>{
+                        //             console.log('error rolling back transaction',err)
+                        //             })
+                        //     }
+                        //  })
+
+                         await BeginTransaction(connection)
+                         await QueryTransaction(connection,query1,values)
+                         await QueryTransaction(connection,query2,values2)
+
                        
                 
                 
             }
-            connection.commit((error)=>{
-                connection.release()
-             if(error){
-                errorLog.push(error.message)
-             connection.rollback((err)=>{
-             console.log('error rolling back transaction',err)
-             })
-             }
-             if(errorLog.length < 1){
-                resolve('Success')
+            // connection.commit((error)=>{
+            //     connection.release()
+            //  if(error){
+            //     errorLog.push(error.message)
+            //  connection.rollback((err)=>{
+            //  console.log('error rolling back transaction',err)
+            //  })
+            //  }
+            //  if(errorLog.length < 1){
+            //     resolve('Success')
 
-             }else{
-                resolve('Failed')
-             }
+            //  }else{
+            //     resolve('Failed')
+            //  }
              
-            })
+            // })
+
+            await CommitTransaction(connection)
+            await ReleaseTransaction(connection)
+            resolve('Success')
             
                 
             })
