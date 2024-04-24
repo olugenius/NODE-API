@@ -8,6 +8,7 @@ import memberModel from "../model/memberModel"
 import GetNewDate from "../utilities/GetNewDate"
 import { BeginTransaction, CommitTransaction, QueryTransaction, ReleaseTransaction } from "./dbContext/Transactions"
 import { SendMail } from "../utilities/EmailHandler"
+import getCurrentDate from "../utilities/GetNewDate"
 
 
 @injectable()
@@ -292,7 +293,7 @@ export default class memberRepositoryImpl implements memberRepository{
                     }
                     
                     const memberId = `MEM-${GenerateUniqueId()}`
-                    const query1 = `INSERT INTO Member(MemberId,FirstName,LastName,DOB,Gender,NIN,Email,Phone,IsActive,CreatorUserId) VALUES(?,?,?,?,?,?,?,?,?,?)`
+                    const query1 = `INSERT INTO Member(MemberId,FirstName,LastName,DOB,Gender,NIN,Email,Phone,IsActive,CreatorUserId,CreatedAt) VALUES(?,?,?,?,?,?,?,?,?,?,?)`
                     const query2 = 'INSERT INTO temp_user(FirstName,LastName,Role,Phone,Email,TempPass) VALUES(?,?,?,?,?)'
                         // connection?.query(query,[memberId,payload.FirstName,payload.LastName,payload.DOB,payload.Gender,payload.NIN,payload.Email,payload.Phone,1,payload.CreatorUserId],(err,data)=>{
                         //  connection.release()
@@ -312,7 +313,7 @@ export default class memberRepositoryImpl implements memberRepository{
                             const pass = GenerateUniqueId(4)
 
                             await BeginTransaction(connection)
-                            await QueryTransaction(connection,query1,[memberId,payload.FirstName,payload.LastName,payload.DOB,payload.Gender,payload.NIN,payload.Email,payload.Phone,1,payload.CreatorUserId])
+                            await QueryTransaction(connection,query1,[memberId,payload.FirstName,payload.LastName,payload.DOB,payload.Gender,payload.NIN,payload.Email,payload.Phone,1,payload.CreatorUserId,getCurrentDate()])
                             await QueryTransaction(connection,query2,[memberId,payload.FirstName,payload.LastName,'MEMBER',payload.Phone,payload.Email,pass])
                             await CommitTransaction(connection)
                             await ReleaseTransaction(connection)
@@ -358,9 +359,9 @@ export default class memberRepositoryImpl implements memberRepository{
                     }
                     
                   
-                    const query = `UPDATE Member SET FirstName=?,LastName=?,NIN=?,DOB=?,Gender=?,CommunityId=?,Email=?,Phone=? WHERE MemberId=?`
+                    const query = `UPDATE Member SET FirstName=?,LastName=?,NIN=?,DOB=?,Gender=?,CommunityId=?,Email=?,Phone=?,UpdatedAt=? WHERE MemberId=?`
                    
-                        connection?.query(query,[payload.FirstName,payload.LastName,payload.NIN,payload.DOB,payload.Gender,payload.CommunityId,payload.Email,payload.Phone,memberId],(err,data)=>{
+                        connection?.query(query,[payload.FirstName,payload.LastName,payload.NIN,payload.DOB,payload.Gender,payload.CommunityId,payload.Email,payload.Phone,GetNewDate(),memberId],(err,data)=>{
                          connection.release()
                             if(err){
                                 console.log('error querying database',err)
