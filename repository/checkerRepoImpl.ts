@@ -39,7 +39,7 @@ export default class checkerRepoImpl implements checkerRepo{
                     
                   
                     const query1 = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint,IsActive,CheckerId,CreatedAt,CreatorUserId) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`
-                    const query2 = 'INSERT INTO temp_user(FirstName,LastName,Role,Phone,Email,TempPass) VALUES(?,?,?,?,?)'
+                    const query2 = 'INSERT INTO temp_user(FirstName,LastName,Role,Phone,Email,TempPass) VALUES(?,?,?,?,?,?)'
                     const checkerId = `Check-${GenerateUniqueId()}`
                         // connection?.query(query,[payload.FirstName,payload.LastName,payload.Phone,payload.Email,payload.DOB,payload.Gender,payload.NIN,payload.CommunityId,payload.CheckPoint,1,checkerId,GetNewDate(),payload.CreatorUserId],(err,data)=>{
                         //  connection.release()
@@ -199,7 +199,7 @@ export default class checkerRepoImpl implements checkerRepo{
                     
         
                         const query1 = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint,IsActive,CheckerId,CreatedAt,CreatorUserId) VALUES ${placeholders}`;
-                        const query2 = 'INSERT INTO temp_user(FirstName,LastName,Role,Phone,Email,TempPass) VALUES(?,?,?,?,?)'
+                        const query2 = 'INSERT INTO temp_user(FirstName,LastName,Role,Phone,Email,TempPass) VALUES(?,?,?,?,?,?)'
                             // connection?.query(query1,values,(err,data)=>{
                             //  //connection.release()
                             //     if(err){

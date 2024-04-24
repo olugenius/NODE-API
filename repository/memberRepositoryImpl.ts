@@ -294,7 +294,7 @@ export default class memberRepositoryImpl implements memberRepository{
                     
                     const memberId = `MEM-${GenerateUniqueId()}`
                     const query1 = `INSERT INTO Member(MemberId,FirstName,LastName,DOB,Gender,NIN,Email,Phone,IsActive,CreatorUserId,CreatedAt) VALUES(?,?,?,?,?,?,?,?,?,?,?)`
-                    const query2 = 'INSERT INTO temp_user(FirstName,LastName,Role,Phone,Email,TempPass) VALUES(?,?,?,?,?)'
+                    const query2 = 'INSERT INTO temp_user(FirstName,LastName,Role,Phone,Email,TempPass) VALUES(?,?,?,?,?,?)'
                         // connection?.query(query,[memberId,payload.FirstName,payload.LastName,payload.DOB,payload.Gender,payload.NIN,payload.Email,payload.Phone,1,payload.CreatorUserId],(err,data)=>{
                         //  connection.release()
                         //     if(err){
@@ -646,7 +646,7 @@ export default class memberRepositoryImpl implements memberRepository{
                         ])
         
                         const query1 = `INSERT INTO Member(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,IsActive,MemberId,CreatedAt,CreatorUserId) VALUES ${placeholders}`;
-                        const query2 = 'INSERT INTO temp_user(FirstName,LastName,Role,Phone,Email,TempPass) VALUES(?,?,?,?,?)'
+                        const query2 = 'INSERT INTO temp_user(FirstName,LastName,Role,Phone,Email,TempPass) VALUES(?,?,?,?,?,?)'
                             // connection?.query(query1,values,(err,data)=>{
                             //  //connection.release()
                             //     if(err){
