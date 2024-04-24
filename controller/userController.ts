@@ -594,14 +594,23 @@ router.post("/login", LoginValidator, async (req: Request, res: Response) => {
     if (response?.length < 1) {
       const tempUser = await userRepo.GetTempUserByEmailOrPhone(reqBody.Channel)
       if(tempUser?.length > 1 && tempUser[0].TempPass === reqBody.Password){
-        return res.status(HttpStatus.STATUS_200).json({
-          status: HttpStatus.STATUS_SUCCESS,
-          message: "Login Successful",
-          IsOnboarded:'False',
-          UserId: tempUser[0]?.UserId,
-          Channel: reqBody.Channel,
-          UserRole: tempUser[0]?.Role,
-        });
+        if(tempUser[0].PasswordUsed === 0){
+          await userRepo.UpdateTempUserPasswordStatus(reqBody.Channel)
+          return res.status(HttpStatus.STATUS_200).json({
+            status: HttpStatus.STATUS_SUCCESS,
+            message: "Login Successful",
+            IsOnboarded:'False',
+            UserId: tempUser[0]?.UserId,
+            Channel: reqBody.Channel,
+            UserRole: tempUser[0]?.Role,
+          });
+        }else{
+          return res.status(HttpStatus.STATUS_400).json({
+            status: HttpStatus.STATUS_FAILED,
+            message: "Login Password cannot be re-used as a temporary user"
+          });
+        }
+      
       }
      return  res.status(HttpStatus.STATUS_400).json({
         status: HttpStatus.STATUS_FAILED,

@@ -9,6 +9,7 @@ import { validationResult } from 'express-validator'
 import multer from 'multer'
 import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
 import { Authorize } from '../middleware/authorization'
+import { SendMail } from '../utilities/EmailHandler'
 
 /**
  * @swagger
@@ -357,6 +358,7 @@ router.post('/checkers/create',Authorize,CreateCheckerValidator,async(req:any,re
           }
       var response = await checker.CreateCheckers(reqBody)
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+       
          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Community'})
       }
       return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Community',data:reqBody})

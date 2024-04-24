@@ -150,6 +150,8 @@ export default class UserRepositoryImpl implements UserRepository {
         });
       });
 
+      
+
       //console.log('About to query Db after connection success')
       //await new Promise<void>((resolve,reject)=>{
 
@@ -171,6 +173,43 @@ export default class UserRepositoryImpl implements UserRepository {
       return result;
     } catch (error) {
       console.error("An error occurred", error);
+    }
+  }
+
+  async UpdateTempUserPasswordStatus(channel: string): Promise<string> {
+   
+    let resValue: string = "";
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<string>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+
+          connection?.query(
+            `UPDATE temp_user SET PasswordUsed=? WHERE (Email = ? or Phone=?)`,
+            [1, channel, channel],
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+                resValue = "Failed";
+              } else {
+                console.log("successfully query", data);
+                resValue = "Success";
+              }
+              resolve(resValue);
+            }
+          );
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.error('An error occurred',error)
+      return 'Failed'
     }
   }
   async GetUserByEmail(Email: string): Promise<any | null> {

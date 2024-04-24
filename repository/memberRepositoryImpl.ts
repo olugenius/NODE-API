@@ -7,6 +7,7 @@ import { GenerateUniqueId } from "../utilities/GenerateUniqueId"
 import memberModel from "../model/memberModel"
 import GetNewDate from "../utilities/GetNewDate"
 import { BeginTransaction, CommitTransaction, QueryTransaction, ReleaseTransaction } from "./dbContext/Transactions"
+import { SendMail } from "../utilities/EmailHandler"
 
 
 @injectable()
@@ -307,12 +308,17 @@ export default class memberRepositoryImpl implements memberRepository{
                         //     }
                         //     resolve(response)
                         //  })
+                    const pass = GenerateUniqueId(4)
 
                          await BeginTransaction(connection)
                          await QueryTransaction(connection,query1,[memberId,payload.FirstName,payload.LastName,payload.DOB,payload.Gender,payload.NIN,payload.Email,payload.Phone,1,payload.CreatorUserId])
-                         await QueryTransaction(connection,query2,[memberId,payload.FirstName,payload.LastName,'MEMBER',payload.Phone,payload.Email,GenerateUniqueId(4)])
+                         await QueryTransaction(connection,query2,[memberId,payload.FirstName,payload.LastName,'MEMBER',payload.Phone,payload.Email,pass])
                          await CommitTransaction(connection)
                          await ReleaseTransaction(connection)
+
+                         const emailMessage = `<!DOCTYPE html><html><body><h2>Dear ${payload.FirstName} ${payload.LastName}</h2><p><b>You have been created as a Member in the VSured App</b></p><p class="demo">Please Login with this One time. <br><br> <b>Password:</b> ${pass}</p></body></html>`;
+                         await SendMail(`${payload.Email}`, emailMessage);
+
                          resolve('Success')
                     })
 
