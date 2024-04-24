@@ -55,7 +55,7 @@ export default class checkerRepoImpl implements checkerRepo{
                         //     }
                         //     resolve(response)
                         //  })
-                    
+                    try{
                         const pass = GenerateUniqueId(4)
                          await BeginTransaction(connection)
                          await QueryTransaction(connection,query1,[payload.FirstName,payload.LastName,payload.Phone,payload.Email,payload.DOB,payload.Gender,payload.NIN,payload.CommunityId,payload.CheckPoint,1,checkerId,GetNewDate(),payload.CreatorUserId])
@@ -66,6 +66,12 @@ export default class checkerRepoImpl implements checkerRepo{
                          await SendMail(`${payload.Email}`, emailMessage);
 
                          resolve('Success')
+                    }catch(err){
+                        console.log('An error occurred',err)
+                        reject(err)
+
+                    }
+
                        
                     })
 
@@ -151,85 +157,90 @@ export default class checkerRepoImpl implements checkerRepo{
             const batchSize = 50; // Number of rows to insert in each batch
             const batches = Math.ceil(payloads.length / batchSize);
             let errorLog:string[]=[]
-            
-            for (let i = 0; i < batches; i++) {
-                const start = i * batchSize;
-                const end = (i + 1) * batchSize;
-                const batchPayloads = payloads.slice(start, end);
+            try{
+                for (let i = 0; i < batches; i++) {
+                    const start = i * batchSize;
+                    const end = (i + 1) * batchSize;
+                    const batchPayloads = payloads.slice(start, end);
+        
+                    // connection?.beginTransaction((err)=>{
+                    //     if(err){
+                    //         console.log('error beginning transaction',err)
+                    //         reject(err)
+                    //     }
+                    // })
+                        const placeholders = batchPayloads.map(() => '(?,?,?,?,?,?,?,?,?,?,?,?,?)').join(',');
+                        const values = batchPayloads.flatMap(payload => [
+                            payload.FirstName,
+                            payload.LastName,
+                            payload.Phone,
+                            payload.Email,
+                            payload.DOB,
+                            payload.Gender,
+                            payload.NIN,
+                            payload.CommunityId,
+                            payload.CheckPoint,
+                            1,
+                            `Check-${GenerateUniqueId()}`,
+                            GetNewDate(),
+                            payload.CreatorUserId
     
-                // connection?.beginTransaction((err)=>{
-                //     if(err){
-                //         console.log('error beginning transaction',err)
-                //         reject(err)
-                //     }
+                        ])
+    
+                        const values2 = batchPayloads.flatMap(payload => [
+                            payload.FirstName,
+                            payload.LastName,
+                            'CHECKER',
+                            payload.Phone,
+                            payload.Email,
+                            GenerateUniqueId(4)
+    
+                        ])
+                    
+        
+                        const query1 = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint,IsActive,CheckerId,CreatedAt,CreatorUserId) VALUES ${placeholders}`;
+                        const query2 = 'INSERT INTO temp_user(FirstName,LastName,Role,Phone,Email,TempPass) VALUES(?,?,?,?,?)'
+                            // connection?.query(query1,values,(err,data)=>{
+                            //  //connection.release()
+                            //     if(err){
+                            //         errorLog.push(err.message)
+                            //         console.log('error querying database',err)
+                            //         connection.rollback((err)=>{
+                            //             console.log('error rolling back transaction',err)
+                            //             })
+                            //     }
+                            //  })
+    
+                             await BeginTransaction(connection)
+                             await QueryTransaction(connection,query1,values)
+                             await QueryTransaction(connection,query2,values2)
+                    
+                    
+                }
+              await CommitTransaction(connection)
+              await ReleaseTransaction(connection)
+              resolve('success')
+                // connection.commit((error)=>{
+                //     connection.release()
+                //  if(error){
+                //     errorLog.push(error.message)
+                //  connection.rollback((err)=>{
+                //  console.log('error rolling back transaction',err)
+                //  })
+                //  }
+                //  if(errorLog.length < 1){
+                //     resolve('Success')
+    
+                //  }else{
+                //     resolve('Failed')
+                //  }
+                 
                 // })
-                    const placeholders = batchPayloads.map(() => '(?,?,?,?,?,?,?,?,?,?,?,?,?)').join(',');
-                    const values = batchPayloads.flatMap(payload => [
-                        payload.FirstName,
-                        payload.LastName,
-                        payload.Phone,
-                        payload.Email,
-                        payload.DOB,
-                        payload.Gender,
-                        payload.NIN,
-                        payload.CommunityId,
-                        payload.CheckPoint,
-                        1,
-                        `Check-${GenerateUniqueId()}`,
-                        GetNewDate(),
-                        payload.CreatorUserId
-
-                    ])
-
-                    const values2 = batchPayloads.flatMap(payload => [
-                        payload.FirstName,
-                        payload.LastName,
-                        'CHECKER',
-                        payload.Phone,
-                        payload.Email,
-                        GenerateUniqueId(4)
-
-                    ])
-                
-    
-                    const query1 = `INSERT INTO Checkers(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,CheckPoint,IsActive,CheckerId,CreatedAt,CreatorUserId) VALUES ${placeholders}`;
-                    const query2 = 'INSERT INTO temp_user(FirstName,LastName,Role,Phone,Email.TempPass) VALUES(?,?,?,?,?)'
-                        // connection?.query(query1,values,(err,data)=>{
-                        //  //connection.release()
-                        //     if(err){
-                        //         errorLog.push(err.message)
-                        //         console.log('error querying database',err)
-                        //         connection.rollback((err)=>{
-                        //             console.log('error rolling back transaction',err)
-                        //             })
-                        //     }
-                        //  })
-
-                         await BeginTransaction(connection)
-                         await QueryTransaction(connection,query1,values)
-                         await QueryTransaction(connection,query2,values2)
-                
-                
+            }catch(err){
+            console.log('An error occurred creating checkers transactions',err)
+            reject(err)
             }
-          await CommitTransaction(connection)
-          await ReleaseTransaction(connection)
-          resolve('success')
-            // connection.commit((error)=>{
-            //     connection.release()
-            //  if(error){
-            //     errorLog.push(error.message)
-            //  connection.rollback((err)=>{
-            //  console.log('error rolling back transaction',err)
-            //  })
-            //  }
-            //  if(errorLog.length < 1){
-            //     resolve('Success')
 
-            //  }else{
-            //     resolve('Failed')
-            //  }
-             
-            // })
             
                 
             })
@@ -239,7 +250,7 @@ export default class checkerRepoImpl implements checkerRepo{
         
         }
         catch(error){
-            console.error('Error creating user:', error);
+            console.error('Error creating checker:', error);
             return 'Failed'
         }
            

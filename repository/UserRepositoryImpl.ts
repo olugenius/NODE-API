@@ -510,66 +510,76 @@ export default class UserRepositoryImpl implements UserRepository {
           
 
             
+            try{
+              const userId = GenerateUniqueId();
+              const query1 = `INSERT INTO Users(FirstName,LastName,DOB,Gender,Address,Phone,Email,PhotoPath,Password,IsVerified,Language,CompanyType,UserRole,UserId) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+              const query2 = 'DELETE FROM temp_user WHERE Phone=?'
+              // connection?.query(
+              //   query,
+              //   [
+              //     payload.FirstName,
+              //     payload.LastName,
+              //     dateFormat,
+              //     payload.Gender,
+              //     payload.Address,
+              //     payload.Phone,
+              //     payload.Email ?? "",
+              //     payload.PhotoPath,
+              //     passwordEncrypt,
+              //     false,
+              //     payload.Language,
+              //     payload.CompanyType,
+              //     payload.UserRole,
+              //     userId,
+              //   ],
+              //   (err, data) => {
+              //     connection.release();
+              //     if (err) {
+              //       console.log("error querying database", err);
+              //       response.status = "Failed";
+              //     } else {
+              //       console.log("successfully query", data);
+              //       response.status = "Success";
+              //     }
+              //     resolve(response);
+              //   }
+              // );
+  
+              await BeginTransaction(connection)
+              await QueryTransaction(connection,query1,[
+                payload.FirstName,
+                payload.LastName,
+                dateFormat,
+                payload.Gender,
+                payload.Address,
+                payload.Phone,
+                payload.Email ?? "",
+                payload.PhotoPath,
+                passwordEncrypt,
+                false,
+                payload.Language,
+                payload.CompanyType,
+                payload.UserRole,
+                userId,
+              ])
+  
+              await QueryTransaction(connection,query2,[payload.Phone])
+  
+              await CommitTransaction(connection)
+  
+              await ReleaseTransaction(connection)
+              response.status = 'Success'
+              resolve(response)
+            }catch(err){
+              console.log('An error occurred in transaction',err)
+              response.status = 'Failed'
+              resolve(response)
 
-            const userId = GenerateUniqueId();
-            const query1 = `INSERT INTO Users(FirstName,LastName,DOB,Gender,Address,Phone,Email,PhotoPath,Password,IsVerified,Language,CompanyType,UserRole,UserId) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
-            const query2 = 'DELETE FROM temp_user WHERE Phone=?'
-            // connection?.query(
-            //   query,
-            //   [
-            //     payload.FirstName,
-            //     payload.LastName,
-            //     dateFormat,
-            //     payload.Gender,
-            //     payload.Address,
-            //     payload.Phone,
-            //     payload.Email ?? "",
-            //     payload.PhotoPath,
-            //     passwordEncrypt,
-            //     false,
-            //     payload.Language,
-            //     payload.CompanyType,
-            //     payload.UserRole,
-            //     userId,
-            //   ],
-            //   (err, data) => {
-            //     connection.release();
-            //     if (err) {
-            //       console.log("error querying database", err);
-            //       response.status = "Failed";
-            //     } else {
-            //       console.log("successfully query", data);
-            //       response.status = "Success";
-            //     }
-            //     resolve(response);
-            //   }
-            // );
+            }
+            
 
-            await BeginTransaction(connection)
-            await QueryTransaction(connection,query1,[
-              payload.FirstName,
-              payload.LastName,
-              dateFormat,
-              payload.Gender,
-              payload.Address,
-              payload.Phone,
-              payload.Email ?? "",
-              payload.PhotoPath,
-              passwordEncrypt,
-              false,
-              payload.Language,
-              payload.CompanyType,
-              payload.UserRole,
-              userId,
-            ])
 
-            await QueryTransaction(connection,query2,[payload.Phone])
 
-            await CommitTransaction(connection)
-
-            await ReleaseTransaction(connection)
-            response.status = 'Success'
-            resolve(response)
           });
         }
          

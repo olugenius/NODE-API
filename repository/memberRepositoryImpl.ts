@@ -308,18 +308,25 @@ export default class memberRepositoryImpl implements memberRepository{
                         //     }
                         //     resolve(response)
                         //  })
-                    const pass = GenerateUniqueId(4)
+                        try{
+                            const pass = GenerateUniqueId(4)
 
-                         await BeginTransaction(connection)
-                         await QueryTransaction(connection,query1,[memberId,payload.FirstName,payload.LastName,payload.DOB,payload.Gender,payload.NIN,payload.Email,payload.Phone,1,payload.CreatorUserId])
-                         await QueryTransaction(connection,query2,[memberId,payload.FirstName,payload.LastName,'MEMBER',payload.Phone,payload.Email,pass])
-                         await CommitTransaction(connection)
-                         await ReleaseTransaction(connection)
+                            await BeginTransaction(connection)
+                            await QueryTransaction(connection,query1,[memberId,payload.FirstName,payload.LastName,payload.DOB,payload.Gender,payload.NIN,payload.Email,payload.Phone,1,payload.CreatorUserId])
+                            await QueryTransaction(connection,query2,[memberId,payload.FirstName,payload.LastName,'MEMBER',payload.Phone,payload.Email,pass])
+                            await CommitTransaction(connection)
+                            await ReleaseTransaction(connection)
+   
+                            const emailMessage = `<!DOCTYPE html><html><body><h2>Dear ${payload.FirstName} ${payload.LastName}</h2><p><b>You have been created as a Member in the VSured App</b></p><p class="demo">Please Login with this One time. <br><br> <b>Password:</b> ${pass}</p></body></html>`;
+                            await SendMail(`${payload.Email}`, emailMessage);
+   
+                            resolve('Success')
+                        }catch(err){
+                            console.log('An error occurred in transaction',err)
+                            reject(err)
 
-                         const emailMessage = `<!DOCTYPE html><html><body><h2>Dear ${payload.FirstName} ${payload.LastName}</h2><p><b>You have been created as a Member in the VSured App</b></p><p class="demo">Please Login with this One time. <br><br> <b>Password:</b> ${pass}</p></body></html>`;
-                         await SendMail(`${payload.Email}`, emailMessage);
-
-                         resolve('Success')
+                        }
+                   
                     })
 
             })
@@ -599,87 +606,89 @@ export default class memberRepositoryImpl implements memberRepository{
             const batchSize = 50; // Number of rows to insert in each batch
             const batches = Math.ceil(payloads.length / batchSize);
             let errorLog:string[]=[]
-            
-            for (let i = 0; i < batches; i++) {
-                const start = i * batchSize;
-                const end = (i + 1) * batchSize;
-                const batchPayloads = payloads.slice(start, end);
+            try{
+                for (let i = 0; i < batches; i++) {
+                    const start = i * batchSize;
+                    const end = (i + 1) * batchSize;
+                    const batchPayloads = payloads.slice(start, end);
+        
+                    connection?.beginTransaction((err)=>{
+                        if(err){
+                            console.log('error beginning transaction',err)
+                            reject(err)
+                        }
+                    })
+                        const placeholders = batchPayloads.map(() => '(?,?,?,?,?,?,?,?,?,?,?,?)').join(',');
+                        const values = batchPayloads.flatMap(payload => [
+                            payload.FirstName,
+                            payload.LastName,
+                            payload.Phone,
+                            payload.Email,
+                            payload.DOB,
+                            payload.Gender,
+                            payload.NIN,
+                            payload.CommunityId,
+                            1,
+                            `MEM-${GenerateUniqueId()}`,
+                            GetNewDate(),
+                            payload.CreatorUserId
     
-                connection?.beginTransaction((err)=>{
-                    if(err){
-                        console.log('error beginning transaction',err)
-                        reject(err)
-                    }
-                })
-                    const placeholders = batchPayloads.map(() => '(?,?,?,?,?,?,?,?,?,?,?,?)').join(',');
-                    const values = batchPayloads.flatMap(payload => [
-                        payload.FirstName,
-                        payload.LastName,
-                        payload.Phone,
-                        payload.Email,
-                        payload.DOB,
-                        payload.Gender,
-                        payload.NIN,
-                        payload.CommunityId,
-                        1,
-                        `MEM-${GenerateUniqueId()}`,
-                        GetNewDate(),
-                        payload.CreatorUserId
-
-                    ])
-                    const values2 = batchPayloads.flatMap(payload => [
-                        payload.FirstName,
-                        payload.LastName,
-                        'MEMBER',
-                        payload.Phone,
-                        payload.Email,
-                        GenerateUniqueId(4)
-
-                    ])
+                        ])
+                        const values2 = batchPayloads.flatMap(payload => [
+                            payload.FirstName,
+                            payload.LastName,
+                            'MEMBER',
+                            payload.Phone,
+                            payload.Email,
+                            GenerateUniqueId(4)
     
-                    const query1 = `INSERT INTO Member(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,IsActive,MemberId,CreatedAt,CreatorUserId) VALUES ${placeholders}`;
-                    const query2 = 'INSERT INTO temp_user(FirstName,LastName,Role,Phone,Email,TempPass) VALUES(?,?,?,?,?)'
-                        // connection?.query(query1,values,(err,data)=>{
-                        //  //connection.release()
-                        //     if(err){
-                        //         errorLog.push(err.message)
-                        //         console.log('error querying database',err)
-                        //         connection.rollback((err)=>{
-                        //             console.log('error rolling back transaction',err)
-                        //             })
-                        //     }
-                        //  })
-
-                         await BeginTransaction(connection)
-                         await QueryTransaction(connection,query1,values)
-                         await QueryTransaction(connection,query2,values2)
-
-                       
-                
-                
+                        ])
+        
+                        const query1 = `INSERT INTO Member(FirstName,LastName,Phone,Email,DOB,Gender,NIN,CommunityId,IsActive,MemberId,CreatedAt,CreatorUserId) VALUES ${placeholders}`;
+                        const query2 = 'INSERT INTO temp_user(FirstName,LastName,Role,Phone,Email,TempPass) VALUES(?,?,?,?,?)'
+                            // connection?.query(query1,values,(err,data)=>{
+                            //  //connection.release()
+                            //     if(err){
+                            //         errorLog.push(err.message)
+                            //         console.log('error querying database',err)
+                            //         connection.rollback((err)=>{
+                            //             console.log('error rolling back transaction',err)
+                            //             })
+                            //     }
+                            //  })
+    
+                             await BeginTransaction(connection)
+                             await QueryTransaction(connection,query1,values)
+                             await QueryTransaction(connection,query2,values2)
+    
+                  
+                }
+                // connection.commit((error)=>{
+                //     connection.release()
+                //  if(error){
+                //     errorLog.push(error.message)
+                //  connection.rollback((err)=>{
+                //  console.log('error rolling back transaction',err)
+                //  })
+                //  }
+                //  if(errorLog.length < 1){
+                //     resolve('Success')
+    
+                //  }else{
+                //     resolve('Failed')
+                //  }
+                 
+                // })
+    
+                await CommitTransaction(connection)
+                await ReleaseTransaction(connection)
+                resolve('Success')
+            }catch(err){
+                console.log('An error occurred in transaction',err)
+                reject(err)
             }
-            // connection.commit((error)=>{
-            //     connection.release()
-            //  if(error){
-            //     errorLog.push(error.message)
-            //  connection.rollback((err)=>{
-            //  console.log('error rolling back transaction',err)
-            //  })
-            //  }
-            //  if(errorLog.length < 1){
-            //     resolve('Success')
-
-            //  }else{
-            //     resolve('Failed')
-            //  }
-             
-            // })
-
-            await CommitTransaction(connection)
-            await ReleaseTransaction(connection)
-            resolve('Success')
             
-                
+            
             })
 
         })
