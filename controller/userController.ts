@@ -621,19 +621,19 @@ router.post("/login", LoginValidator, async (req: Request, res: Response) => {
 
     let IValid = await bcrypt.compare(reqBody.Password, response[0].Password);
     if (!IValid) {
-      res.status(HttpStatus.STATUS_400).json({
+      return res.status(HttpStatus.STATUS_400).json({
         status: HttpStatus.STATUS_FAILED,
         message: "Invalid Login Credentials",
       });
-      return;
+     
     }
 
     if (!response[0]?.IsVerified) {
-      res.status(HttpStatus.STATUS_400).json({
+      return res.status(HttpStatus.STATUS_400).json({
         status: HttpStatus.STATUS_FAILED,
         message: "Email is not yet verified",
       });
-      return;
+      
     }
     //generate jwt Token
     let claims = {
