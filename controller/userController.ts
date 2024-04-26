@@ -618,6 +618,7 @@ router.post("/login", LoginValidator, async (req: Request, res: Response) => {
       });
     
     }
+   if(response[0].UserRole !== RolesEnum.SUPER_ADMIN){
 
     let IValid = await bcrypt.compare(reqBody.Password, response[0].Password);
     if (!IValid) {
@@ -627,6 +628,9 @@ router.post("/login", LoginValidator, async (req: Request, res: Response) => {
       });
      
     }
+    
+   }
+    
 
     if (!response[0]?.IsVerified) {
       return res.status(HttpStatus.STATUS_400).json({
