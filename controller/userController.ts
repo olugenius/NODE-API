@@ -593,7 +593,7 @@ router.post("/login", LoginValidator, async (req: Request, res: Response) => {
     );
     if (response?.length < 1) {
       const tempUser = await userRepo.GetTempUserByEmailOrPhone(reqBody.Channel)
-      if(tempUser?.length > 1 && tempUser[0].TempPass === reqBody.Password){
+      if(tempUser?.length > 0 && tempUser[0].TempPass === reqBody.Password){
         if(tempUser[0].PasswordUsed === 0){
           await userRepo.UpdateTempUserPasswordStatus(reqBody.Channel)
           return res.status(HttpStatus.STATUS_200).json({
