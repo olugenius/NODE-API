@@ -595,8 +595,6 @@ router.post("/login", LoginValidator, async (req: Request, res: Response) => {
       const tempUser = await userRepo.GetTempUserByEmailOrPhone(reqBody.Channel)
    
       if(tempUser?.length > 0 && tempUser[0].TempPass === reqBody.Password){
-        console.log('password1',tempUser[0].TempPass)
-        console.log('password2',reqBody.Password)
         if(tempUser[0].PasswordUsed === 0){
           await userRepo.UpdateTempUserPasswordStatus(reqBody.Channel)
           return res.status(HttpStatus.STATUS_200).json({
@@ -632,6 +630,11 @@ router.post("/login", LoginValidator, async (req: Request, res: Response) => {
      
     }
 
+   }else if(response[0].Password !== reqBody.Password){
+    return res.status(HttpStatus.STATUS_400).json({
+      status: HttpStatus.STATUS_FAILED,
+      message: "Invalid Login Credentials",
+    });
    }
     
 
