@@ -11,7 +11,9 @@ export const CreateCommunityValidator =
  
 ]
 
-export const CreateCheckerValidator = 
+export const 
+
+CreateCheckerValidator = 
 [
   body('FirstName','FirstName field is required').notEmpty().trim().escape().matches(/^[a-zA-Z]+$/).withMessage('FirstName must contain only alphabetic characters'),
   body('LastName','LastName field is required').notEmpty().trim().escape().matches(/^[a-zA-Z]+$/).withMessage('LastName must contain only alphabetic characters'),
