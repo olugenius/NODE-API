@@ -11,6 +11,7 @@ import { CreateAppointmentValidator } from '../utilities/MembersValidator'
 import { validationResult } from 'express-validator'
 import { GenerateUniqueId } from '../utilities/GenerateUniqueId'
 import { Authorize } from '../middleware/authorization'
+import { CreateCheckerValidator, CreateMemberValidator } from '../utilities/CommunityValidator'
 
 
 /**
@@ -236,8 +237,13 @@ let uploadXls = multer({
     dest:'public/AppointmentUploads/'
   })
 
-router.post('/member/create',Authorize,async(req,res)=>{
+router.post('/member/create',Authorize,CreateMemberValidator,async(req:any,res:any)=>{
     try{
+      const error = validationResult(req)
+      if(!error.isEmpty()){
+        res.status(HttpStatus.STATUS_400).json(error.array())
+        return;
+      }
       const reqBody = <memberModel>req.body
       var response = await member.CreateMember(reqBody)
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
