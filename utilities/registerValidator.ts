@@ -12,7 +12,25 @@ import { isAtLeast16YearsOld, isValidDateFormat } from './dateFormatter'
   body('Address','Address is required').notEmpty().trim().escape(),
   body('Phone').notEmpty().withMessage('PhoneNumber is required').trim().matches(/^\+?\d{1,}$/).isMobilePhone('any',{ strictMode: true }).withMessage('Invalid phone number'),
   //body('PhotoPath').notEmpty().trim().escape(),
-  body('Password').notEmpty().withMessage('Password is required').trim().escape().isLength({min:6}).withMessage('password length must not be less than 6'),
+  body('Password').notEmpty().withMessage('Password is required').trim().escape().isLength({min:6}).withMessage('password length must not be less than 6')  .custom((value, { req }) => {
+    // Regular expressions to check for at least one capital letter, one special character, and one number
+    const capitalRegex = /[A-Z]/;
+    const specialCharRegex = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
+    const numberRegex = /[0-9]/;
+
+    // Check if the password satisfies all conditions
+    const hasCapital = capitalRegex.test(value);
+    const hasSpecialChar = specialCharRegex.test(value);
+    const hasNumber = numberRegex.test(value);
+
+    // Return true if all conditions are met, false otherwise
+    if (hasCapital && hasSpecialChar && hasNumber) {
+        return true;
+    }
+
+    // Return false with a custom error message if any condition fails
+    throw new Error('Password must contain at least one capital letter, one special character, and one number');
+}),
   //body('VerifyChannel','Verification channel is required').notEmpty().trim().escape(),
   //body('IsVerified').notEmpty().trim().escape(),
   body('Language','Language is required').notEmpty().trim().escape(),
