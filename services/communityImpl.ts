@@ -93,6 +93,10 @@ export default class CommunityImpl implements Community{
       return await this.communityRepo.CreateOrganization(payload) 
     }
 
+    async GetOrganizationByCreatorPhone(creatorPhone:string):Promise<any>{
+      return await this.communityRepo.GetOrganizationByCreatorPhone(creatorPhone) 
+    }
+
     async UpdateOrganization(CreatorPhone:string,Channel:string,payload:OrganizationModel):Promise<string>{
       return await this.communityRepo.UpdateOrganization(CreatorPhone,Channel,payload) 
     }

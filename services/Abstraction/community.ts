@@ -21,6 +21,7 @@ export default interface Community{
     DeactivateCommunity(Id:string):Promise<any | null>
     ActivateCommunity(Id:string):Promise<any | null>
     CreateOrganization(payload:OrganizationModel):Promise<string>
+    GetOrganizationByCreatorPhone(creatorPhone:string):Promise<any>
     UpdateOrganization(CreatorPhone:string,Channel:string,payload:OrganizationModel):Promise<string>
     GetCommunityAdminProfile(Phone:string):Promise<any>
     // getCheckersByPhoneOrEmail(channel:string):Promise<any | null>

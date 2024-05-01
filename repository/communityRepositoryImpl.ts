@@ -820,6 +820,44 @@ export default class communityRepositoryImpl implements communityRepository{
            
       
     }
+    
+
+     async GetOrganizationByCreatorPhone(creatorPhone:string):Promise<any>{
+        let result : any
+        try{
+            const connection =  await this.getConnection()  
+            let result =await new Promise<any>((resolve,reject)=>{
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+
+                    connection?.query(`SELECT * FROM Organization where CreatorPhone=?`,[creatorPhone],(err,data)=>{
+                        connection.release()
+                        if(err){
+                           console.log('error querying database',err)           
+                        }
+                        else{
+                           console.log('successfully query',data)
+                           
+                        }
+                        resolve(data)
+                       })
+        
+
+                   
+                    
+                    })
+            })
+    
+             return result
+
+        }catch(error){
+         console.error('An error occurred',error)
+        }
+
+    }
 
     async UpdateOrganization(CreatorPhone:string,Channel:string,payload:OrganizationModel):Promise<string>{
    

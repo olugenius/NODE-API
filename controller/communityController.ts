@@ -335,6 +335,29 @@ import { v2 as cloudinary } from 'cloudinary';
  *               message: Organisation Created Successful
  */
 
+/**
+ * @swagger
+ * /api/organization/single/{creatorPhone}:
+ *   get:
+ *     summary: Get Organization By creatorPhone
+ *     parameters:
+ *       - in: path
+ *         name: creatorPhone
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: creatorPhone of the Organization to get
+ *     security: 
+ *      - APIKeyHeader: []
+ *     tags: []
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:   Organization is fetch by creatorPhone Successfully
+ */
 
 
 
@@ -662,6 +685,25 @@ router.patch('/community/deactivate/:CommunityId',Authorize,async(req,res)=>{
 //   }
 
 // })
+
+
+router.get('/organization/single/:creatorPhone',async(req,res)=>{
+  try{
+const param = req?.params?.creatorPhone
+if(!param){
+  return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Parameter passed'})
+}
+var response = await community.GetOrganizationByCreatorPhone(param)
+if(response?.length < 1){
+    res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Organization'})
+  }
+  res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Organization',data:response[0]})
+
+  }catch(error){
+   console.error('An Error Occurred',error)
+  }
+
+})
 
 router.post('/organization/create',OrganizationUpload.single('file'),CreateOrganisationValidator,async(req:any,res:any)=>{
   try{
