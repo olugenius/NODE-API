@@ -150,7 +150,8 @@ export const UpdateOrganisationValidator =
 
 export const CreateOrganisationValidator = 
 [
-  body('Name').notEmpty().trim().escape().withMessage('Name is required').matches(/^[a-zA-Z]+$/).withMessage('Organization Name must contain only alphabetic characters'),
+  // body('Name').notEmpty().trim().escape().withMessage('Name is required').matches(/^[a-zA-Z]+$/).withMessage('Organization Name must contain only alphabetic characters'),
+  body('Name').notEmpty().trim().escape().withMessage('Name is required'),
   check('Phone').optional().trim().matches(/^\+?\d{1,}$/).isMobilePhone('any',{ strictMode: true }).withMessage('Invalid phone number'),
   body('Address','Organisation office address is required').notEmpty().trim().escape(),
   //body('DOB','Date of Birth is required').isDate().toDate(),
