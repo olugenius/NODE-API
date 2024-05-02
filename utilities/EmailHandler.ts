@@ -1,11 +1,8 @@
 import nodemailer, { SentMessageInfo } from 'nodemailer'
 import Mail from 'nodemailer/lib/mailer'
 import SMTPTransport from 'nodemailer/lib/smtp-transport'
- export async function SendMail (mailTo:string,message:string):Promise<boolean | any> {
-  let mailResult = false
-      try{
 
-    const host = process.env.MAIL_HOST
+const host = process.env.MAIL_HOST
     const port =process.env.MAIL_PORT
     const user = process.env.MAIL_USER
     const password = process.env.MAIL_PASSWORD
@@ -20,7 +17,11 @@ import SMTPTransport from 'nodemailer/lib/smtp-transport'
             pass:password
         }
     })
-   
+
+ export async function SendMail (mailTo:string,message:string):Promise<boolean | any> {
+  let mailResult = false
+      try{
+
     const mailOption:Mail.Options = {
      from: from,
      to:mailTo,
