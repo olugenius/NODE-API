@@ -52,8 +52,6 @@ const transport = nodemailer.createTransport({
     }
     catch(error){
     console.error('An error occurred while sending mail',error)
-    console.log('hostName',host)
-    console.log('UserName',user)
     return false;
     }
     
