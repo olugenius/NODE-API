@@ -63,7 +63,7 @@ export default class checkerRepoImpl implements checkerRepo{
                          await CommitTransaction(connection)
                          await ReleaseTransaction(connection)
                          const emailMessage = `<!DOCTYPE html><html><body><h2>Dear ${payload.FirstName} ${payload.LastName}</h2><p><b>You have been created as a Checker in the VSured App</b></p><p class="demo">Please Login with this One time. <br><br> <b>Paswword:</b> ${pass}</p></body></html>`;
-                        //  await SendMail(`${payload.Email}`, emailMessage);
+                         await SendMail(`${payload.Email}`, emailMessage);
 
                          resolve('Success')
                     }catch(err){

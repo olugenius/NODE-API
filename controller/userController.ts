@@ -539,6 +539,31 @@ const router = express.Router();
  *               message:  Successfully got user  by creatorUserId
  */
 
+
+/**
+ * @swagger
+ * /api/encrypt/data:
+ *   post:
+ *     summary: Encrypt data
+ *     tags: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               data:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Data Encrypted   Successfully
+ */
+
 const userRepo = container.get<UserRepository>("UserRepository");
 const memberRepo = container.get<Member>("Member");
 const communityRepo = container.get<Community>("Community");
@@ -580,6 +605,24 @@ const upload = multer({
   },
 });
 
+
+router.post('/encrypt/data', async (req: Request, res: Response) => {
+  try{
+
+  
+  const reqBody = req.body
+  const saltRound = 10;
+  const passwordEncrypt = await bcrypt.hash(reqBody.data, saltRound);
+
+  return res.status(200).json({status:'Success',data:passwordEncrypt})
+
+  }catch(err){
+console.log('An error occurred',err)
+return res.status(400).json({status:'Success',message:'Something went wrong'})
+  }
+
+})
+
 router.post("/login", LoginValidator, async (req: Request, res: Response) => {
   try {
     const reqBody = <loginModel>req.body;
@@ -619,7 +662,7 @@ router.post("/login", LoginValidator, async (req: Request, res: Response) => {
       });
     
     }
-   if(response[0].UserRole !== RolesEnum.SUPER_ADMIN){
+  //  if(response[0].UserRole !== RolesEnum.SUPER_ADMIN){
 
     let IValid = await bcrypt.compare(reqBody.Password, response[0].Password);
     if (!IValid) {
@@ -630,12 +673,12 @@ router.post("/login", LoginValidator, async (req: Request, res: Response) => {
      
     }
 
-   }else if(response[0].Password !== reqBody.Password){
-    return res.status(HttpStatus.STATUS_400).json({
-      status: HttpStatus.STATUS_FAILED,
-      message: "Invalid Login Credentials",
-    });
-   }
+  //  }else if(response[0].Password !== reqBody.Password){
+  //   return res.status(HttpStatus.STATUS_400).json({
+  //     status: HttpStatus.STATUS_FAILED,
+  //     message: "Invalid Login Credentials",
+  //   });
+  //  }
     
 
     if (!response[0]?.IsVerified) {

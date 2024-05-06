@@ -4,6 +4,8 @@ import conn from './dbContext/dbConnection'
 import createSubAdminModel from "../model/createSubAdminModel";
 import { injectable } from "inversify";
 import { GenerateUniqueId } from "../utilities/GenerateUniqueId";
+import { BeginTransaction, CommitTransaction, QueryTransaction, ReleaseTransaction } from "./dbContext/Transactions";
+import { SendMail } from "../utilities/EmailHandler";
 
 @injectable()
 export default class subAdminRepoimpl implements subAdminRepo{
@@ -26,30 +28,54 @@ export default class subAdminRepoimpl implements subAdminRepo{
             const connection =  await this.getConnection()
             let result = await new Promise<string>((resolve,reject)=>{
              
-                connection?.getConnection((err,connection)=>{
+                connection?.getConnection(async(err,connection)=>{
                     if(err){
                         console.log('connection error',err)
                         reject(err)
                     }
+
+                    try{
+
                     
-                  
+
+                    await BeginTransaction(connection)
+                    
+                    
+                    const pass = GenerateUniqueId(4)
                     const query = `INSERT INTO SubAdmin(FirstName,LastName,Phone,Email,PhotoPath,CommunityId,SubAdminId,CreatorUserId,IsActive) VALUES(?,?,?,?,?,?,?,?,?)`
+                    const query2 = 'INSERT INTO temp_user(FirstName,LastName,Role,Phone,Email,TempPass) VALUES(?,?,?,?,?,?)'
                     const subAdminId = `subAdmin-${GenerateUniqueId()}`
-                        connection?.query(query,[payload.FirstName,payload.LastName,payload.Phone,payload.Email,payload.PhotoPath,payload.CommunityId,subAdminId,payload.CreatorUserId ?? '',1],(err,data)=>{
-                         connection.release()
-                            if(err){
-                                console.log('error querying database',err)
-                                response = 'Failed'
+                        // connection?.query(query,[payload.FirstName,payload.LastName,payload.Phone,payload.Email,payload.PhotoPath,payload.CommunityId,subAdminId,payload.CreatorUserId ?? '',1],(err,data)=>{
+                        //  connection.release()
+                        //     if(err){
+                        //         console.log('error querying database',err)
+                        //         response = 'Failed'
                                
-                            }else{
-                                console.log('successfully query',data)
-                                response = 'Success'
+                        //     }else{
+                        //         console.log('successfully query',data)
+                        //         response = 'Success'
                                
                                
-                            }
-                            resolve(response)
-                         })
-                       
+                        //     }
+                        //     resolve(response)
+                        //  })
+
+
+                         await QueryTransaction(connection,query,[payload.FirstName,payload.LastName,payload.Phone,payload.Email,payload.PhotoPath,payload.CommunityId,subAdminId,payload.CreatorUserId ?? '',1])
+                         await QueryTransaction(connection,query2,[payload.FirstName,payload.LastName,'SUB_ADMIN',payload.Phone,payload.Email,pass])
+                         await CommitTransaction(connection)
+                         await ReleaseTransaction(connection)
+                         const emailMessage = `<!DOCTYPE html><html><body><h2>Dear ${payload.FirstName} ${payload.LastName}</h2><p><b>You have been created as a SubAdmin in the VSured App</b></p><p class="demo">Please Login with this One time. <br><br> <b>Paswword:</b> ${pass}</p></body></html>`;
+                         await SendMail(`${payload.Email}`, emailMessage);
+
+                         resolve('Success')
+
+                        }catch(err){
+                            console.log('An error occurred',err)
+                            reject(err)
+    
+                        }
+
                     })
 
             })
