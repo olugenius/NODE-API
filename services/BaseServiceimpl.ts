@@ -15,6 +15,7 @@ import SupportModel from "../model/SupportModel";
 import SupportCommentModel from "../model/SupportCommentModel";
 import CreateIReportModel from "../model/CreateIReportModel";
 import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
+import IReportCategory from "../model/IReportCategory";
 
 @injectable()
 export default class BaseServiceimpl implements BaseService{
@@ -181,14 +182,19 @@ export default class BaseServiceimpl implements BaseService{
    async GetAllSupportComment():Promise<any>{
       return await this.baseRepo.GetAllSupportComment()
    }
-
+async CreateIReportCategory(payload: IReportCategory): Promise<string> {
+   return await this.baseRepo.CreateIReportCategory(payload)
+}
    async CreateIReport(PhotoPath:string[],payload:CreateIReportModel):Promise<string>{
       return await this.baseRepo.CreateIReport(PhotoPath,payload)
    }
-
+   async GetAllIReportCategory(): Promise<any>{
+   return await this.baseRepo.GetAllIReportCategory()
+   }
    async GetAllIReportByCreatorByUserId(creatorUserId:string):Promise<any>{
       return await this.baseRepo.GetAllIReportByCreatorByUserId(creatorUserId)
    }
+
    async GetAllIReport():Promise<any>{
       return await this.baseRepo.GetAllIReport()
    }

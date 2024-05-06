@@ -20,6 +20,7 @@ import SupportCommentModel from "../model/SupportCommentModel";
 import CreateIReportModel from "../model/CreateIReportModel";
 import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
 import { BeginTransaction, CommitTransaction, QueryTransaction, ReleaseTransaction } from "./dbContext/Transactions";
+import IReportCategory from "../model/IReportCategory";
 
 @injectable()
 export default class baseRepositoryImpl implements BaseRepository {
@@ -1858,6 +1859,80 @@ export default class baseRepositoryImpl implements BaseRepository {
       return result;
     } catch (error) {
       console.error("Error Getting Support:", error);
+    }
+  }
+
+
+  async GetAllIReportCategory(): Promise<any> {
+    let result: any;
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<any>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+
+          connection?.query(`SELECT * FROM i-report-category`, (err, data) => {
+            connection.release();
+            if (err) {
+              console.log("error querying database", err);
+            } else {
+              console.log("successfully query", data);
+            }
+            resolve(data);
+          });
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error Getting Support:", error);
+    }
+  }
+
+
+  async CreateIReportCategory(payload: IReportCategory): Promise<string> {
+    let response: string = "";
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<string>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+          const ticketId = `${GenerateUniqueId()}`;
+
+          const query = `INSERT INTO i-report-category(Name,Description,CreatedAt) VALUES(?,?,?)`;
+
+          connection?.query(
+            query,
+            [
+              payload.Name,
+              payload.Description,
+              getCurrentDate(),
+            ],
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+                response = "Failed";
+              } else {
+                console.log("successfully query", data);
+                response = "Success";
+              }
+              resolve(response);
+            }
+          );
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error creating user:", error);
+      return "Failed";
     }
   }
 

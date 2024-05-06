@@ -26,6 +26,7 @@ import SupportCommentModel from "../model/SupportCommentModel";
 import CreateIReportModel from "../model/CreateIReportModel";
 import { v2 as cloudinary } from "cloudinary";
 import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
+import IReportCategory from "../model/IReportCategory";
 
 /**
  * @swagger
@@ -407,7 +408,7 @@ import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
  *     summary: Get All Forum
  *     security:
  *      - APIKeyHeader: []
- *     tags: [Base]
+ *     tags: [SuperAdmin]
  *     responses:
  *       200:
  *         description: Successful response
@@ -946,7 +947,7 @@ import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
  *     summary: Create Business Category
  *     security:
  *      - APIKeyHeader: []
- *     tags: [Base]
+ *     tags: [SuperAdmin]
  *     requestBody:
  *       required: true
  *       content:
@@ -997,7 +998,7 @@ import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
  *     summary: Get All Business Category
  *     security:
  *      - APIKeyHeader: []
- *     tags: [Base]
+ *     tags: [SuperAdmin]
  *     responses:
  *       200:
  *         description: Successful response
@@ -1046,7 +1047,7 @@ import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
  *         description: ID of the Business Category to Delete
  *     security:
  *      - APIKeyHeader: []
- *     tags: [Base]
+ *     tags: [SuperAdmin]
  *     responses:
  *       200:
  *         description: Successful response
@@ -1258,6 +1259,52 @@ import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
  *               message: I-Report created Successful
  */
 
+/**
+ * @swagger
+ * /api/i-report-category/create:
+ *   post:
+ *     summary: Create i-report-categor
+ *     security:
+ *      - APIKeyHeader: []
+ *     tags: [SuperAdmin]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Name:
+ *                 type: string
+ *               Description:
+ *                 type: date
+ *
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: i-report-category Created successfully
+ */
+
+/**
+ * @swagger
+ * /api/i-report-category/all:
+ *   get:
+ *     summary: Get All I-Report-category
+ *     security:
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got All I-Report-category
+ *               data: []
+ */
 
 /**
  * @swagger
@@ -1266,7 +1313,7 @@ import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
  *     summary: Get All I-Report
  *     security:
  *      - APIKeyHeader: []
- *     tags: [Base]
+ *     tags: [SuperAdmin]
  *     responses:
  *       200:
  *         description: Successful response
@@ -2983,6 +3030,65 @@ router.get("/supportComment/all", Authorize, async (req, res) => {
       .json({
         status: HttpStatus.STATUS_SUCCESS,
         message: "Successfully fetch All Support Comment",
+        data: response,
+      });
+  } catch (error) {
+    console.error("An Error Occurred", error);
+    return res
+      .status(HttpStatus.STATUS_500)
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
+  }
+});
+
+
+router.post("/i-report-category/create", Authorize, async (req: any, res: any) => {
+  try {
+    const reqBody = <IReportCategory>req.body;
+    // const error = validationResult(req);
+    // if (!error.isEmpty()) {
+    //   res.status(HttpStatus.STATUS_400).json(error.array());
+    //   return;
+    // }
+    var response = await baseService.CreateIReportCategory(reqBody);
+    if (response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS) {
+      return res
+        .status(HttpStatus.STATUS_400)
+        .json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "Failed to create i-report-category",
+        });
+    }
+    return res
+      .status(HttpStatus.STATUS_200)
+      .json({
+        status: HttpStatus.STATUS_SUCCESS,
+        message: "Successfully Created i-report-category",
+        data: reqBody,
+      });
+  } catch (error) {
+    console.error("An Error Occurred", error);
+    return res
+      .status(HttpStatus.STATUS_500)
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
+  }
+});
+
+router.get("/i-report-category/all", Authorize, async (req, res) => {
+  try {
+    var response = await baseService.GetAllIReportCategory();
+    if (response?.length < 1) {
+      return res
+        .status(HttpStatus.STATUS_404)
+        .json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "Failed to fetch All i-report-category ",
+        });
+    }
+    return res
+      .status(HttpStatus.STATUS_200)
+      .json({
+        status: HttpStatus.STATUS_SUCCESS,
+        message: "Successfully fetch All i-report-category",
         data: response,
       });
   } catch (error) {

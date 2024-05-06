@@ -74,7 +74,7 @@ import { v2 as cloudinary } from 'cloudinary';
  *     summary: Get All Communities
  *     security: 
  *      - APIKeyHeader: []
- *     tags: [Community] 
+ *     tags: [SuperAdmin] 
  *     responses:
  *       200:
  *         description: Successful response

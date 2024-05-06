@@ -149,7 +149,7 @@ const router = express.Router();
  *         schema:
  *           type: string
  *         description: channel of the user to update
- *     tags: [User]
+ *     tags: [Settings]
  *     security:
  *      - APIKeyHeader: []
  *     requestBody:
@@ -362,7 +362,7 @@ const router = express.Router();
  * /api/superAdmin/createPassword:
  *   post:
  *     summary: Create Super Admin Password
- *     tags: [User]
+ *     tags: [SuperAdmin]
  *     requestBody:
  *       required: true
  *       content:
@@ -418,7 +418,7 @@ const router = express.Router();
  * /api/setting/password/update:
  *   put:
  *     summary: Update Password
- *     tags: [User]
+ *     tags: [Settings]
  *     requestBody:
  *       required: true
  *       content:
@@ -455,7 +455,7 @@ const router = express.Router();
  *         description: ID of the Account to delete
  *     security:
  *      - APIKeyHeader: []
- *     tags: [User]
+ *     tags: [Settings]
  *     responses:
  *       200:
  *         description: Successful response
@@ -470,7 +470,7 @@ const router = express.Router();
  * /api/setting/email/update:
  *   put:
  *     summary: Update Email
- *     tags: [User]
+ *     tags: [Settings]
  *     requestBody:
  *       required: true
  *       content:
@@ -505,7 +505,7 @@ const router = express.Router();
  *         description: channel of the user profile to get
  *     security:
  *      - APIKeyHeader: []
- *     tags: [User]
+ *     tags: [Settings]
  *     responses:
  *       200:
  *         description: Successful response

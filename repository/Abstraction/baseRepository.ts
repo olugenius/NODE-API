@@ -3,6 +3,7 @@ import CommentModel from "../../model/CommentModel"
 import CreateDigitalRegistar from "../../model/CreateDigitalRegistar"
 import CreateForumModel from "../../model/CreateForumModel"
 import CreateIReportModel from "../../model/CreateIReportModel"
+import IReportCategory from "../../model/IReportCategory"
 import PostModel from "../../model/PostModel"
 import SupportCommentModel from "../../model/SupportCommentModel"
 import SupportModel from "../../model/SupportModel"
@@ -62,9 +63,9 @@ export default interface BaseRepository{
     UpdateSupportComment(Id:number,payload:SupportCommentModel):Promise<string>
     GetSupportCommentById(Id:number):Promise<any>
     GetAllSupportComment():Promise<any>
-
+    CreateIReportCategory(payload: IReportCategory): Promise<string> 
     CreateIReport(PhotoPath:string[],payload:CreateIReportModel):Promise<string>
-
+    GetAllIReportCategory(): Promise<any>
     GetAllIReportByCreatorByUserId(creatorUserId:string):Promise<any>
     GetAllIReport():Promise<any>
     GetIReportPhotos(reportId:string):Promise<any>
