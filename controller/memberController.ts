@@ -153,6 +153,32 @@ import { CreateCheckerValidator, CreateMemberValidator } from '../utilities/Comm
  */
 
 
+
+// /**
+//  * @swagger
+//  * /api/member/{channel}:
+//  *   get:
+//  *     summary: Get Member by Email or Phone
+//  *     parameters:
+//  *       - in: path
+//  *         name: channel
+//  *         required: true
+//  *         schema:
+//  *           type: string
+//  *         description: Email or Phone of the Member to get
+//  *     security: 
+//  *      - APIKeyHeader: []
+//  *     tags: [Member]
+//  *     responses:
+//  *       200:
+//  *         description: Successful response
+//  *         content:
+//  *           application/json:
+//  *             example:
+//  *               message:  Successfully got Member by Email or Phone
+//  */
+
+
 /**
  * @swagger
  * /api/member/single/{memberId}:
@@ -324,6 +350,24 @@ router.post('/member/create',Authorize,CreateMemberValidator,async(req:any,res:a
       return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})    
     }
       
+  })
+
+  router.get('/member/:channel',Authorize,async(req,res)=>{
+    try{
+  const param = req?.params?.channel
+  if(!param){
+    return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Member Id'})
+  }
+  var response = await member.GetMemberByPhoneOrEmail(param)
+  if(response?.length < 1){
+      return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Member'})
+    }
+    return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Member',data:response[0]})
+  
+    }catch(error){
+     console.error('An Error Occurred',error)
+     return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})      }
+  
   })
   
   router.get('/member/single/:memberId',Authorize,async(req,res)=>{

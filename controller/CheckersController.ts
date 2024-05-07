@@ -164,16 +164,16 @@ import { SendMail } from '../utilities/EmailHandler'
 
 // /**
 //  * @swagger
-//  * /api/checkers/{Id}:
+//  * /api/checkers/{channel}:
 //  *   get:
-//  *     summary: Get Checkers by Id
+//  *     summary: Get Checkers by Email or Phone
 //  *     parameters:
 //  *       - in: path
-//  *         name: Id
+//  *         name: channel
 //  *         required: true
 //  *         schema:
-//  *           type: number
-//  *         description: ID of the Checker to get
+//  *           type: string
+//  *         description: Email or Phone of the Checker to get
 //  *     security: 
 //  *      - APIKeyHeader: []
 //  *     tags: [Checkers]
@@ -183,7 +183,7 @@ import { SendMail } from '../utilities/EmailHandler'
 //  *         content:
 //  *           application/json:
 //  *             example:
-//  *               message:  Successfully got Checkers by Id
+//  *               message:  Successfully got Checkers by Email or Phone
 //  */
 
 
@@ -433,24 +433,25 @@ router.post('/checkers/create',Authorize,CreateCheckerValidator,async(req:any,re
   })
   
   
-  // router.get('/checkers/:Id',Authorize,async(req,res)=>{
-  //   try{
-  //     const param = req?.params?.Id
-  //     if(!param){
-  //       return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Checkers Id'})
-  //     }
-  //     console.log('checker param',param)
-  //     var response = await checker.GetCheckersById(Number(param))
-  //     if(response?.length < 1){
-  //         return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Checkers'})
-  //       }
-  //       return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Checkers',data:response[0]})
+  router.get('/checkers/:channel',Authorize,async(req,res)=>{
+    try{
+      const param = req?.params?.channel
+      if(!param){
+        return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Checkers Id'})
+      }
+      console.log('checker param',param)
+      var response = await checker.getCheckersByPhoneOrEmail(param)
+      if(response?.length < 1){
+          return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Failed to fetch Checkers'})
+        }
+        return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully fetch Checkers',data:response[0]})
   
-  //   }catch(error){
-  //     console.error('An Error Occurred',error)
-  //     return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})      }
+    }catch(error){
+      console.error('An Error Occurred',error)
+      return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,message:'Something went wrong'})      }
       
-  // })
+  })
+
   router.get('/checkers/single/:checkerId',Authorize,async(req,res)=>{
     try{
       const param = req?.params?.checkerId

@@ -677,7 +677,7 @@ router.post("/login", LoginValidator, async (req: Request, res: Response) => {
           await userRepo.UpdateTempUserPasswordStatus(reqBody.Channel)
           return res.status(HttpStatus.STATUS_200).json({
             status: HttpStatus.STATUS_SUCCESS,
-            message: "Login Successful",
+            message: "Activation Successful",
             IsOnboarded:'False',
             UserId: tempUser[0]?.UserId,
             Channel: reqBody.Channel,
