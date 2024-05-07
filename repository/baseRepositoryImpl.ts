@@ -21,6 +21,9 @@ import CreateIReportModel from "../model/CreateIReportModel";
 import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
 import { BeginTransaction, CommitTransaction, QueryTransaction, ReleaseTransaction } from "./dbContext/Transactions";
 import IReportCategory from "../model/IReportCategory";
+import SuperAdminRole from "../model/SuperAdminRole";
+import AdminTeam from "../model/AdminTeam";
+import bcrypt from "bcrypt";
 
 @injectable()
 export default class baseRepositoryImpl implements BaseRepository {
@@ -2275,4 +2278,144 @@ export default class baseRepositoryImpl implements BaseRepository {
       console.error("Error Getting Support:", error);
     }
   }
+
+
+
+  async CreateSuperAdminRoles(payload: SuperAdminRole): Promise<string> {
+    let response: string = "";
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<string>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+          //const ticketId = `${GenerateUniqueId()}`;
+
+          const query = `INSERT INTO superadminrole(Name,Description,ViewCommunity,ActivateDeactivateCommunity,CreateAdvert,EditAdvert,DeleteAdvert,CreateSubscription,EditSubscription,DeleteSubscription,CreatedAt) VALUES(?,?,?,?,?,?,?,?,?,?,?)`;
+
+          connection?.query(
+            query,
+            [
+              payload.Name,
+              payload.Description,
+              payload.ViewCommunity,
+              payload.ActivateDeactivateCommunity,
+              payload.CreateAdvert,
+              payload.EditAdvert,
+              payload.DeleteAdvert,
+              payload.CreateSubscription,
+              payload.EditSubscription,
+              payload.DeleteSubscription,
+              getCurrentDate(),
+            ],
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+                response = "Failed";
+              } else {
+                console.log("successfully query", data);
+                response = "Success";
+              }
+              resolve(response);
+            }
+          );
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error creating user:", error);
+      return "Failed";
+    }
+  }
+
+
+  async GetSuperAdminRoles(): Promise<any> {
+    let result: any;
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<any>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+
+          connection?.query(
+            `SELECT * FROM superadminrole`,
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+                reject(err)
+              } else {
+                console.log("successfully query", data);
+              }
+              resolve(data);
+            }
+          );
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error Getting superadminrole:", error);
+    }
+  }
+
+  async CreateSuperAdminTeam(payload: AdminTeam): Promise<string> {
+    let response: string = "";
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<string>((resolve, reject) => {
+        connection?.getConnection(async(err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+          //const ticketId = `${GenerateUniqueId()}`;
+          const pass =  GenerateUniqueId(6)
+          const saltRound = 10;
+          const passwordEncrypt = await bcrypt.hash(pass, saltRound);
+
+          const query = `INSERT INTO adminteammember(FirstName,LastName,Email,Phone,RoleId,Password,CreatedAt) VALUES(?,?,?,?,?,?,?)`;
+
+          connection?.query(
+            query,
+            [
+              payload.FirstName,
+              payload.LastName,
+              payload.Email,
+              payload.Phone,
+              payload.RoleId,
+              passwordEncrypt,
+              getCurrentDate(),
+            ],
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+                response = "Failed";
+              } else {
+                console.log("successfully query", data);
+                
+                response = "Success";
+              }
+              resolve(response);
+            }
+          );
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error creating super admin team:", error);
+      return "Failed";
+    }
+  }
+
+
 }

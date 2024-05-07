@@ -6,4 +6,5 @@ export default interface subAdminRepo{
     GetAllSubAdminsByCreatorUserId(creatorUserId:string):Promise<any>
     GetSubAdminById(Id:number):any
     GetSubAdminsByCommunityId(communityId:string):any
+    GetSubAdminByPhoneOrEmail(Email:string):Promise<any>
 }

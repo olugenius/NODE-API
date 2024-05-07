@@ -1,3 +1,4 @@
+import AdminTeam from "../../model/AdminTeam"
 import BusinessCategoryModel from "../../model/BusinessCategoryModel"
 import CommentModel from "../../model/CommentModel"
 import CreateDigitalRegistar from "../../model/CreateDigitalRegistar"
@@ -5,6 +6,7 @@ import CreateForumModel from "../../model/CreateForumModel"
 import CreateIReportModel from "../../model/CreateIReportModel"
 import IReportCategory from "../../model/IReportCategory"
 import PostModel from "../../model/PostModel"
+import SuperAdminRole from "../../model/SuperAdminRole"
 import SupportCommentModel from "../../model/SupportCommentModel"
 import SupportModel from "../../model/SupportModel"
 import TransactionModel from "../../model/TransactionModel"
@@ -74,5 +76,8 @@ export default interface BaseRepository{
     UpdateDigitalRegistar(registarId:string,payload:CreateDigitalRegistar):Promise<string>
     GetAllDigitalRegistar():Promise<any>
     GetDigitalRegistarByRegistarId(registarId:string):Promise<any>
+    CreateSuperAdminRoles(payload: SuperAdminRole): Promise<string> 
+    GetSuperAdminRoles(): Promise<any>
+    CreateSuperAdminTeam(payload: AdminTeam): Promise<string> 
 
 }

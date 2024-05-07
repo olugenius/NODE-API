@@ -123,6 +123,58 @@ export default class UserRepositoryImpl implements UserRepository {
       console.error("An error occurred", error);
     }
   }
+
+  async GetSuperAdminEmailOrPhone(Email: string): Promise<any | null> {
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<any>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+          connection?.query(
+            `SELECT * FROM adminteammember WHERE (Email = ? or Phone =?)`,
+            [Email, Email],
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+              } else {
+                console.log("successfully query", data);
+              }
+              resolve(data);
+            }
+          );
+
+          console.log("connection success");
+        });
+      });
+
+      //console.log('About to query Db after connection success')
+      //await new Promise<void>((resolve,reject)=>{
+
+      // connection?.query(`SELECT * FROM Users WHERE Email = ?`,[Email],(err,data)=>{
+      //     if(err){
+      //        console.log('error querying database',err)
+      //        reject(err)
+
+      //     }
+      //     else{
+      //        console.log('successfully query',data)
+      //        result = data
+      //        resolve()
+      //     }
+      //    })
+
+      //})
+
+      return result;
+    } catch (error) {
+      console.error("An error occurred", error);
+    }
+  }
+
   async GetTempUserByEmailOrPhone(Email: string): Promise<any | null> {
     try {
       const connection = await this.getConnection();

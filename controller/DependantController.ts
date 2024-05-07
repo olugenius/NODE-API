@@ -39,7 +39,7 @@ import { Authorize } from '../middleware/authorization'
  *                 type: string
  *                DOB:
  *                 type: string
- *                CreatorPhone:
+ *                CreatorUserId:
  *                 type: string
  *               
  *     responses:
@@ -83,7 +83,7 @@ import { Authorize } from '../middleware/authorization'
  *                 type: string
  *               PhotoPath:
  *                 type: string
- *               CreatorPhone:
+ *               CreatorUserId:
  *                 type: string
  *     responses:
  *       200:

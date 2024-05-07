@@ -27,6 +27,7 @@ import CreateIReportModel from "../model/CreateIReportModel";
 import { v2 as cloudinary } from "cloudinary";
 import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
 import IReportCategory from "../model/IReportCategory";
+import SuperAdminRole from "../model/SuperAdminRole";
 
 /**
  * @swagger
@@ -1263,7 +1264,7 @@ import IReportCategory from "../model/IReportCategory";
  * @swagger
  * /api/i-report-category/create:
  *   post:
- *     summary: Create i-report-categor
+ *     summary: Create i-report-category
  *     security:
  *      - APIKeyHeader: []
  *     tags: [SuperAdmin]
@@ -1277,7 +1278,7 @@ import IReportCategory from "../model/IReportCategory";
  *               Name:
  *                 type: string
  *               Description:
- *                 type: date
+ *                 type: string
  *
  *     responses:
  *       200:
@@ -1487,6 +1488,108 @@ import IReportCategory from "../model/IReportCategory";
  *           application/json:
  *             example:
  *               message:  Successfully got digital-registar by registarId
+ */
+
+
+
+/**
+ * @swagger
+ * /api/super-admin-role/create:
+ *   post:
+ *     summary: Create super-admin-role
+ *     security:
+ *      - APIKeyHeader: []
+ *     tags: [SuperAdmin]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Name:
+ *                 type: string
+ *               Description:
+ *                 type: string
+ *               ViewCommunity:
+ *                 type: boolean
+ *               ActivateDeactivateCommunity:
+ *                 type: boolean
+ *               CreateAdvert:
+ *                 type: boolean
+ *               EditAdvert:
+ *                 type: boolean
+ *               DeleteAdvert:
+ *                 type: boolean
+ *               CreateSubscription:
+ *                 type: boolean
+ *               EditSubscription:
+ *                 type: boolean
+ *               DeleteSubscription:
+ *                 type: boolean
+ *
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: super-admin-role Created successfully
+ */
+
+/**
+ * @swagger
+ * /api/super-admin-role/all:
+ *   get:
+ *     summary: Get All super-admin-role
+ *     security:
+ *      - APIKeyHeader: []
+ *     tags: [SuperAdmin]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got All super-admin-role
+ *               data: []
+ */
+
+
+
+/**
+ * @swagger
+ * /api/super-admin-team/create:
+ *   post:
+ *     summary: Create super-admin-team
+ *     security:
+ *      - APIKeyHeader: []
+ *     tags: [SuperAdmin]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               FirstName:
+ *                 type: string
+ *               LastName:
+ *                 type: string
+ *               Email:
+ *                 type: string
+ *               Phone:
+ *                 type: string
+ *               RoleId:
+ *                 type: string
+ *
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: super-admin-team Created successfully
  */
 
 
@@ -3383,6 +3486,62 @@ router.get("/digital-registar/:registarId", Authorize, async (req, res) => {
         status: HttpStatus.STATUS_SUCCESS,
         message: "Successfully fetch Digital Registar",
         data: response[0],
+      });
+  } catch (error) {
+    console.error("An Error Occurred", error);
+    return res
+      .status(HttpStatus.STATUS_500)
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
+  }
+});
+
+
+router.post("/super-admin-role/create", Authorize, async (req: any, res: any) => {
+  try {
+    const reqBody = <SuperAdminRole>req.body;
+
+    var response = await baseService.CreateSuperAdminRoles(reqBody);
+    if (response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS) {
+      return res
+        .status(HttpStatus.STATUS_400)
+        .json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "Failed to create super-admin-role",
+        });
+    }
+    return res
+      .status(HttpStatus.STATUS_200)
+      .json({
+        status: HttpStatus.STATUS_SUCCESS,
+        message: "Successfully Created super-admin-role",
+        data: reqBody,
+      });
+  } catch (error) {
+    console.error("An Error Occurred", error);
+    return res
+      .status(HttpStatus.STATUS_500)
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
+  }
+});
+
+
+router.get("/super-admin-role/all", Authorize, async (req, res) => {
+  try {
+    var response = await baseService.GetAllDigitalRegistar();
+    if (response?.length < 1) {
+      res
+        .status(HttpStatus.STATUS_404)
+        .json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "Failed to fetch super-admin-role ",
+        });
+    }
+    return res
+      .status(HttpStatus.STATUS_200)
+      .json({
+        status: HttpStatus.STATUS_SUCCESS,
+        message: "Successfully fetch super-admin-role",
+        data: response,
       });
   } catch (error) {
     console.error("An Error Occurred", error);

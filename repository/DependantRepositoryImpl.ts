@@ -5,6 +5,8 @@ import conn from './dbContext/dbConnection'
 import { injectable } from "inversify";
 import UpdateDependantModel from "../model/UpdateDependantModel";
 import { GenerateUniqueId } from "../utilities/GenerateUniqueId";
+import { BeginTransaction, CommitTransaction, QueryTransaction, ReleaseTransaction } from "./dbContext/Transactions";
+import { SendMail } from "../utilities/EmailHandler";
 
 @injectable()
 export default class DependantRepositoryImpl implements DependantRepository{
@@ -71,54 +73,70 @@ export default class DependantRepositoryImpl implements DependantRepository{
             const connection =  await this.getConnection()
             let result = await new Promise<string>((resolve,reject)=>{
              
-                connection?.getConnection((err,connection)=>{
+                connection?.getConnection(async(err,connection)=>{
                     if(err){
                         console.log('connection error',err)
                         reject(err)
                     }
-                    connection?.beginTransaction((err)=>{
-                        if(err){
-                            console.log('error beginning transaction',err)
-                            reject(err)
-                        }
-                    })
-                    const query1 = `INSERT INTO Dependant(Name,Email,Phone,DOB,CreatorPhone,DependantId) VALUES(?,?,?,?,?,?)`
-                  
+                    // connection?.beginTransaction((err)=>{
+                    //     if(err){
+                    //         console.log('error beginning transaction',err)
+                    //         reject(err)
+                    //     }
+                    // })
 
-                         for(let i=0;i<payload.length;i++){
-                           const dependantId = `Dependant-${GenerateUniqueId()}`
-                            connection?.query(query1,[payload[i].Name,payload[i].Email,payload[i].Phone,payload[i].DOB,payload[i].CreatorPhone,dependantId],(err,data)=>{
-                                   if(err){
-                                    errorLog.push(err.message)
-                                       connection.rollback(()=>{
-                                           console.log('error querying database',err)
-       
-                                       })
-                                   }
-                                })
-
-                         }//end of for loop
-                       
-
-
-                         connection.commit((err)=>{
-                         connection.release()
-                         if(err){
-                            errorLog.push(err.message)
-                            return connection.rollback(()=>{
-                                console.log('Error Committing Transaction',err)
-                                reject('Failed')
-                            })
-                            
-                         }
-                         if(errorLog.length < 1){
+                    try{
+                        await BeginTransaction(connection)
+                        const query1 = `INSERT INTO Dependant(Name,Email,Phone,DOB,CreatorUserId,DependantId) VALUES(?,?,?,?,?,?)`
+                        const query2 = 'INSERT INTO temp_user(FirstName,LastName,Role,Phone,Email,TempPass) VALUES(?,?,?,?,?,?)'
+    
+    
+                             for(let i=0;i<payload.length;i++){
+                               const dependantId = `Dependant-${GenerateUniqueId()}`
+                                // connection?.query(query1,[payload[i].Name,payload[i].Email,payload[i].Phone,payload[i].DOB,payload[i].CreatorUserId,dependantId],(err,data)=>{
+                                //        if(err){
+                                //         errorLog.push(err.message)
+                                //            connection.rollback(()=>{
+                                //                console.log('error querying database',err)
+           
+                                //            })
+                                //        }
+                                //     })
+                                    const pass = GenerateUniqueId(4)
+                                    await QueryTransaction(connection,query1,[payload[i].Name,payload[i].Email,payload[i].Phone,payload[i].DOB,payload[i].CreatorUserId,dependantId])
+                                    await QueryTransaction(connection,query2,[payload[i].Name,'','DEPENDANT',payload[i].Phone,payload[i].Email,pass])
+                                    const emailMessage = `<!DOCTYPE html><html><body><h2>Dear ${payload[i].Name}</h2><p><b>You have been created as a Dependant in the VSured App</b></p><p class="demo">Please Login with this One time. <br><br> <b>Password:</b> ${pass}</p></body></html>`;
+                                    await SendMail(`${payload[i].Email}`, emailMessage);
+                             }//end of for loop
+                           
+    
+    
+                            //  connection.commit((err)=>{
+                            //  connection.release()
+                            //  if(err){
+                            //     errorLog.push(err.message)
+                            //     return connection.rollback(()=>{
+                            //         console.log('Error Committing Transaction',err)
+                            //         reject('Failed')
+                            //     })
+                                
+                            //  }
+                            //  if(errorLog.length < 1){
+                            //     resolve('Success')
+    
+                            //  }else{
+                            //     resolve('Failed')
+                            //  }
+                             
+                            //  })
+                            await CommitTransaction(connection)
+                            await ReleaseTransaction(connection)
                             resolve('Success')
-
-                         }else{
-                            resolve('Failed')
-                         }
-                         
-                         })
+                    }catch(err){
+                        console.log('An error occurred',err)
+                       reject('Failed')
+                    }
+                    
                        
                     })
 

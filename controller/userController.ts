@@ -49,6 +49,7 @@ import path from "path";
 import { Authorize } from "../middleware/authorization";
 import { registerModel, updateUserModel } from "../model/registerModel";
 import { v2 as cloudinary } from "cloudinary";
+import subAdmin from "../services/Abstraction/subAdmin";
 
 const router = express.Router();
 
@@ -87,6 +88,39 @@ const router = express.Router();
  *             example:
  *               message: Login Successfuly
  */
+
+
+
+/**
+ * @swagger
+ * /api/super-admin/login:
+ *   post:
+ *     summary: Login User
+ *     tags: [SuperAdmin]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Channel:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *           example:
+ *             Channel: JohnDoe
+ *             Password: john@example.com
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Login Successfuly
+ */
+
+
 
 /**
  * @swagger
@@ -569,6 +603,7 @@ const memberRepo = container.get<Member>("Member");
 const communityRepo = container.get<Community>("Community");
 const dependantRepo = container.get<Dependant>("Dependant");
 const checkerRepo = container.get<checker>("checker");
+const subAdminRepo = container.get<subAdmin>("subAdmin");
 
 // Set up storage for uploaded files
 
@@ -688,6 +723,73 @@ router.post("/login", LoginValidator, async (req: Request, res: Response) => {
       });
       
     }
+    //generate jwt Token
+    let claims = {
+      Phone: response[0]?.Phone,
+      Email: response[0]?.Email,
+      Name: response[0].FirstName + " " + response[0].LastName,
+      Role: response[0].UserRole,
+    };
+    const accessToken = jwtHandler.generateJWT(claims);
+    const refreshToken = await jwtHandler.generateRefreshToken(reqBody.Channel);
+
+    return res.status(HttpStatus.STATUS_200).json({
+      status: HttpStatus.STATUS_SUCCESS,
+      message: "Login Successful",
+      UserId: response[0]?.UserId,
+      Channel: reqBody.Channel,
+      IsOnboarded:'True',
+      UserRole: response[0]?.UserRole,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    });
+  } catch (err) {
+    console.log("An error occured", err);
+    return res
+      .status(HttpStatus.STATUS_500)
+      .json({ status: HttpStatus.STATUS_500, Message: "Something went wrong" });
+  }
+});
+
+
+router.post("/super-admin/login", LoginValidator, async (req: Request, res: Response) => {
+  try {
+    const reqBody = <loginModel>req.body;
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+      res.status(HttpStatus.STATUS_400).json(error.array());
+      return;
+    }
+    let response = (
+      await userRepo.GetSuperAdminEmailOrPhone(reqBody.Channel)
+    );
+    if (response?.length < 1) {
+   
+     return  res.status(HttpStatus.STATUS_400).json({
+        status: HttpStatus.STATUS_FAILED,
+        message: "invalid Phone Number or Password",
+      });
+    
+    }
+
+
+    let IValid = await bcrypt.compare(reqBody.Password, response[0].Password);
+    if (!IValid) {
+      return res.status(HttpStatus.STATUS_400).json({
+        status: HttpStatus.STATUS_FAILED,
+        message: "Invalid Login Credentials",
+      });
+     
+    }
+
+
+    // if (!response[0]?.IsVerified) {
+    //   return res.status(HttpStatus.STATUS_400).json({
+    //     status: HttpStatus.STATUS_FAILED,
+    //     message: "Email is not yet verified",
+    //   });
+      
+    // }
     //generate jwt Token
     let claims = {
       Phone: response[0]?.Phone,
@@ -843,6 +945,13 @@ router.post(
           break;
 
         case RolesEnum.SUB_ADMIN:
+          let subAdmin = await subAdminRepo.GetSubAdminByPhoneOrEmail(reqBody.Phone);
+          if (subAdmin?.length < 1) {
+            return res.status(HttpStatus.STATUS_400).json({
+              status: HttpStatus.STATUS_FAILED,
+              message: "subAdmin is not yet created. Please contact Admin",
+            });
+          }
           break;
 
         case RolesEnum.DEPENDANT:

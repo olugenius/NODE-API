@@ -129,6 +129,43 @@ export default class subAdminRepoimpl implements subAdminRepo{
 
     }
 
+    async GetSubAdminByPhoneOrEmail(Email:string):Promise<any>{
+        let result : any
+        try{
+            const connection =  await this.getConnection()  
+            let result =await new Promise<any>((resolve,reject)=>{
+                connection?.getConnection((err,connection)=>{
+                    if(err){
+                    console.log('connection error',err)
+                    reject(err)
+                    }
+
+                    connection?.query(`SELECT * FROM SubAdmin where (Email=? or Phone=?)`,[Email],(err,data)=>{
+                        connection.release()
+                        if(err){
+                           console.log('error querying database',err)           
+                        }
+                        else{
+                           console.log('successfully query',data)
+                           
+                        }
+                        resolve(data)
+                       })
+        
+
+                   
+                    
+                    })
+            })
+    
+             return result
+
+        }catch(error){
+         console.log('An error occurred',error)
+        }
+
+    }
+
 
     async GetAllSubAdmins():Promise<any|null>{
         let result : any

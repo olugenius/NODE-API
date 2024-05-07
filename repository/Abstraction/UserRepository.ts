@@ -22,5 +22,6 @@ export default interface UserRepository{
     UpdatePassword(payload:updatePasswordRequestModel):Promise<any>
     DeleteAccount(Id:number):Promise<string>
     UpdateEmail(payload:UpdateEmailModel):Promise<string>
+    GetSuperAdminEmailOrPhone(Email: string): Promise<any | null>
 
 }

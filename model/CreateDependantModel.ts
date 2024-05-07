@@ -3,7 +3,7 @@ export default interface CreateDependantmodel{
     Email:string,
     Phone:string,
     DOB:Date,
-    CreatorPhone:string,
+    CreatorUserId:string,
     AllowPushNotification:Boolean,
     AllowEmailNotification:Boolean,
     AllowSMSNotification:Boolean

@@ -314,7 +314,7 @@ export default class memberRepositoryImpl implements memberRepository{
 
                             await BeginTransaction(connection)
                             await QueryTransaction(connection,query1,[memberId,payload.FirstName,payload.LastName,payload.DOB,payload.Gender,payload.NIN,payload.Email,payload.Phone,1,payload.CreatorUserId,getCurrentDate()])
-                            await QueryTransaction(connection,query2,[memberId,payload.FirstName,payload.LastName,'MEMBER',payload.Phone,payload.Email,pass])
+                            await QueryTransaction(connection,query2,[payload.FirstName,payload.LastName,'MEMBER',payload.Phone,payload.Email,pass])
                             await CommitTransaction(connection)
                             await ReleaseTransaction(connection)
    

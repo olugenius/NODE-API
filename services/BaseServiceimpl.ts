@@ -16,6 +16,8 @@ import SupportCommentModel from "../model/SupportCommentModel";
 import CreateIReportModel from "../model/CreateIReportModel";
 import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
 import IReportCategory from "../model/IReportCategory";
+import SuperAdminRole from "../model/SuperAdminRole";
+import AdminTeam from "../model/AdminTeam";
 
 @injectable()
 export default class BaseServiceimpl implements BaseService{
@@ -214,5 +216,16 @@ async CreateIReportCategory(payload: IReportCategory): Promise<string> {
    }
    async GetDigitalRegistarByRegistarId(registarId:string):Promise<any>{
       return await this.baseRepo.GetDigitalRegistarByRegistarId(registarId)
+   }
+
+   async CreateSuperAdminRoles(payload: SuperAdminRole): Promise<string> {
+      return await this.baseRepo.CreateSuperAdminRoles(payload)
+   }
+   async GetSuperAdminRoles(): Promise<any>{
+      return await this.baseRepo.GetSuperAdminRoles()
+   }
+
+   async CreateSuperAdminTeam(payload: AdminTeam): Promise<string> {
+      return await this.baseRepo.CreateSuperAdminTeam(payload)
    }
 }
