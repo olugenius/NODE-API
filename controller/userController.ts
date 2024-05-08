@@ -868,12 +868,10 @@ router.post("/super-admin/login", LoginValidator, async (req: Request, res: Resp
       });
     
     }
-   console.log('password passed',reqBody.Password)
-
-   console.log('password on db',response[0].Password)
     
-    let IValid = await bcrypt.compare(reqBody.Password, response[0].Password);
-    if (!IValid) {
+    let IsValid = await bcrypt.compare(reqBody.Password, response[0].Password);
+    console.log('isvalid value',IsValid)
+    if (!IsValid) {
       return res.status(HttpStatus.STATUS_400).json({
         status: HttpStatus.STATUS_FAILED,
         message: "Invalid Login Credentials",
