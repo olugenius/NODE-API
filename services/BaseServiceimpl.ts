@@ -228,4 +228,8 @@ async CreateIReportCategory(payload: IReportCategory): Promise<string> {
    async CreateSuperAdminTeam(payload: AdminTeam): Promise<string> {
       return await this.baseRepo.CreateSuperAdminTeam(payload)
    }
+
+   async GetSuperAdminByPhoneOrEmail(Email:string): Promise<any> {
+      return await this.baseRepo.GetSuperAdminByPhoneOrEmail(Email)
+   }
 }

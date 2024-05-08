@@ -426,6 +426,42 @@ export default class UserRepositoryImpl implements UserRepository {
     } catch (error) {}
   }
 
+  async UpdateAdminUserPassword(newPassword: string, channel: string): Promise<any> {
+    let tokenValue: userToken | any;
+    let resValue: string = "";
+    try {
+      const connection = await this.getConnection();
+      const saltRound = 10;
+      const passwordEncrypt = await bcrypt.hash(newPassword, saltRound);
+      let result = await new Promise<any>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+
+          connection?.query(
+            `UPDATE adminteammember SET Password=? WHERE (Email = ? or Phone=?)`,
+            [passwordEncrypt, channel, channel],
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+                resValue = "Failed";
+              } else {
+                console.log("successfully query", data);
+                resValue = "Success";
+              }
+              resolve(resValue);
+            }
+          );
+        });
+      });
+
+      return result;
+    } catch (error) {}
+  }
+
   async UpdateUserRefreshToken(phone: string, token: string): Promise<any> {
     let tokenValue: userToken | any;
     let resValue: string = "";

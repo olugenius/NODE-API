@@ -50,6 +50,7 @@ import { Authorize } from "../middleware/authorization";
 import { registerModel, updateUserModel } from "../model/registerModel";
 import { v2 as cloudinary } from "cloudinary";
 import subAdmin from "../services/Abstraction/subAdmin";
+import BaseService from "../services/Abstraction/BaseService";
 
 const router = express.Router();
 
@@ -303,6 +304,39 @@ const router = express.Router();
  *               message: Forgot Password Mail/SMS Sent Successfully
  */
 
+
+/**
+ * @swagger
+ * /api/super-admin/forgotPassword/sendMail:
+ *   post:
+ *     summary: Send Mail /SMS for super admin forgot password Validation
+ *     tags: [SuperAdmin]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Channel:
+ *                 type: string
+ *               DOB:
+ *                 type: string
+ *               Medium:
+ *                 type: string
+ *           example:
+ *             Channel: john@example.com
+ *             DOB: 1993-01-01
+ *             Medium: Email
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Forgot Password Mail/SMS Sent Successfully
+ */
+
 /**
  * @swagger
  * /api/forgotPassword/verify:
@@ -331,6 +365,37 @@ const router = express.Router();
  *             example:
  *               message: Token Verification Successfully
  */
+
+
+/**
+ * @swagger
+ * /api/super-admin/forgotPassword/verify:
+ *   post:
+ *     summary: Super Admin forgot password Mail /SMS Token Verification
+ *     tags: [SuperAdmin]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Channel:
+ *                 type: string
+ *               Token:
+ *                 type: string
+ *           example:
+ *             Channel: john@example.com
+ *             Token: john@example.com
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Token Verification Successfully
+ */
+
 
 /**
  * @swagger
@@ -388,12 +453,43 @@ const router = express.Router();
  *         content:
  *           application/json:
  *             example:
- *               message: JWT Generated Successfully Successfully
+ *               message: Password Reset Successfully
  */
+
+
 
 /**
  * @swagger
- * /api/superAdmin/createPassword:
+ * /api/super-admin/resetPassword:
+ *   post:
+ *     summary: Reset Super Admin Password
+ *     tags: [SuperAdmin]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               NewPassword:
+ *                 type: string
+ *               ConfirmPassword:
+ *                 type: string
+ *               Channel:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Password Reset Successfully
+ */
+
+
+/**
+ * @swagger
+ * /api/super-admin/createPassword:
  *   post:
  *     summary: Create Super Admin Password
  *     tags: [SuperAdmin]
@@ -604,6 +700,7 @@ const communityRepo = container.get<Community>("Community");
 const dependantRepo = container.get<Dependant>("Dependant");
 const checkerRepo = container.get<checker>("checker");
 const subAdminRepo = container.get<subAdmin>("subAdmin");
+const baseRepo = container.get<BaseService>("BaseService");
 
 // Set up storage for uploaded files
 
@@ -1396,6 +1493,87 @@ router.post(
 );
 
 router.post(
+  "/super-admin/forgotPassword/sendMail",
+  ForgotPasswordValidator,
+  async (req: Request, res: Response) => {
+    try {
+      var reqBody = <forgotPasswordRequestmodel>req.body;
+      const error = validationResult(req);
+      if (!error.isEmpty()) {
+        res.status(HttpStatus.STATUS_400).json(error.array());
+      } else {
+        let response = <registerModel[]>(
+          await baseRepo.GetSuperAdminByPhoneOrEmail(reqBody.Channel)
+        );
+        if (response?.length < 1) {
+          res.status(HttpStatus.STATUS_404).json({
+            status: HttpStatus.STATUS_FAILED,
+            message: "Invalid Channel passed",
+          });
+          return;
+        }
+     
+        let DOBCheck =
+          dateFormatter(response[0].DOB) === dateFormatter(reqBody.DOB)
+            ? true
+            : false;
+        if (!DOBCheck) {
+          res.status(HttpStatus.STATUS_400).json({
+            status: HttpStatus.STATUS_FAILED,
+            message: "invalid Date of Birth",
+          });
+          return;
+        }
+
+        
+        let token = Math.floor(100000 + Math.random() * 900000);
+        let result = await userRepo.AddToken(
+          reqBody.Channel,
+          "ForgotPassword",
+          token.toString(),
+          reqBody.Medium
+        );
+        if (result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS) {
+          res.status(HttpStatus.STATUS_400).json({
+            status: HttpStatus.STATUS_FAILED,
+            message: `${reqBody.Medium} sending failed, please try again`,
+          });
+          return;
+        }
+
+        //Send Email Implementation
+        let emailSMSResult = false;
+        const message = `Please use the token sent to you for validation: \\n Token Value is: ${token.toString()}`;
+        if (reqBody.Medium.toLowerCase() === "sms") {
+          emailSMSResult = await SMSHandler(reqBody.Channel, message);
+        } else {
+          emailSMSResult = await SendMail(`${reqBody.Channel}`, message);
+        }
+
+        if (!emailSMSResult) {
+          return res.status(HttpStatus.STATUS_400).json({
+            status: HttpStatus.STATUS_FAILED,
+            message: `${reqBody.Medium} sending failed, please try again`,
+          });
+        }
+        return res.status(HttpStatus.STATUS_200).json({
+          status: HttpStatus.STATUS_SUCCESS,
+          message: "Email Sent Successfully",
+          Channel: `${reqBody.Channel}`,
+          Medium: `${reqBody.Medium}`,
+        });
+      }
+    } catch (err) {
+      console.log("An error occurred sending mail/sms", err);
+      return res.status(HttpStatus.STATUS_500).json({
+        status: HttpStatus.STATUS_500,
+        message: "Something went wrong",
+      });
+    }
+  }
+);
+
+router.post(
   "/forgotPassword/verify",
   ForgotPasswordVerifyValidator,
   async (req: Request, res: Response) => {
@@ -1429,6 +1607,111 @@ router.post(
       //check if user exist
       let userRes = <registerModel[]>(
         await userRepo.GetUserByEmailOrPhone(reqBody.Channel)
+      );
+      if (userRes?.length < 1) {
+        res.status(HttpStatus.STATUS_404).json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "Invalid Channel passed",
+        });
+        return;
+      }
+      //Get Token from Db
+      let response = <userToken[]>(
+        await userRepo.GetUserToken(reqBody.Channel, "ForgotPassword")
+      );
+      if (response?.length < 1) {
+        res.status(HttpStatus.STATUS_400).json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "Verification Failed, Please try again",
+        });
+        return;
+      }
+      let tokenRes = response.find(
+        (c) => c.Token === reqBody.Token && c.Used == false
+      );
+      console.log("token response value", tokenRes);
+      //verify token
+      if (!tokenRes) {
+        res.status(HttpStatus.STATUS_400).json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "Token Verification Failed",
+        });
+        return;
+      }
+      let result = await userRepo.UpdateUserToken(
+        reqBody.Channel,
+        "ForgotPassword"
+      );
+      console.log("token update result:", tokenRes);
+      if (result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS) {
+        res.status(HttpStatus.STATUS_400).json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "forgot Password Verification Failed, Please try again",
+        });
+        return;
+      }
+      return res.status(HttpStatus.STATUS_200).json({
+        status: HttpStatus.STATUS_SUCCESS,
+        message: "forgot Password Verification Successful",
+        Email: reqBody.Channel,
+      });
+
+      //  //comment this when going to production environment
+      //  if(reqBody.Token === '000000'){
+      //   let result = await  userRepo.UpdateUserTokenTest(reqBody.Channel,'EmailVerify')
+      //   if(result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS){
+      //     res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
+      //     return;
+      // }
+      // res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Email Verification Successful, please proceed to login'})
+
+      // }else{
+      //   res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Email Verification Failed, Please try again'})
+      // }
+    } catch (err) {
+      console.log("An error occurred verifying token", err);
+      return res.status(HttpStatus.STATUS_500).json({
+        status: HttpStatus.STATUS_500,
+        message: "Something went wrong",
+      });
+    }
+  }
+);
+
+router.post(
+  "/super-admin/forgotPassword/verify",
+  ForgotPasswordVerifyValidator,
+  async (req: Request, res: Response) => {
+    try {
+      var reqBody = <forgotPasswordVerifyModel>req.body;
+      const error = validationResult(req);
+      if (!error.isEmpty()) {
+        res.status(HttpStatus.STATUS_400).json(error.array());
+        return;
+      }
+
+      //comment this when going to production environment
+      if (reqBody.Token === "000000") {
+        let testResult = await userRepo.UpdateUserTokenTest(
+          reqBody.Channel,
+          "EmailVerify"
+        );
+        if (testResult?.toLowerCase() !== HttpStatus.STATUS_SUCCESS) {
+          res.status(HttpStatus.STATUS_400).json({
+            status: HttpStatus.STATUS_FAILED,
+            message: "Verification Failed, Please try again",
+          });
+          return;
+        }
+        return res.status(HttpStatus.STATUS_200).json({
+          status: HttpStatus.STATUS_SUCCESS,
+          message: "Verification Successful",
+        });
+      }
+
+      //check if user exist
+      let userRes = <registerModel[]>(
+        await baseRepo.GetSuperAdminByPhoneOrEmail(reqBody.Channel)
       );
       if (userRes?.length < 1) {
         res.status(HttpStatus.STATUS_404).json({
@@ -1549,7 +1832,56 @@ router.post(
 );
 
 router.post(
-  "/superAdmin/createPassword",
+  "/super-admin/resetPassword",
+  resetPasswordValidator,
+  async (req: Request, res: Response) => {
+    try {
+      var reqBody = <resetPasswordRequestModel>req.body;
+      const error = validationResult(req);
+      if (!error.isEmpty()) {
+        res.status(HttpStatus.STATUS_400).json(error.array());
+        return;
+      }
+
+      let response = (
+        await baseRepo.GetSuperAdminByPhoneOrEmail(reqBody.Channel)
+      );
+      if (response?.length < 1) {
+        res.status(HttpStatus.STATUS_400).json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "Email Verification Failed, Please try again",
+        });
+        return;
+      }
+
+      let result = await userRepo.UpdateAdminUserPassword(
+        reqBody.NewPassword,
+        reqBody.Channel
+      );
+      if (result?.toLowerCase() !== HttpStatus.STATUS_SUCCESS) {
+        res.status(HttpStatus.STATUS_400).json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "Reset Password Failed, Please try again",
+        });
+        return;
+      }
+      return res.status(HttpStatus.STATUS_200).json({
+        status: HttpStatus.STATUS_SUCCESS,
+        message: "Password Reset Successful, Please proceed to login",
+      });
+    } catch (err) {
+      console.log("An error occurred resetting password", err);
+      return res.status(HttpStatus.STATUS_500).json({
+        status: HttpStatus.STATUS_500,
+        message: "Something went wrong",
+      });
+    }
+  }
+);
+
+
+router.post(
+  "/super-admin/createPassword",
   createPasswordValidator,
   async (req: Request, res: Response) => {
     try {

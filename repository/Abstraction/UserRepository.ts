@@ -20,6 +20,7 @@ export default interface UserRepository{
     GetUserToken(email:string,mailFor:string):Promise<any>
     CreatePassword(payload:createPasswordRequestModel):Promise<any>
     UpdatePassword(payload:updatePasswordRequestModel):Promise<any>
+    UpdateAdminUserPassword(newPassword: string, channel: string): Promise<any> 
     DeleteAccount(Id:number):Promise<string>
     UpdateEmail(payload:UpdateEmailModel):Promise<string>
     GetSuperAdminEmailOrPhone(Email: string): Promise<any | null>

@@ -77,5 +77,6 @@ export default interface BaseService{
     CreateSuperAdminRoles(payload: SuperAdminRole): Promise<string> 
     GetSuperAdminRoles(): Promise<any>
     CreateSuperAdminTeam(payload: AdminTeam): Promise<string> 
+    GetSuperAdminByPhoneOrEmail(Email:string): Promise<any> 
         
 }
