@@ -693,7 +693,7 @@ router.post("/login", LoginValidator, async (req: Request, res: Response) => {
       }
      return  res.status(HttpStatus.STATUS_400).json({
         status: HttpStatus.STATUS_FAILED,
-        message: "invalid Phone Number or Password",
+        message: "Invalid Login Credentials",
       });
     
     }
