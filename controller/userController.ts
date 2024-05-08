@@ -864,12 +864,14 @@ router.post("/super-admin/login", LoginValidator, async (req: Request, res: Resp
    
      return  res.status(HttpStatus.STATUS_400).json({
         status: HttpStatus.STATUS_FAILED,
-        message: "invalid Phone Number or Password",
+        message: "Invalid Login Credentials",
       });
     
     }
+   console.log('password passed',reqBody.Password)
 
-
+   console.log('password on db',response[0].Password)
+    
     let IValid = await bcrypt.compare(reqBody.Password, response[0].Password);
     if (!IValid) {
       return res.status(HttpStatus.STATUS_400).json({
