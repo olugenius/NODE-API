@@ -19,6 +19,7 @@ import UpdateEmailModel from "../model/UpdateEmailModel";
 import { GenerateUniqueId } from "../utilities/GenerateUniqueId";
 import { registerModel, updateUserModel } from "../model/registerModel";
 import { BeginTransaction, CommitTransaction, QueryTransaction, ReleaseTransaction } from "./dbContext/Transactions";
+import { RolesEnum } from "../utilities/RolesEnum";
 
 @injectable()
 export default class UserRepositoryImpl implements UserRepository {
@@ -563,6 +564,7 @@ export default class UserRepositoryImpl implements UserRepository {
 
             
             try{
+              const UserRole = payload.UserRole.toUpperCase()
               const userId = GenerateUniqueId();
               const query1 = `INSERT INTO Users(FirstName,LastName,DOB,Gender,Address,Phone,Email,PhotoPath,Password,IsVerified,Language,CompanyType,UserRole,UserId) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
               const query2 = 'DELETE FROM temp_user WHERE Phone=?'
@@ -608,10 +610,10 @@ export default class UserRepositoryImpl implements UserRepository {
                 payload.Email ?? "",
                 payload.PhotoPath,
                 passwordEncrypt,
-                false,
+                UserRole === RolesEnum.COMMUNITY_ADMIN ? false : true,
                 payload.Language,
                 payload.CompanyType,
-                payload.UserRole,
+                UserRole,
                 userId,
               ])
   
