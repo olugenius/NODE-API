@@ -1334,8 +1334,7 @@ router.post(
           });
           return;
         }
-        console.log("response DBO", dateFormatter(response[0].DOB));
-        console.log("iNPUT DBO", dateFormatter(reqBody.DOB));
+     
         let DOBCheck =
           dateFormatter(response[0].DOB) === dateFormatter(reqBody.DOB)
             ? true
@@ -1347,6 +1346,8 @@ router.post(
           });
           return;
         }
+
+        
         let token = Math.floor(100000 + Math.random() * 900000);
         let result = await userRepo.AddToken(
           reqBody.Channel,

@@ -2,8 +2,14 @@ import { format } from "date-fns/format";
 import { DateTime } from 'luxon';
 
 
-export function dateFormatter(date:Date):string{
-return format(date,'yyyy-MM-dd')
+export function dateFormatter(date:Date):string|boolean{
+  try{
+    return format(date,'yyyy-MM-dd')
+  }catch(err){
+  console.log('An error occured formatting date',err)
+  return false
+  }
+
 }
 
 export const isValidDateFormat = (value:string) => {
