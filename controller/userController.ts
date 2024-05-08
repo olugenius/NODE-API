@@ -660,7 +660,7 @@ const router = express.Router();
  *         description: channel of the Super Admin user profile to get
  *     security:
  *      - APIKeyHeader: []
- *     tags: [Settings]
+ *     tags: [SuperAdmin]
  *     responses:
  *       200:
  *         description: Successful response
