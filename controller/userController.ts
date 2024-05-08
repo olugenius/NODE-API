@@ -76,11 +76,11 @@ const router = express.Router();
  *             properties:
  *               Channel:
  *                 type: string
- *               password:
+ *               Password:
  *                 type: string
  *           example:
- *             Channel: JohnDoe
- *             Password: john@example.com
+ *             Channel: JohnDoe@gmail.com
+ *             Password: ******
  *     responses:
  *       200:
  *         description: Successful response
@@ -107,11 +107,11 @@ const router = express.Router();
  *             properties:
  *               Channel:
  *                 type: string
- *               password:
+ *               Password:
  *                 type: string
  *           example:
- *             Channel: JohnDoe
- *             Password: john@example.com
+ *             Channel: JohnDoe@gmail.com
+ *             Password: *****
  *     responses:
  *       200:
  *         description: Successful response
@@ -870,7 +870,6 @@ router.post("/super-admin/login", LoginValidator, async (req: Request, res: Resp
     }
     
     let IsValid = await bcrypt.compare(reqBody.Password, response[0].Password);
-    console.log('isvalid value',IsValid)
     if (!IsValid) {
       return res.status(HttpStatus.STATUS_400).json({
         status: HttpStatus.STATUS_FAILED,
