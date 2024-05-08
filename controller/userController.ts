@@ -645,6 +645,31 @@ const router = express.Router();
  *               message:  Successfully got user profile by channel
  */
 
+
+/**
+ * @swagger
+ * /api/super-admin/profile/{channel}:
+ *   get:
+ *     summary: Get Super Admin user profile by Phone or Email
+ *     parameters:
+ *       - in: path
+ *         name: channel
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: channel of the Super Admin user profile to get
+ *     security:
+ *      - APIKeyHeader: []
+ *     tags: [Settings]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got Super Admin user profile by channel
+ */
+
 /**
  * @swagger
  * /api/users/all/{creatorUserId}:
@@ -2113,6 +2138,34 @@ router.get("/profile/:channel", Authorize, async (req, res) => {
     return res.status(HttpStatus.STATUS_200).json({
       status: HttpStatus.STATUS_SUCCESS,
       message: "Successfully fetch UserDetails",
+      data: response[0],
+    });
+  } catch (error) {
+    console.error("An Error Occurred", error);
+    return res
+      .status(HttpStatus.STATUS_500)
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
+  }
+});
+
+router.get("/super-admin/profile/:channel", Authorize, async (req, res) => {
+  try {
+    const param = req?.params?.channel;
+    if (!param) {
+      return res
+        .status(HttpStatus.STATUS_404)
+        .json({ status: HttpStatus.STATUS_FAILED, message: "Invalid Id" });
+    }
+    var response = await userRepo.GetSuperAdminEmailOrPhone(param);
+    if (response?.length < 1) {
+      return res.status(HttpStatus.STATUS_404).json({
+        status: HttpStatus.STATUS_FAILED,
+        message: "Failed to fetch Super Admin User Details",
+      });
+    }
+    return res.status(HttpStatus.STATUS_200).json({
+      status: HttpStatus.STATUS_SUCCESS,
+      message: "Successfully fetch Super Admin User Details",
       data: response[0],
     });
   } catch (error) {
