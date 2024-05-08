@@ -80,7 +80,7 @@ const router = express.Router();
  *                 type: string
  *           example:
  *             Channel: JohnDoe@gmail.com
- *             Password: ******
+ *             Password: 111111
  *     responses:
  *       200:
  *         description: Successful response
@@ -111,7 +111,7 @@ const router = express.Router();
  *                 type: string
  *           example:
  *             Channel: JohnDoe@gmail.com
- *             Password: *****
+ *             Password: 111111
  *     responses:
  *       200:
  *         description: Successful response
