@@ -234,7 +234,7 @@ router.post('/subAdmin/create',Authorize,SubAdminUpload.single('file'),CreateSub
     try{
   const param = req?.params?.Id
   if(!param){
-    return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid subAdmin Id'})
+    return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid parameter'})
   }
   var response = await subAdmin.GetSubAdminsById(Number(param))
   if(response?.length < 1){

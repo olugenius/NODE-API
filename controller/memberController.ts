@@ -356,7 +356,7 @@ router.post('/member/create',Authorize,CreateMemberValidator,async(req:any,res:a
     try{
   const param = req?.params?.channel
   if(!param){
-    return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Member Id'})
+    return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid parameter'})
   }
   var response = await member.GetMemberByPhoneOrEmail(param)
   if(response?.length < 1){
@@ -374,7 +374,7 @@ router.post('/member/create',Authorize,CreateMemberValidator,async(req:any,res:a
     try{
   const param = req?.params?.memberId
   if(!param){
-    return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid Member Id'})
+    return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid parameter'})
   }
   var response = await member.GetMemberByMemberId(param)
   if(response?.length < 1){
@@ -409,7 +409,7 @@ router.post('/member/create',Authorize,CreateMemberValidator,async(req:any,res:a
     try{
   const param = req?.params?.creatorUserId
   if(!param){
-    return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid param'})
+    return res.status(HttpStatus.STATUS_404).json({status:HttpStatus.STATUS_FAILED,message:'Invalid parameter'})
   }
   var response = await member.GetMemberByCreatorUserId(param)
   if(response?.length < 1){

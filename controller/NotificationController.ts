@@ -478,7 +478,7 @@ router.post('/notification/create',Authorize,async(req,res)=>{
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to Update Notification'})
       }
-      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Update Notification',data:reqBody})
+      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Updated Notification',data:reqBody})
   
     }catch(error){
       console.error('An Error Occurred',error)

@@ -1034,7 +1034,7 @@ router.post(
       if (userData?.length > 0) {
         return res.status(HttpStatus.STATUS_400).json({
           status: HttpStatus.STATUS_FAILED,
-          message: "User with this Phone number already exist",
+          message: "User already exist",
         });
       }
       //start switch case
@@ -1226,7 +1226,7 @@ router.put(
             if (response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS) {
               return res.status(HttpStatus.STATUS_400).json({
                 status: HttpStatus.STATUS_FAILED,
-                message: "Error Updating user",
+                message: "Failed to Update user",
               });
             }
             return res.status(HttpStatus.STATUS_200).json({
@@ -1242,7 +1242,7 @@ router.put(
         if (response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS) {
           return res.status(HttpStatus.STATUS_400).json({
             status: HttpStatus.STATUS_FAILED,
-            message: "Error Updating user",
+            message: "Failed to Update user",
           });
         }
         return res.status(HttpStatus.STATUS_200).json({
@@ -1279,7 +1279,7 @@ router.post(
       if (userRes?.length < 1) {
         res.status(HttpStatus.STATUS_404).json({
           status: HttpStatus.STATUS_FAILED,
-          message: "Invalid Channel passed",
+          message: "User does not exist",
         });
         return;
       }
@@ -1368,7 +1368,7 @@ router.post(
       if (userRes?.length < 1) {
         res.status(HttpStatus.STATUS_404).json({
           status: HttpStatus.STATUS_FAILED,
-          message: "Invalid Channel passed",
+          message: "User does not exist",
         });
         return;
       }
@@ -1451,7 +1451,7 @@ router.post(
         if (response?.length < 1) {
           res.status(HttpStatus.STATUS_404).json({
             status: HttpStatus.STATUS_FAILED,
-            message: "Invalid Channel passed",
+            message: "User does not exist",
           });
           return;
         }
@@ -1532,7 +1532,7 @@ router.post(
         if (response?.length < 1) {
           res.status(HttpStatus.STATUS_404).json({
             status: HttpStatus.STATUS_FAILED,
-            message: "Invalid Channel passed",
+            message: "User does not exist",
           });
           return;
         }
@@ -1740,7 +1740,7 @@ router.post(
       if (userRes?.length < 1) {
         res.status(HttpStatus.STATUS_404).json({
           status: HttpStatus.STATUS_FAILED,
-          message: "Invalid Channel passed",
+          message: "Invalid User does not exist",
         });
         return;
       }
