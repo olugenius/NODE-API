@@ -24,6 +24,9 @@ import IReportCategory from "../model/IReportCategory";
 import SuperAdminRole from "../model/SuperAdminRole";
 import AdminTeam from "../model/AdminTeam";
 import bcrypt from "bcrypt";
+import TargetAudience from "../model/TargetAudience";
+import AdvertModel from "../model/AdvertModel";
+import PanicType from "../model/PanicType";
 
 @injectable()
 export default class baseRepositoryImpl implements BaseRepository {
@@ -2448,6 +2451,299 @@ export default class baseRepositoryImpl implements BaseRepository {
       return result;
     } catch (error) {
       console.error("Error Getting superadmin:", error);
+    }
+  }
+
+
+
+  async CreateTargetAudience(
+    payload: TargetAudience
+  ): Promise<string> {
+    let response: string = "";
+    let errorLog: any[] = [];
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<string>((resolve, reject) => {
+        connection?.getConnection(async(err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+          const reportId = `${GenerateUniqueId()}`;
+         try{
+          await BeginTransaction(connection)
+          const query1 = `INSERT INTO adverttargetaudience(Name,Allow_Male,Allow_Female,Allow_18_29,Allow_30_49,Allow_50_Plus,Allow_Role_Community_Admin,Allow_Role_SubAdmin,Allow_Role_Checker,Allow_Role_Member,Allow_Role_Dependant,TargetId,CreatedAt) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+          const query2 = "INSERT INTO adverttargetcommunity(TargetId,CommunityId) VALUES(?,?)";
+          const audience = `Audience-${GenerateUniqueId()}`
+          await QueryTransaction(connection,query1,
+            [
+              payload.Name,
+              payload.Allow_Male,
+              payload.Allow_Female,
+              payload.Allow_18_29,
+              payload.Allow_30_49,
+              payload.Allow_50_Plus,
+              payload.Allow_Role_Community_Admin,
+              payload.Allow_Role_SubAdmin,
+              payload.Allow_Role_Checker,
+              payload.Allow_Role_Member,
+              payload.Allow_Role_Dependant,
+              audience,
+              getCurrentDate()
+
+            ])
+            //let communityIds = JSON.parse(payload.CommunityIds)
+            payload.CommunityIds.forEach(async(value:string)=>{
+              await QueryTransaction(connection,query2,[audience,value])
+            })  
+            
+            await CommitTransaction(connection)
+            await ReleaseTransaction(connection)
+            resolve('Success')
+         }catch(err){
+           console.log('An error occured in transaction',err)
+           reject(err)
+         }
+         
+        
+            
+       
+
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error creating Target Audience:", error);
+      return "Failed";
+    }
+  }
+
+  async CreateAdvert(payload: AdvertModel): Promise<string> {
+    let response: string = "";
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<string>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+          //const ticketId = `${GenerateUniqueId()}`;
+
+          const query = `INSERT INTO advert(Title,Type,TargetId,StartDate,EndDate,Content,Amount,FilePath,CreatedAt,IsActive) VALUES(?,?,?,?,?,?,?,?,?,?)`;
+
+          connection?.query(
+            query,
+            [
+              payload.Title,
+              payload.Type,
+              payload.TargetId,
+              payload.StartDate,
+              payload.EndDate,
+              payload.Content,
+              payload.Amount,
+              payload.FilePath,
+              getCurrentDate(),
+              1
+            ],
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+                response = "Failed";
+              } else {
+                console.log("successfully query", data);
+                response = "Success";
+              }
+              resolve(response);
+            }
+          );
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error creating user:", error);
+      return "Failed";
+    }
+  }
+
+  async GetAdverts(): Promise<any> {
+    let result: any;
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<any>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+
+          connection?.query(
+            `select a.*,(a.EndDate - a.StartDate) as Duration,datediff(a.EndDate, CURDATE()) as DaysLeft,b.Name as TargetAudience from advert a left join adverttargetaudience b on b.TargetId = a.TargetId`,
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+                reject(err)
+              } else {
+                console.log("successfully query", data);
+              }
+              resolve(data);
+            }
+          );
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error Getting advert:", error);
+    }
+  }
+
+  async GetAdvertById(Id:number): Promise<any> {
+    let result: any;
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<any>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+
+          connection?.query(
+            `select a.*,(a.EndDate - a.StartDate) as Duration,datediff(a.EndDate, CURDATE()) as DaysLeft,b.Name as TargetAudience from advert a left join adverttargetaudience b on b.TargetId = a.TargetId where a.Id= ?`,
+            [Id],
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+                reject(err)
+              } else {
+                console.log("successfully query", data);
+              }
+              resolve(data);
+            }
+          );
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error Getting advert by Id:", error);
+    }
+  }
+
+  async CreatePanicType(payload: PanicType): Promise<string> {
+    let response: string = "";
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<string>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+          //const ticketId = `${GenerateUniqueId()}`;
+
+          const query = `INSERT INTO PanicType(Name,Description,CreatorPhone,CreatedAt) VALUES(?,?,?,?)`;
+
+          connection?.query(
+            query,
+            [
+              payload.Name,
+              payload.Description,
+              payload.CreatorPhone,
+              getCurrentDate()
+            ],
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+                response = "Failed";
+              } else {
+                console.log("successfully query", data);
+                response = "Success";
+              }
+              resolve(response);
+            }
+          );
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error creating user:", error);
+      return "Failed";
+    }
+  }
+
+  async GetPanicTypes(): Promise<any> {
+    let result: any;
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<any>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+
+          connection?.query(
+            `SELECT * FROM PanicType`,
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+                reject(err)
+              } else {
+                console.log("successfully query", data);
+              }
+              resolve(data);
+            }
+          );
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error Getting advert:", error);
+    }
+  }
+
+  async GetPanicTypeById(Id:number): Promise<any> {
+    let result: any;
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<any>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+
+          connection?.query(
+            `SELECT * FROM PanicType WHERE Id=?`,
+            [Id],
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+                reject(err)
+              } else {
+                console.log("successfully query", data);
+              }
+              resolve(data);
+            }
+          );
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error Getting advert:", error);
     }
   }
 

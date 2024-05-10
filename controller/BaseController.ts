@@ -28,6 +28,8 @@ import { v2 as cloudinary } from "cloudinary";
 import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
 import IReportCategory from "../model/IReportCategory";
 import SuperAdminRole from "../model/SuperAdminRole";
+import AdvertModel from "../model/AdvertModel";
+import TargetAudience from "../model/TargetAudience";
 
 /**
  * @swagger
@@ -1593,9 +1595,226 @@ import SuperAdminRole from "../model/SuperAdminRole";
  */
 
 
+/**
+ * @swagger
+ * /api/super-admin/advert/create:
+ *   post:
+ *     summary: Create Advert
+ *     security:
+ *      - APIKeyHeader: []
+ *     tags: [SuperAdmin]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: file
+ *               Title:
+ *                 type: string
+ *               Type:
+ *                 type: string
+ *               TargetId:
+ *                 type: string
+ *               StartDate:
+ *                 type: Date
+ *               EndDate:
+ *                 type: Date
+ *               Content:
+ *                 type: string
+ *               Amount:
+ *                 type: string
+ *           example:
+ *             Channel: JohnDoe
+ *             Password: john@example.com
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Advert created Successful
+ */
+
+
+/**
+ * @swagger
+ * /api/super-admin/audience/create:
+ *   post:
+ *     summary: Create Target Audience
+ *     security:
+ *      - APIKeyHeader: []
+ *     tags: [SuperAdmin]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Name:
+ *                 type: string
+ *               Allow_Male:
+ *                 type: boolean
+ *               Allow_Female:
+ *                 type: boolean
+ *               Allow_18_29:
+ *                 type: boolean
+ *               Allow_30_49:
+ *                 type: boolean
+ *               Allow_50_Plus:
+ *                 type: boolean
+ *               Allow_Role_Community_Admin:
+ *                 type: boolean
+ *               Allow_Role_SubAdmin:
+ *                 type: boolean
+ *               Allow_Role_Checker:
+ *                 type: boolean
+ *               Allow_Role_Member:
+ *                 type: boolean
+ *               Allow_Role_Dependant:
+ *                 type: boolean
+ *               CommunityIds:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Target Audience Created successfully
+ */
+
+
+/**
+ * @swagger
+ * /api/super-admin/advert/all:
+ *   get:
+ *     summary: Get All Advert
+ *     security:
+ *      - APIKeyHeader: []
+ *     tags: [SuperAdmin]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got All Advert
+ *               data: []
+ */
+
+
+/**
+ * @swagger
+ * /api/super-admin/advert/{Id}:
+ *   get:
+ *     summary: Get advert by Id
+ *     parameters:
+ *       - in: path
+ *         name: Id
+ *         required: true
+ *         schema:
+ *           type: int
+ *         description: Id of the advert to get
+ *     security:
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got Advert by Id
+ */
+
+
+/**
+ * @swagger
+ * /api/super-admin/panic-type/create:
+ *   post:
+ *     summary: Create Panic Type
+ *     security:
+ *      - APIKeyHeader: []
+ *     tags: [SuperAdmin]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Name:
+ *                 type: string
+ *               Description:
+ *                 type: string
+ *               CreatorPhone:
+ *                 type: string
+ *
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Panic Type Created successfully
+ */
+
+/**
+ * @swagger
+ * /api/super-admin/panic-type/all:
+ *   get:
+ *     summary: Get All Panic Type
+ *     security:
+ *      - APIKeyHeader: []
+ *     tags: [SuperAdmin]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got All Panic Type
+ *               data: []
+ */
+
+/**
+ * @swagger
+ * /api/super-admin/panic-type/{Id}:
+ *   get:
+ *     summary: Get Panic Type by Id
+ *     parameters:
+ *       - in: path
+ *         name: Id
+ *         required: true
+ *         schema:
+ *           type: int
+ *         description: Id of the Panic Type to get
+ *     security:
+ *      - APIKeyHeader: []
+ *     tags: [Base]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message:  Successfully got Panic Type by Id
+ */
+
 const router = express.Router();
 let AppointmentUploadXls = multer({
   dest: "public/AppointmentUploads/",
+});
+
+let AdvertUpload = multer({
+  dest: "public/AdvertUploads/",
 });
 
 let IReportUploads = multer({
@@ -3550,5 +3769,166 @@ router.get("/super-admin-role/all", Authorize, async (req, res) => {
       .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
+
+
+router.post(
+  "/super-admin/advert/create",
+  Authorize,
+  AdvertUpload.single("file"),
+  async (req: any, res: any) => {
+    try {
+      const reqBody = <AdvertModel>req.body;
+      // const error = validationResult(req);
+      // if (!error.isEmpty()) {
+      //   res.status(HttpStatus.STATUS_400).json(error.array());
+      //   return;
+      // }
+      if (req?.file?.path !== undefined) {
+        cloudinary.uploader.upload(
+          req.file.path,
+          async (error: any, result: any) => {
+            if (error) {
+              // Handle error
+              console.error(error);
+              return res
+                .status(500)
+                .json({ status: "Failed", message: "File Upload failed" });
+            }
+            // File uploaded successfully, send back URL
+            reqBody.FilePath = result.secure_url;
+            var response = await baseService.CreateAdvert(reqBody);
+            if (response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS) {
+              return res
+                .status(HttpStatus.STATUS_400)
+                .json({
+                  status: HttpStatus.STATUS_FAILED,
+                  message: "Failed to create Advert",
+                });
+            }
+            return res
+              .status(HttpStatus.STATUS_200)
+              .json({
+                status: HttpStatus.STATUS_SUCCESS,
+                message: "Successfully Created Advert",
+                data: reqBody,
+              });
+          }
+        );
+      } else {
+        reqBody.FilePath = "";
+        var response = await baseService.CreateAdvert(reqBody);
+        if (response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS) {
+          return res
+            .status(HttpStatus.STATUS_400)
+            .json({
+              status: HttpStatus.STATUS_FAILED,
+              message: "Failed to create Advert",
+            });
+        }
+        return res
+          .status(HttpStatus.STATUS_200)
+          .json({
+            status: HttpStatus.STATUS_SUCCESS,
+            message: "Successfully Created Advert",
+            data: reqBody,
+          });
+      }
+    } catch (error) {
+      console.error("An Error Occurred", error);
+      return res
+        .status(HttpStatus.STATUS_500)
+        .json({
+          status: HttpStatus.STATUS_500,
+          Message: "Something went wrong",
+        });
+    }
+  }
+);
+
+
+router.post("/super-admin/audience/create", Authorize, async (req: any, res: any) => {
+  try {
+    const reqBody = <TargetAudience>req.body;
+
+    var response = await baseService.CreateTargetAudience(reqBody);
+    if (response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS) {
+      return res
+        .status(HttpStatus.STATUS_400)
+        .json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "Failed to create Target Audience",
+        });
+    }
+    return res
+      .status(HttpStatus.STATUS_200)
+      .json({
+        status: HttpStatus.STATUS_SUCCESS,
+        message: "Successfully Created Target Audience",
+        data: reqBody,
+      });
+  } catch (error) {
+    console.error("An Error Occurred", error);
+    return res
+      .status(HttpStatus.STATUS_500)
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
+  }
+});
+
+router.get("/super-admin/advert/all", Authorize, async (req, res) => {
+  try {
+    var response = await baseService.GetAdverts();
+    if (response?.length < 1) {
+      res
+        .status(HttpStatus.STATUS_404)
+        .json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "Failed to fetch Adverts ",
+        });
+    }
+    return res
+      .status(HttpStatus.STATUS_200)
+      .json({
+        status: HttpStatus.STATUS_SUCCESS,
+        message: "Successfully fetch Adverts",
+        data: response,
+      });
+  } catch (error) {
+    console.error("An Error Occurred", error);
+    return res
+      .status(HttpStatus.STATUS_500)
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
+  }
+});
+
+
+router.get("/super-admin/advert/:Id", Authorize, async (req, res) => {
+  try {
+    const param = req.params.Id
+    var response = await baseService.GetAdvertById(Number(param));
+    
+    if (response?.length < 1) {
+      res
+        .status(HttpStatus.STATUS_404)
+        .json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "Failed to fetch Advert",
+        });
+    }
+    return res
+      .status(HttpStatus.STATUS_200)
+      .json({
+        status: HttpStatus.STATUS_SUCCESS,
+        message: "Successfully fetch Advert",
+        data: response[0],
+      });
+  } catch (error) {
+    console.error("An Error Occurred", error);
+    return res
+      .status(HttpStatus.STATUS_500)
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
+  }
+});
+
+
 
 export default router;

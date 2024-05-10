@@ -1,4 +1,4 @@
-import { inject, injectable } from "inversify";
+import { id, inject, injectable } from "inversify";
 import bulkAccessCodeModel from "../model/bulkAccessCodeModel";
 import singleAccessCodeModel from "../model/singleAccessCodeModel";
 import staticAccessCodeModel from "../model/staticAccessCodeModel";
@@ -18,6 +18,9 @@ import CreateDigitalRegistar from "../model/CreateDigitalRegistar";
 import IReportCategory from "../model/IReportCategory";
 import SuperAdminRole from "../model/SuperAdminRole";
 import AdminTeam from "../model/AdminTeam";
+import TargetAudience from "../model/TargetAudience";
+import AdvertModel from "../model/AdvertModel";
+import PanicType from "../model/PanicType";
 
 @injectable()
 export default class BaseServiceimpl implements BaseService{
@@ -231,5 +234,29 @@ async CreateIReportCategory(payload: IReportCategory): Promise<string> {
 
    async GetSuperAdminByPhoneOrEmail(Email:string): Promise<any> {
       return await this.baseRepo.GetSuperAdminByPhoneOrEmail(Email)
+   }
+
+   async CreateTargetAudience(payload: TargetAudience): Promise<string> {
+      return await this.baseRepo.CreateTargetAudience(payload)
+   }
+   async CreateAdvert(payload: AdvertModel): Promise<string> {
+      return await this.baseRepo.CreateAdvert(payload)
+   }
+   async GetAdverts(): Promise<any>{
+      return await this.baseRepo.GetAdverts()
+   }
+
+   async GetAdvertById(Id:number): Promise<any>{
+      return await this.baseRepo.GetAdvertById(Id)
+   }
+
+   async CreatePanicType(payload: PanicType): Promise<string>{
+      return await this.baseRepo.CreatePanicType(payload)
+   }
+   async GetPanicTypes(): Promise<any> {
+      return await this.baseRepo.GetPanicTypes()
+   }
+   async GetPanicTypeById(Id:number): Promise<any> {
+      return await this.baseRepo.GetPanicTypeById(Id)
    }
 }

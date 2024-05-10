@@ -1,14 +1,17 @@
 import AdminTeam from "../../model/AdminTeam"
+import AdvertModel from "../../model/AdvertModel"
 import BusinessCategoryModel from "../../model/BusinessCategoryModel"
 import CommentModel from "../../model/CommentModel"
 import CreateDigitalRegistar from "../../model/CreateDigitalRegistar"
 import CreateForumModel from "../../model/CreateForumModel"
 import CreateIReportModel from "../../model/CreateIReportModel"
 import IReportCategory from "../../model/IReportCategory"
+import PanicType from "../../model/PanicType"
 import PostModel from "../../model/PostModel"
 import SuperAdminRole from "../../model/SuperAdminRole"
 import SupportCommentModel from "../../model/SupportCommentModel"
 import SupportModel from "../../model/SupportModel"
+import TargetAudience from "../../model/TargetAudience"
 import TransactionModel from "../../model/TransactionModel"
 import bulkAccessCodeModel from "../../model/bulkAccessCodeModel"
 import createAppointmentModel from "../../model/creatAppointmentModel"
@@ -78,5 +81,12 @@ export default interface BaseService{
     GetSuperAdminRoles(): Promise<any>
     CreateSuperAdminTeam(payload: AdminTeam): Promise<string> 
     GetSuperAdminByPhoneOrEmail(Email:string): Promise<any> 
+    CreateTargetAudience(payload: TargetAudience): Promise<string> 
+    CreateAdvert(payload: AdvertModel): Promise<string> 
+    GetAdverts(): Promise<any>
+    GetAdvertById(Id:number): Promise<any>
+    CreatePanicType(payload: PanicType): Promise<string>
+    GetPanicTypes(): Promise<any> 
+    GetPanicTypeById(Id:number): Promise<any> 
         
 }
