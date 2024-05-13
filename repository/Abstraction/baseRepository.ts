@@ -90,5 +90,6 @@ export default interface BaseRepository{
     CreatePanicType(payload: PanicType): Promise<string>
     GetPanicTypes(): Promise<any> 
     GetPanicTypeById(Id:number): Promise<any> 
+    DeletePanicType(Id: number): Promise<string> 
 
 }

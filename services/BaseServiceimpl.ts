@@ -259,4 +259,8 @@ async CreateIReportCategory(payload: IReportCategory): Promise<string> {
    async GetPanicTypeById(Id:number): Promise<any> {
       return await this.baseRepo.GetPanicTypeById(Id)
    }
+
+   async DeletePanicType(Id: number): Promise<string> {
+      return await this.baseRepo.DeletePanicType(Id)
+   }
 }

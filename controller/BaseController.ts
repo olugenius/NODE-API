@@ -30,6 +30,7 @@ import IReportCategory from "../model/IReportCategory";
 import SuperAdminRole from "../model/SuperAdminRole";
 import AdvertModel from "../model/AdvertModel";
 import TargetAudience from "../model/TargetAudience";
+import PanicType from "../model/PanicType";
 
 /**
  * @swagger
@@ -1807,6 +1808,34 @@ import TargetAudience from "../model/TargetAudience";
  *             example:
  *               message:  Successfully got Panic Type by Id
  */
+
+
+/**
+ * @swagger
+ * /api/super-admin/panic-type/delete/{Id}:
+ *   delete:
+ *     summary: Delete Panic Type
+ *     security:
+ *      - APIKeyHeader: []
+ *     tags: [SuperAdmin]
+ *     parameters:
+ *       - in: path
+ *         name: Id
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: Id of the Panic Type
+ *
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Panic Type deleted successfully
+ */
+
+
 
 const router = express.Router();
 let AppointmentUploadXls = multer({
@@ -3928,6 +3957,134 @@ router.get("/super-admin/advert/:Id", Authorize, async (req, res) => {
       .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
   }
 });
+
+
+
+
+router.post("/super-admin/panic-type/create", Authorize, async (req: any, res: any) => {
+  try {
+    const reqBody = <PanicType>req.body;
+
+    var response = await baseService.CreatePanicType(reqBody);
+    if (response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS) {
+      return res
+        .status(HttpStatus.STATUS_400)
+        .json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "Failed to create Panic Type",
+        });
+    }
+    return res
+      .status(HttpStatus.STATUS_200)
+      .json({
+        status: HttpStatus.STATUS_SUCCESS,
+        message: "Successfully Created Panic Type",
+        data: reqBody,
+      });
+  } catch (error) {
+    console.error("An Error Occurred", error);
+    return res
+      .status(HttpStatus.STATUS_500)
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
+  }
+});
+
+router.get("/super-admin/panic-type/all", Authorize, async (req, res) => {
+  try {
+    var response = await baseService.GetPanicTypes();
+    if (response?.length < 1) {
+      res
+        .status(HttpStatus.STATUS_404)
+        .json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "Failed to fetch Panic Types ",
+        });
+    }
+    return res
+      .status(HttpStatus.STATUS_200)
+      .json({
+        status: HttpStatus.STATUS_SUCCESS,
+        message: "Successfully fetch Panic Types",
+        data: response,
+      });
+  } catch (error) {
+    console.error("An Error Occurred", error);
+    return res
+      .status(HttpStatus.STATUS_500)
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
+  }
+});
+
+
+router.get("/super-admin/panic-type/:Id", Authorize, async (req, res) => {
+  try {
+    const param = req.params.Id
+    var response = await baseService.GetPanicTypeById(Number(param));
+    
+    if (response?.length < 1) {
+      res
+        .status(HttpStatus.STATUS_404)
+        .json({
+          status: HttpStatus.STATUS_FAILED,
+          message: "Failed to fetch Panic Type",
+        });
+    }
+    return res
+      .status(HttpStatus.STATUS_200)
+      .json({
+        status: HttpStatus.STATUS_SUCCESS,
+        message: "Successfully fetch Panic Type",
+        data: response[0],
+      });
+  } catch (error) {
+    console.error("An Error Occurred", error);
+    return res
+      .status(HttpStatus.STATUS_500)
+      .json({ status: HttpStatus.STATUS_500, message: "Something went wrong" });
+  }
+});
+
+
+
+
+
+router.delete(
+  "/super-admin/panic-type/delete:Id",
+  Authorize,
+  async (req: any, res: any) => {
+    try {
+      const param = req?.params?.Id;
+      // const error = validationResult(req)
+      // if(!error.isEmpty()){
+      //   res.status(HttpStatus.STATUS_400).json(error.array())
+      //   return;
+      // }
+      var response = await baseService.DeletePanicType(param);
+      if (response?.toLowerCase() !== HttpStatus.STATUS_SUCCESS) {
+        return res
+          .status(HttpStatus.STATUS_400)
+          .json({
+            status: HttpStatus.STATUS_FAILED,
+            message: "Failed to Delete Panic Type",
+          });
+      }
+      return res
+        .status(HttpStatus.STATUS_200)
+        .json({
+          status: HttpStatus.STATUS_SUCCESS,
+          message: "Successfully Deleted Panic Type",
+        });
+    } catch (error) {
+      console.error("An Error Occurred", error);
+      return res
+        .status(HttpStatus.STATUS_500)
+        .json({
+          status: HttpStatus.STATUS_500,
+          Message: "Something went wrong",
+        });
+    }
+  }
+);
 
 
 

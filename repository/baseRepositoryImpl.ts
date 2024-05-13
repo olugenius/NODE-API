@@ -2743,9 +2743,45 @@ export default class baseRepositoryImpl implements BaseRepository {
 
       return result;
     } catch (error) {
-      console.error("Error Getting advert:", error);
+      console.error("Error Getting Panic Type:", error);
     }
   }
+
+
+  async DeletePanicType(Id: number): Promise<string> {
+    let response: string = "";
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<string>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+
+          const query = `DELETE FROM PanicType WHERE Id=?`;
+
+          connection?.query(query, [Id], (err, data) => {
+            connection.release();
+            if (err) {
+              console.log("error querying database", err);
+              response = "Failed";
+            } else {
+              console.log("successfully query", data);
+              response = "Success";
+            }
+            resolve(response);
+          });
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error Deleting Panic Type:", error);
+      return "Failed";
+    }
+  }
+
 
 
 }
