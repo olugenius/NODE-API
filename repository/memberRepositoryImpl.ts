@@ -6,7 +6,7 @@ import { injectable } from "inversify"
 import { GenerateUniqueId } from "../utilities/GenerateUniqueId"
 import memberModel from "../model/memberModel"
 import GetNewDate from "../utilities/GetNewDate"
-import { BeginTransaction, CommitTransaction, QueryTransaction, ReleaseTransaction } from "./dbContext/Transactions"
+import { BeginTransaction, CommitTransaction, QueryTransaction, ReleaseTransaction, RollbackTransaction } from "./dbContext/Transactions"
 import { SendMail } from "../utilities/EmailHandler"
 import getCurrentDate from "../utilities/GetNewDate"
 
@@ -324,6 +324,7 @@ export default class memberRepositoryImpl implements memberRepository{
                             resolve('Success')
                         }catch(err){
                             console.log('An error occurred in transaction',err)
+                            await RollbackTransaction(connection)
                             reject(err)
 
                         }
@@ -686,6 +687,7 @@ export default class memberRepositoryImpl implements memberRepository{
                 resolve('Success')
             }catch(err){
                 console.log('An error occurred in transaction',err)
+                await RollbackTransaction(connection)
                 reject(err)
             }
             

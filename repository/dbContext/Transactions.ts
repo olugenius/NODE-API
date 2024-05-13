@@ -55,3 +55,16 @@ export const ReleaseTransaction = (connection:PoolConnection)=>{
     })
     
 }
+
+export const RollbackTransaction = (connection:PoolConnection)=>{
+    return new Promise<void>((resolve,reject)=>{
+        connection?.rollback((err)=>{
+           if(err){
+           reject(err)
+           }else{
+            resolve()
+           }
+        });
+    })
+    
+}

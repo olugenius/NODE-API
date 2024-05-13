@@ -5,7 +5,7 @@ import createCheckersModel from "../model/createcheckersModel";
 import { injectable } from "inversify";
 import { GenerateUniqueId } from "../utilities/GenerateUniqueId";
 import GetNewDate from "../utilities/GetNewDate";
-import { BeginTransaction, CommitTransaction, QueryTransaction, ReleaseTransaction } from "./dbContext/Transactions";
+import { BeginTransaction, CommitTransaction, QueryTransaction, ReleaseTransaction, RollbackTransaction } from "./dbContext/Transactions";
 import { generateHTML } from "swagger-ui-express";
 import { SendMail } from "../utilities/EmailHandler";
 
@@ -68,6 +68,7 @@ export default class checkerRepoImpl implements checkerRepo{
                          resolve('Success')
                     }catch(err){
                         console.log('An error occurred',err)
+                        await RollbackTransaction(connection)
                         reject(err)
 
                     }
@@ -238,6 +239,7 @@ export default class checkerRepoImpl implements checkerRepo{
                 // })
             }catch(err){
             console.log('An error occurred creating checkers transactions',err)
+            await RollbackTransaction(connection)
             reject(err)
             }
 
