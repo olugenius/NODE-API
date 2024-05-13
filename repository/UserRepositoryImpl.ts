@@ -18,7 +18,7 @@ import {
 import UpdateEmailModel from "../model/UpdateEmailModel";
 import { GenerateUniqueId } from "../utilities/GenerateUniqueId";
 import { registerModel, updateUserModel } from "../model/registerModel";
-import { BeginTransaction, CommitTransaction, QueryTransaction, ReleaseTransaction } from "./dbContext/Transactions";
+import { BeginTransaction, CommitTransaction, QueryTransaction, ReleaseTransaction, RollbackTransaction } from "./dbContext/Transactions";
 import { RolesEnum } from "../utilities/RolesEnum";
 
 @injectable()
@@ -663,6 +663,7 @@ export default class UserRepositoryImpl implements UserRepository {
               resolve(response)
             }catch(err){
               console.log('An error occurred in transaction',err)
+              await RollbackTransaction(connection)
               response.status = 'Failed'
               resolve(response)
 
