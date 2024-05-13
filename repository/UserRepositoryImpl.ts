@@ -602,7 +602,7 @@ export default class UserRepositoryImpl implements UserRepository {
             try{
               const UserRole = payload.UserRole.toUpperCase()
               const userId = GenerateUniqueId();
-              const query1 = `INSERT INTO Users(FirstName,LastName,DOB,Gender,Address,Phone,Email,PhotoPath,Password,IsVerified,Language,CompanyType,UserRole,UserId) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+              const query1 = `INSERT INTO Users(FirstName,LastName,DOB,Gender,Address,Phone,Email,PhotoPath,Password,IsVerified,Language,CompanyType,UserRole,UserId,Title) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
               const query2 = 'DELETE FROM temp_user WHERE Phone=?'
               // connection?.query(
               //   query,
@@ -651,6 +651,7 @@ export default class UserRepositoryImpl implements UserRepository {
                 payload.CompanyType,
                 UserRole,
                 userId,
+                payload.Title
               ])
   
               await QueryTransaction(connection,query2,[payload.Phone])
