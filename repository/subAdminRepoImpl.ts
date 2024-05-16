@@ -6,6 +6,7 @@ import { injectable } from "inversify";
 import { GenerateUniqueId } from "../utilities/GenerateUniqueId";
 import { BeginTransaction, CommitTransaction, QueryTransaction, ReleaseTransaction } from "./dbContext/Transactions";
 import { SendMail } from "../utilities/EmailHandler";
+import SMSHandler from "../utilities/SMSHandler";
 
 @injectable()
 export default class subAdminRepoimpl implements subAdminRepo{
@@ -65,8 +66,13 @@ export default class subAdminRepoimpl implements subAdminRepo{
                          await QueryTransaction(connection,query2,[payload.FirstName,payload.LastName,'SUB_ADMIN',payload.Phone,payload.Email,pass])
                          await CommitTransaction(connection)
                          await ReleaseTransaction(connection)
-                         const emailMessage = `<!DOCTYPE html><html><body><h2>Dear ${payload.FirstName} ${payload.LastName}</h2><p><b>You have been created as a SubAdmin in the VSured App</b></p><p class="demo">Please Login with this One time. <br><br> <b>Paswword:</b> ${pass}</p></body></html>`;
-                         await SendMail(`${payload.Email}`, emailMessage);
+                         const message = `Hello ${payload.FirstName} You have been created as a SubAdmin in the VSured App. Please Login with this One time. Paswword: ${pass}`
+                         if (!payload.Email) {
+                            await SMSHandler(payload.Phone, message);
+                         } else {
+                           const emailMessage = `<!DOCTYPE html><html><body><h2>Hello ${payload.FirstName} </h2><p><b>You have been created as a SubAdmin in the VSured App</b></p><p class="demo">Please Login with this One time. <br><br> <b>Paswword:</b> ${pass}</p></body></html>`;
+                            await SendMail(`${payload.Email}`, emailMessage);
+                         }
 
                          resolve('Success')
 

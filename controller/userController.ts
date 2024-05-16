@@ -1301,11 +1301,12 @@ router.post(
       }
       //Start sending sms or email
       let emailSMSResult = false;
-      const message = `Please use the token sent to you for validation: \n Token Value is: ${token.toString()}`;
+      // const message = `Please use the token sent to you for validation: \n Token Value is: ${token.toString()}`;
+      const message = `Hello ${userRes[0].FirstName}, please use the following OTP for account verification - ${token.toString()}. From Vsured.`
       if (reqBody.Medium.toLowerCase() === "sms") {
         emailSMSResult = await SMSHandler(reqBody.Channel, message);
       } else {
-        const emailMessage = `<!DOCTYPE html><html><body><h2>Dear Customer</h2><p><b>A token request was sent using your Email address. Please ignore if not requested by you </b></p><p class="demo">Please use the token below to complete your verify. <br><br> <b>Token:</b> ${token}</p></body></html>`;
+        const emailMessage = `<!DOCTYPE html><html><body><h2>Hello ${userRes[0].FirstName}</h2><p><b>A token request was sent using your Email address. Please ignore if not requested by you </b></p><p class="demo">Please use the token below to complete your verify. <br><br> <b>Token:</b> ${token}</p></body></html>`;
         emailSMSResult = await SendMail(`${reqBody.Channel}`, emailMessage);
       }
 
@@ -1486,11 +1487,13 @@ router.post(
 
         //Send Email Implementation
         let emailSMSResult = false;
-        const message = `Please use the token sent to you for validation: \\n Token Value is: ${token.toString()}`;
+        // const message = `Please use the token sent to you for validation: \\n Token Value is: ${token.toString()}`;
+        const message = `Hello ${response[0].FirstName}, please use the following OTP for account verification - ${token.toString()}. From Vsured.`
         if (reqBody.Medium.toLowerCase() === "sms") {
           emailSMSResult = await SMSHandler(reqBody.Channel, message);
         } else {
-          emailSMSResult = await SendMail(`${reqBody.Channel}`, message);
+          const emailMessage = `<!DOCTYPE html><html><body><h2>Hello ${response[0].FirstName}</h2><p><b>A token request was sent using your Email address. Please ignore if not requested by you </b></p><p class="demo">Please use the token below to complete your verify. <br><br> <b>Token:</b> ${token}</p></body></html>`;
+          emailSMSResult = await SendMail(`${reqBody.Channel}`, emailMessage);
         }
 
         if (!emailSMSResult) {
@@ -1526,7 +1529,7 @@ router.post(
       if (!error.isEmpty()) {
         res.status(HttpStatus.STATUS_400).json(error.array());
       } else {
-        let response = <registerModel[]>(
+        let response = (
           await baseRepo.GetSuperAdminByPhoneOrEmail(reqBody.Channel)
         );
         if (response?.length < 1) {
@@ -1567,11 +1570,13 @@ router.post(
 
         //Send Email Implementation
         let emailSMSResult = false;
-        const message = `Please use the token sent to you for validation: \\n Token Value is: ${token.toString()}`;
+        // const message = `Please use the token sent to you for validation: \\n Token Value is: ${token.toString()}`;
+        const message = `Hello ${response[0].FirstName}, please use the following OTP for account verification - ${token.toString()}. From Vsured.`
         if (reqBody.Medium.toLowerCase() === "sms") {
           emailSMSResult = await SMSHandler(reqBody.Channel, message);
         } else {
-          emailSMSResult = await SendMail(`${reqBody.Channel}`, message);
+          const emailMessage = `<!DOCTYPE html><html><body><h2>Hello ${response[0].FirstName}</h2><p><b>A token request was sent using your Email address. Please ignore if not requested by you </b></p><p class="demo">Please use the token below to complete your verify. <br><br> <b>Token:</b> ${token}</p></body></html>`;
+          emailSMSResult = await SendMail(`${reqBody.Channel}`, emailMessage);
         }
 
         if (!emailSMSResult) {
