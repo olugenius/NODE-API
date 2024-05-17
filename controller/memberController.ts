@@ -271,12 +271,17 @@ router.post('/member/create',Authorize,CreateMemberValidator,async(req:any,res:a
         return;
       }
       const reqBody = <memberModel>req.body
-      var response = await member.CreateMember(reqBody)
-      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
-         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Member'})
+      const memberData = await member.GetMemberByPhoneOrEmail(reqBody.Phone)
+      if(memberData.length > 0){
+        var response = await member.CreateMember(reqBody)
+        if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+           return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Member'})
+        }
+        return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Member',data:reqBody})
+    
       }
-      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Member',data:reqBody})
-  
+      return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Member already exist'})
+
     }catch(error){
       console.error('An Error Occurred',error)
       return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})    

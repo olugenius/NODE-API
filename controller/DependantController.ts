@@ -220,6 +220,7 @@ const dependant = container.get<Dependant>('Dependant')
 router.post('/dependant/create',Authorize,async(req,res)=>{
     try{
       const reqBody = <CreateDependantmodel[]>req.body
+      
       var response = await dependant.CreateDependant(reqBody)
       if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Dependant'})

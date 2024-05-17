@@ -180,34 +180,40 @@ router.post('/subAdmin/create',Authorize,SubAdminUpload.single('file'),CreateSub
             return;
           }
 
-          if(req?.file?.path !== undefined){
-            cloudinary.uploader.upload(req.file.path, async (error:any, result:any) => {
-              if (error) {
-                // Handle error
-                console.error(error);
-                return res.status(500).json({status:'Failed',message:'File Upload failed'});
-              }
-              // File uploaded successfully, send back URL
-              console.log('photo url:',result.secure_url)
-              reqBody.PhotoPath = result.secure_url
+          const subAdminData = await subAdmin.GetSubAdminByPhoneOrEmail(reqBody.Phone)
+          if(subAdminData.length > 0){
+            if(req?.file?.path !== undefined){
+              cloudinary.uploader.upload(req.file.path, async (error:any, result:any) => {
+                if (error) {
+                  // Handle error
+                  console.error(error);
+                  return res.status(500).json({status:'Failed',message:'File Upload failed'});
+                }
+                // File uploaded successfully, send back URL
+                console.log('photo url:',result.secure_url)
+                reqBody.PhotoPath = result.secure_url
+                var response = await subAdmin.CreateSubAdmin(reqBody)
+                if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+                   return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create SubAdmin'})
+                }
+                return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created SubAdmin'})
+            
+       
+              });
+  
+            }else{
+              reqBody.PhotoPath = ''
               var response = await subAdmin.CreateSubAdmin(reqBody)
               if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
                  return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create SubAdmin'})
               }
               return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created SubAdmin'})
           
-     
-            });
-
-          }else{
-            reqBody.PhotoPath = ''
-            var response = await subAdmin.CreateSubAdmin(reqBody)
-            if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
-               return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create SubAdmin'})
             }
-            return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created SubAdmin'})
-        
+            
           }
+          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'SubAdmin already exist'})
+
           
      
     }catch(error){

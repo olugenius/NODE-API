@@ -356,13 +356,19 @@ router.post('/checkers/create',Authorize,CreateCheckerValidator,async(req:any,re
             res.status(HttpStatus.STATUS_400).json(error.array())
             return;
           }
-      var response = await checker.CreateCheckers(reqBody)
-      if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
-       
-         return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Checker'})
-      }
-      return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Checker',data:reqBody})
-  
+          var checkData = await checker.getCheckersByPhoneOrEmail(reqBody.Phone)
+          if(checkData.length > 0){
+            var response = await checker.CreateCheckers(reqBody)
+            if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
+             
+               return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Checker'})
+            }
+            return res.status(HttpStatus.STATUS_200).json({status:HttpStatus.STATUS_SUCCESS,message:'Successfully Created Checker',data:reqBody})
+        
+          }
+          return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Checker already exist'})
+
+     
     }catch(error){
       console.error('An Error Occurred',error)
       return res.status(HttpStatus.STATUS_500).json({status: HttpStatus.STATUS_500,Message:'Something went wrong'})      }
