@@ -10,7 +10,7 @@ import { isAtLeast16YearsOld, isValidDateFormat } from './dateFormatter'
   body('LastName','LastName is required').notEmpty().trim().escape().matches(/^[a-zA-Z]+$/).withMessage('LastName must contain only alphabetic characters'),
   body('Gender','Gender is required').notEmpty().trim().escape().matches(/^[a-zA-Z]+$/).withMessage('Gender must contain only alphabetic characters'),
   body('Address','Address is required').notEmpty().trim().escape(),
-  body('Phone').notEmpty().withMessage('PhoneNumber is required').trim().matches(/^\+?\d{1,}$/).isMobilePhone('any',{ strictMode: true }).withMessage('Invalid phone number. Phone number must include country code'),
+  body('Phone').notEmpty().withMessage('PhoneNumber is required').trim().matches(/^\+?\d{1,}$/).isMobilePhone('any',{ strictMode: true }).withMessage('invalid phone number.'),
   //body('PhotoPath').notEmpty().trim().escape(),
   body('Password').notEmpty().withMessage('Password is required').trim().escape().isLength({min:6}).withMessage('password length must not be less than 6').custom((value, { req }) => {
     // Regular expressions to check for at least one capital letter, one special character, and one number
@@ -152,7 +152,7 @@ export const CreateOrganisationValidator =
 [
   // body('Name').notEmpty().trim().escape().withMessage('Name is required').matches(/^[a-zA-Z]+$/).withMessage('Organization Name must contain only alphabetic characters'),
   body('Name').notEmpty().trim().escape().withMessage('Name is required'),
-  check('Phone').optional().trim().matches(/^\+?\d{1,}$/).isMobilePhone('any',{ strictMode: true }).withMessage('Invalid phone number. Phone number must include country code'),
+  check('Phone').optional().trim().matches(/^\+?\d{1,}$/).isMobilePhone('any',{ strictMode: true }).withMessage('invalid phone number.'),
   body('Address','Organisation office address is required').notEmpty().trim().escape(),
   //body('DOB','Date of Birth is required').isDate().toDate(),
   body('DateIncoporated').notEmpty().withMessage('Date of Incoporation is required').custom(isValidDateFormat).withMessage('Date of Birth must be in YYYY-MM-DD format'),
