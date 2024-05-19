@@ -272,7 +272,7 @@ router.post('/member/create',Authorize,CreateMemberValidator,async(req:any,res:a
       }
       const reqBody = <memberModel>req.body
       const memberData = await member.GetMemberByPhoneOrEmail(reqBody.Phone)
-      if(memberData.length > 0){
+      if(memberData.length < 1){
         var response = await member.CreateMember(reqBody)
         if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
            return res.status(HttpStatus.STATUS_400).json({status:HttpStatus.STATUS_FAILED,message:'Failed to create Member'})

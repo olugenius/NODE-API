@@ -357,7 +357,7 @@ router.post('/checkers/create',Authorize,CreateCheckerValidator,async(req:any,re
             return;
           }
           var checkData = await checker.getCheckersByPhoneOrEmail(reqBody.Phone)
-          if(checkData.length > 0){
+          if(checkData.length < 1){
             var response = await checker.CreateCheckers(reqBody)
             if(response?.toLowerCase() !==  HttpStatus.STATUS_SUCCESS){
              

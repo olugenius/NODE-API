@@ -181,7 +181,7 @@ router.post('/subAdmin/create',Authorize,SubAdminUpload.single('file'),CreateSub
           }
 
           const subAdminData = await subAdmin.GetSubAdminByPhoneOrEmail(reqBody.Phone)
-          if(subAdminData.length > 0){
+          if(subAdminData.length < 1){
             if(req?.file?.path !== undefined){
               cloudinary.uploader.upload(req.file.path, async (error:any, result:any) => {
                 if (error) {
