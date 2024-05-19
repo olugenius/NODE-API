@@ -168,7 +168,8 @@ import ElectricityPurchaseDto from "../model/DTOs/ElectricityPurchaseDto";
 
 const router = express.Router()
 const _billsPayment = container.get<BillsPayment>('BillsPayment')
-router.get('bills/airtime/providers',async(req,res)=>{
+
+router.get('/bills/airtime/providers',async(req,res)=>{
     try {
        var response = await _billsPayment.GetAirtimeTelcos()
        if(response.length > 0){
@@ -182,7 +183,7 @@ router.get('bills/airtime/providers',async(req,res)=>{
 
 })
 
-router.post('bills/airtime/purchase',async(req,res)=>{
+router.post('/bills/airtime/purchase',async(req,res)=>{
     try {
         const reqBody = <AirtimePurchaseModel>req.body
        var response = <AirtimePurchaseResponse>await _billsPayment.PurchaseAirtime(reqBody)
@@ -217,7 +218,7 @@ router.post('bills/airtime/purchase',async(req,res)=>{
 
 })
 
-router.get('bills/data/providers',async(req,res)=>{
+router.get('/bills/data/providers',async(req,res)=>{
     try {
        var response = await _billsPayment.GetDataTelcos()
        if(response.length > 0){
@@ -232,7 +233,7 @@ router.get('bills/data/providers',async(req,res)=>{
 })
 
 
-router.post('bills/data/purchase',async(req,res)=>{
+router.post('/bills/data/purchase',async(req,res)=>{
     try {
         const reqBody = <DataPurchaseModel>req.body
        var response = <DataResponseModel>await _billsPayment.PurchaseData(reqBody)
@@ -253,7 +254,7 @@ router.post('bills/data/purchase',async(req,res)=>{
 })
 
 
-router.post('bills/electricity/purchase',async(req,res)=>{
+router.post('/bills/electricity/purchase',async(req,res)=>{
     try {
         const reqBody = <ElectricityPurchaseModel>req.body
        var response = <ElectricityPurchaseResponse>await _billsPayment.PurchaseElectricity(reqBody)
