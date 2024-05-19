@@ -1,3 +1,4 @@
+import { inject, injectable } from "inversify";
 import AirtimePurchaseModel from "../model/AirtimePurchaseModel";
 import DataPurchaseModel from "../model/DataPurchaseModel";
 import DataResponseModel from "../model/DataResponseModel";
@@ -6,9 +7,9 @@ import { GenerateUniqueId } from "../utilities/GenerateUniqueId";
 import billService from "../utilities/ServiceClient/Abstraction/billService";
 import GenerateHash from "../utilities/generateHash";
 import BillPayment from "./Abstraction/BillsPayment";
-
+@injectable()
 export default class BillsPaymentImpl implements BillPayment{
-    constructor(private _billService:billService){
+    constructor(@inject('billService') private _billService:billService){
 
     }
     GetAirtimeTelcos(): Promise<any> {

@@ -1,6 +1,8 @@
 import axios from "axios";
-
-export default class billServiceImpl{
+import { injectable } from "inversify";
+import billService from "./Abstraction/billService";
+@injectable()
+export default class billServiceImpl implements billService{
     async GetBearer(){
         try{
             const body = {
