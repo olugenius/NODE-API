@@ -319,11 +319,11 @@ export default class memberRepositoryImpl implements memberRepository{
                             await CommitTransaction(connection)
                             await ReleaseTransaction(connection)
    
-                            const message = `Hello ${payload.FirstName} You have been created as a Member in the VSured App. Please Login with this One time. Paswword: ${pass}`
+                            const message = `Hello ${payload.FirstName} You have been created as a Member in the VSured App. Please Login with this One time. Password: ${pass}`
                             if (!payload.Email) {
                                await SMSHandler(payload.Phone, message);
                             } else {
-                              const emailMessage = `<!DOCTYPE html><html><body><h2>Hello ${payload.FirstName}</h2><p><b>You have been created as a Checker in the VSured App</b></p><p class="demo">Please Login with this One time. <br><br> <b>Paswword:</b> ${pass}</p></body></html>`;
+                              const emailMessage = `<!DOCTYPE html><html><body><h2>Hello ${payload.FirstName}</h2><p><b>You have been created as a Member in the VSured App</b></p><p class="demo">Please Login with this One time. <br><br> <b>Password:</b> ${pass}</p></body></html>`;
                                await SendMail(`${payload.Email}`, emailMessage);
                             }
    

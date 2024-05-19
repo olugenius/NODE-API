@@ -30,6 +30,9 @@ import NotificationImpl from '../services/NotificationImpl'
 import NotificationRepoImpl from '../repository/NotificationRepoImpl'
 import Notification from '../services/Abstraction/Notification'
 import NotificationRepo from '../repository/Abstraction/NotificationRepo'
+import BillPayment from '../services/Abstraction/BillsPayment'
+import BillsPaymentImpl from '../services/BillsPaymentImpl'
+import BillsPayment from '../services/Abstraction/BillsPayment'
 
 
 export const container = new Container()
@@ -49,6 +52,7 @@ container.bind<checkerRepo>('checkerRepo').to(checkerRepoImpl)
 container.bind<subAdminRepo>('subAdminRepo').to(subAdminRepoimpl)
 container.bind<NotificationRepo>('NotificationRepo').to(NotificationRepoImpl)
 container.bind<Notification>('Notification').to(NotificationImpl)
+container.bind<BillsPayment>('BillPayment').to(BillsPaymentImpl)
 
 
 

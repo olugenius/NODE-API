@@ -106,11 +106,11 @@ export default class DependantRepositoryImpl implements DependantRepository{
                                     const pass = GenerateUniqueId(4)
                                     await QueryTransaction(connection,query1,[payload[i].Name,payload[i].Email,payload[i].Phone,payload[i].DOB,payload[i].CreatorUserId,dependantId])
                                     await QueryTransaction(connection,query2,[payload[i].Name,'','DEPENDANT',payload[i].Phone,payload[i].Email,pass])
-                                    const message = `Hello ${payload[i].Name} You have been created as a Dependant in the VSured App. Please Login with this One time. Paswword: ${pass}`
+                                    const message = `Hello ${payload[i].Name} You have been created as a Dependant in the VSured App. Please Login with this One time. Password: ${pass}`
                                     if (!payload[i].Email) {
                                        await SMSHandler(payload[i].Phone, message);
                                     } else {
-                                      const emailMessage = `<!DOCTYPE html><html><body><h2>Hello ${payload[i].Name}</h2><p><b>You have been created as a Dependant in the VSured App</b></p><p class="demo">Please Login with this One time. <br><br> <b>Paswword:</b> ${pass}</p></body></html>`;
+                                      const emailMessage = `<!DOCTYPE html><html><body><h2>Hello ${payload[i].Name}</h2><p><b>You have been created as a Dependant in the VSured App</b></p><p class="demo">Please Login with this One time. <br><br> <b>Password:</b> ${pass}</p></body></html>`;
                                        await SendMail(`${payload[i].Email}`, emailMessage);
                                     }
                              }//end of for loop
