@@ -1,4 +1,4 @@
 export default interface refreshTokenRequestmodel{
-    Channel:string,
+    Email:string,
     RefreshToken: string
 }

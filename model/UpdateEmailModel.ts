@@ -1,4 +1,4 @@
 export default interface UpdateEmailModel{
-  Channel:string,
+  Email:string,
   NewEmail:string
 }

@@ -1,6 +1,6 @@
 export default interface loginModel{
     
-        Channel : string
+        Email : string
         Password :string
     
 }

@@ -1,21 +1,15 @@
 export interface registerModel{
         FirstName : string
         LastName :string
-        DOB : Date
-        Gender :string
-        Address :string
         Phone : string 
         Email : string
-        PhotoPath : string
+        FilePath : string
         Password : string 
-        VerifyChannel : string 
+        Industry : string 
         IsVerified : boolean  
-        Language : string
-        CompanyType : string
-        UserRole:string
+        Gender : string
         RefreshToken:string
-        UserId:string,
-        Title:string
+        UserId:string
 
     }
 

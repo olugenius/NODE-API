@@ -6,11 +6,9 @@ import { createPasswordRequestModel, updatePasswordRequestModel } from "../../mo
 export default interface UserRepository{
     GetUserByPhone(Phone:string):Promise<any | null>
     GetUserByEmailOrPhone(Email:string):Promise<any | null>
-    GetTempUserByEmailOrPhone(Email: string): Promise<any | null>
-    UpdateTempUserPasswordStatus(channel: string): Promise<string>
     GetUserByCreatorUserId(creatorUserId:string):Promise<any | null>
     GetUserByEmail(Email:string):Promise<any | null>
-    AddToken(email:string,mailFor:string,token:string,medium:string):Promise<string>
+    AddToken(email:string,mailFor:string,token:string):Promise<string>
     UpdateUserRefreshToken(phone:string,token:string):Promise<any>
     UpdateUserToken(email:string,mailFor:string):Promise<string>
     createUser(payload:registerModel):Promise<registerResponseModel>
@@ -20,9 +18,7 @@ export default interface UserRepository{
     GetUserToken(email:string,mailFor:string):Promise<any>
     CreatePassword(payload:createPasswordRequestModel):Promise<any>
     UpdatePassword(payload:updatePasswordRequestModel):Promise<any>
-    UpdateAdminUserPassword(newPassword: string, channel: string): Promise<any> 
     DeleteAccount(Id:number):Promise<string>
     UpdateEmail(payload:UpdateEmailModel):Promise<string>
-    GetSuperAdminEmailOrPhone(Email: string): Promise<any | null>
 
 }

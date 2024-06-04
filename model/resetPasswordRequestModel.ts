@@ -1,7 +1,7 @@
 export  interface resetPasswordRequestModel{
     NewPassword:string,
     ConfirmPassword:string,
-    Channel:string
+    Email:string
 }
 
 export  interface createPasswordRequestModel{
@@ -13,5 +13,5 @@ export  interface createPasswordRequestModel{
 export  interface updatePasswordRequestModel{
     OldPassword:string,
     NewPassword:string,
-    Phone:string
+    Email:string
 }

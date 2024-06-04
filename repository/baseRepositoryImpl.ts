@@ -10,7 +10,7 @@ import CreateForumModel from "../model/CreateForumModel";
 import PostModel from "../model/PostModel";
 import CommentModel from "../model/CommentModel";
 import { formatDuration } from "date-fns";
-import createAppointmentModel from "../model/creatAppointmentModel";
+import createAppointmentModel from "../model/CreateAppointmentModel";
 import TransactionModel from "../model/TransactionModel";
 import createServiceProviderModel from "../model/createServiceProviderModel";
 import BusinessCategoryModel from "../model/BusinessCategoryModel";
@@ -27,6 +27,9 @@ import bcrypt from "bcrypt";
 import TargetAudience from "../model/TargetAudience";
 import AdvertModel from "../model/AdvertModel";
 import PanicType from "../model/PanicType";
+import CreateAppointmentModel from "../model/CreateAppointmentModel";
+import CreateTransactionModel from "../model/CreateTransactionModel";
+import CreateSubscriptionModel from "../model/CreateSubscriptionModel";
 
 @injectable()
 export default class baseRepositoryImpl implements BaseRepository {
@@ -38,7 +41,9 @@ export default class baseRepositoryImpl implements BaseRepository {
     }
   }
 
-  async createSingleCode(payload: singleAccessCodeModel): Promise<string> {
+  
+
+  async CreateAppointment(payload: CreateAppointmentModel): Promise<string> {
     let response: string = "";
     try {
       const connection = await this.getConnection();
@@ -49,1013 +54,19 @@ export default class baseRepositoryImpl implements BaseRepository {
             reject(err);
           }
 
-          var AccessCode = `Access- ${GenerateUniqueId()}`;
-          const query = `INSERT INTO AccessCode(CodeType,Code,Purpose,StartTime,EndTime,Name,Date,Phone,Email,CreatorUserId,IsActive) VALUES(?,?,?,?,?,?,?,?,?,?,?)`;
-
+          const ConsultationId = `Consult-${GenerateUniqueId()}`;
+          const query = `INSERT INTO Appointment(ConsultationId,CreatedAt,Cost,Status,UserId) VALUES(?,?,?,?,?)`;
+          
+       
           connection?.query(
             query,
-            [
-              "Single",
-              AccessCode,
-              payload.PurposeCode,
-              payload.StartTime,
-              payload.EndTime,
-              payload.Name,
-              payload.Date,
-              payload.Phone,
-              payload.Email,
-              payload.CreatorUserId,
-              1,
-            ],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                response = "Failed";
-              } else {
-                console.log("successfully query", data);
-                response = "Success";
-              }
-              resolve(response);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-  async createStaticCode(payload: staticAccessCodeModel): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          var AccessCode = `Access- ${GenerateUniqueId()}`;
-          const query = `INSERT INTO AccessCode(CodeType,Code,DateRange,Frequency,Name,Phone,Email,Category,CreatorUserId,IsActive) VALUES(?,?,?,?,?,?,?,?,?,?)`;
-
-          connection?.query(
-            query,
-            [
-              "Static",
-              AccessCode,
-              payload.DateRange,
-              payload.Frequency,
-              payload.Name,
-              payload.Phone,
-              payload.Email,
-              payload.Category,
-              payload.CreatorUserId,
-              1,
-            ],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                response = "Failed";
-              } else {
-                console.log("successfully query", data);
-                response = "Success";
-              }
-              resolve(response);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-  async createBulkCode(payload: bulkAccessCodeModel): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          var AccessCode = `Access- ${GenerateUniqueId()}`;
-          const query = `INSERT INTO AccessCode(CodeType,Code,Date,StartTime,EndTime,AppointmentTitle,Phone,Email,NoOfParticipants,CreatorUserId,IsActive) VALUES(?,?,?,?,?,?,?,?,?,?,?)`;
-
-          connection?.query(
-            query,
-            [
-              "Bulk",
-              AccessCode,
-              payload.Date,
-              payload.StartTime,
-              payload.EndTime,
-              payload.AppointmentTitle,
-              payload.Phone,
-              payload.Email,
-              payload.NoOfParticipants,
-              payload.CreatorUserId,
-              1,
-            ],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                response = "Failed";
-              } else {
-                console.log("successfully query", data);
-                response = "Success";
-              }
-              resolve(response);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-  async getAllAccessCode(): Promise<any> {
-    let result: any;
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          connection?.query(
-            `SELECT a.*,b.FirstName as CreatorName,b.Phone as CreatorPhone FROM AccessCode a left join users b ON b.UserId = a.CreatorUserId`,
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-              } else {
-                console.log("successfully query", data);
-              }
-              resolve(data);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {}
-  }
-
-  async getAllAccessCodeByCreatorUserId(creatorUserId: string): Promise<any> {
-    let result: any;
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          connection?.query(
-            `SELECT a.*,b.FirstName as CreatorName,b.Phone as CreatorPhone FROM AccessCode a left join users b ON b.UserId = a.CreatorUserId WHERE a.CreatorUserId = ?`,
-            [creatorUserId],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-              } else {
-                console.log("successfully query", data);
-              }
-              resolve(data);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {}
-  }
-
-  async getAccessCodeByAccessCode(accessCode: string): Promise<any> {
-    let result: any;
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          connection?.query(
-            `SELECT a.*,b.FirstName as CreatorName,b.Phone as CreatorPhone FROM AccessCode a left join users b ON b.UserId = a.CreatorUserId WHERE a.Code = ?`,
-            [accessCode],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-              } else {
-                console.log("successfully query", data);
-              }
-              resolve(data);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {}
-  }
-
-  async getAccessCodeByid(Id: number): Promise<any> {
-    let result: any;
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          connection?.query(
-            `SELECT a.*,b.FirstName as CreatorName,b.Phone as CreatorPhone FROM AccessCode a left join users b ON b.UserId = a.CreatorUserId WHERE a.Id = ?`,
-            [Id],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-              } else {
-                console.log("successfully query", data);
-              }
-              resolve(data);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {}
-  }
-
-  async CreateForum(payload: CreateForumModel): Promise<string> {
-    let response: string = "";
-    let errorLog: string[] = [];
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-          connection?.beginTransaction((err) => {
-            if (err) {
-              console.log("error beginning transaction", err);
-              reject(err);
-            }
-          });
-          var forumId = `Forum-${GenerateUniqueId()}`;
-          const query1 = `INSERT INTO Forum(CommunityId,Title,ForumId,CreatedBy,DateCreated,Status) VALUES(?,?,?,?,?,?)`;
-          const query2 = `INSERT INTO ForumUsers(UserId,ForumId) VALUES(?,?)`;
-          const query3 = `INSERT INTO ForumMembers(ForumId,UserRole) VALUES(?,?)`;
-
-          connection?.query(
-            query1,
-            [
-              payload.CommunityId,
-              payload.Title,
-              forumId,
-              payload.CreatorUserId,
-              new Date(),
-              1,
-            ],
-            (err, data) => {
-              //connection.release()
-              if (err) {
-                errorLog.push(err.message);
-                return connection.rollback(() => {
-                  console.log("error querying database", err);
-                  //reject('Failed')
-                });
-              }
-            }
-          );
-
-          for (let i = 0; i < payload.UserIds!.length; i++) {
-            connection?.query(
-              query2,
-              [payload.UserIds![i], forumId],
-              (err, data) => {
-                if (err) {
-                  errorLog.push(err.message);
-                  return connection.rollback(() => {
-                    console.log("error querying database", err);
-                    //reject('Failed')
-                  });
-                }
-              }
-            );
-          } //end of for loop
-
-          for (let i = 0; i < payload.UserRoles.length; i++) {
-            connection?.query(
-              query3,
-              [forumId, payload.UserRoles[i]],
-              (err, data) => {
-                if (err) {
-                  errorLog.push(err.message);
-                  return connection.rollback(() => {
-                    console.log("error querying database", err);
-                    //reject('Failed')
-                  });
-                }
-              }
-            );
-          } //end of for loop
-
-          connection.commit((err) => {
-            connection.release();
-            if (err) {
-              errorLog.push(err.message);
-              return connection.rollback(() => {
-                console.log("Error Committing Transaction", err);
-                reject("Failed");
-              });
-            }
-            if (errorLog.length < 1) {
-              resolve("Success");
-            } else {
-              resolve("Failed");
-            }
-          });
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating Forum:", error);
-      return "Failed";
-    }
-  }
-
-  async UpdateForum(Id: string, payload: CreateForumModel): Promise<string> {
-    let response: string = "";
-    let errorLog: string[] = [];
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-          connection?.beginTransaction((err) => {
-            if (err) {
-              console.log("error beginning transaction", err);
-              reject(err);
-            }
-          });
-          const query1 = `UPDATE Forum SET Title=?,CommunityId=? WHERE ForumId=?`;
-          const query2 = `UPDATE ForumMembers SET UserRole=? WHERE ForumId=?`;
-
-          connection?.query(
-            query1,
-            [payload.Title, payload.CommunityId, Id],
-            (err, data) => {
-              //connection.release()
-              if (err) {
-                errorLog.push(err.message);
-                connection.rollback(() => {
-                  console.log("error querying database", err);
-                });
-              }
-            }
-          );
-
-          for (let i = 0; i < payload.UserRoles.length; i++) {
-            connection?.query(
-              query2,
-              [payload.UserRoles[i], Id],
-              (err, data) => {
-                if (err) {
-                  errorLog.push(err.message);
-                  connection.rollback(() => {
-                    console.log("error querying database", err);
-                  });
-                }
-              }
-            );
-          } //end of for loop
-
-          connection.commit((err) => {
-            connection.release();
-            if (err) {
-              errorLog.push(err.message);
-              return connection.rollback(() => {
-                console.log("Error Committing Transaction", err);
-                reject("Failed");
-              });
-            }
-            if (errorLog.length < 1) {
-              resolve("Success");
-            } else {
-              resolve("Failed");
-            }
-          });
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-  async DeleteForum(Id: string): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          const query = `UPDATE Forum SET Status= ? WHERE ForumId=?`;
-
-          connection?.query(query, [3, Id], (err, data) => {
-            connection.release();
-            if (err) {
-              console.log("error querying database", err);
-              response = "Failed";
-            } else {
-              console.log("successfully query", data);
-              response = "Success";
-            }
-            resolve(response);
-          });
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-  async DeactivateForum(Id: string): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          const query = `UPDATE Forum SET Status= ? WHERE ForumId=?`;
-          console.log("About to deactivate forum", Id);
-          connection?.query(query, [2, Id], (err, data) => {
-            connection.release();
-            if (err) {
-              console.log("error querying database", err);
-              response = "Failed";
-            } else {
-              console.log("successfully query", data);
-              response = "Success";
-            }
-            resolve(response);
-          });
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-  async ActivateForum(Id: string): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          const query = `UPDATE Forum SET Status= ? WHERE ForumId=?`;
-
-          connection?.query(query, [1, Id], (err, data) => {
-            connection.release();
-            if (err) {
-              console.log("error querying database", err);
-              response = "Failed";
-            } else {
-              console.log("successfully query", data);
-              response = "Success";
-            }
-            resolve(response);
-          });
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-  async GetAllForum(): Promise<any> {
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          //const query = `SELECT * FROM Forum`
-          const query = `select a.CommunityId,a.Title,a.ForumId,(select FirstName from users where Id = a.createdBy ) as CreatedBy,DateCreated,Status from forum a`;
-
-          connection?.query(query, (err, data) => {
-            connection.release();
-            if (err) {
-              console.log("error querying database", err);
-            } else {
-              console.log("successfully query", data);
-            }
-            resolve(data);
-          });
-        });
-      });
-      return result;
-    } catch (error) {
-      console.error("Error Getting community", error);
-    }
-  }
-
-  async GetForumByForumId(Id: string): Promise<any> {
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          const query = `SELECT * FROM Forum where ForumId = ?`;
-
-          connection?.query(query, [Id], (err, data) => {
-            connection.release();
-            if (err) {
-              console.log("error querying database", err);
-            } else {
-              console.log("successfully query", data);
-            }
-            resolve(data);
-          });
-        });
-      });
-      return result;
-    } catch (error) {
-      console.error("Error Getting community", error);
-    }
-  }
-
-  async CreatePost(payload: PostModel): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          const query = `INSERT INTO Post(Title,Information,UserId,CreatedAt) VALUES(?,?,?,?)`;
-
-          connection?.query(
-            query,
-            [payload.Title, payload.Information, payload.UserId, new Date()],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                response = "Failed";
-              } else {
-                console.log("successfully query", data);
-                response = "Success";
-              }
-              resolve(response);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-  async GetAllPost(): Promise<any> {
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          const query = `SELECT * FROM Post`;
-
-          connection?.query(query, (err, data) => {
-            connection.release();
-            if (err) {
-              console.log("error querying database", err);
-            } else {
-              console.log("successfully query", data);
-            }
-            resolve(data);
-          });
-        });
-      });
-      return result;
-    } catch (error) {
-      console.error("Error Getting community", error);
-    }
-  }
-
-  async GetPostById(PostId: number): Promise<any> {
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          const query = `SELECT * FROM Post where Id = ?`;
-
-          connection?.query(query, [PostId], (err, data) => {
-            connection.release();
-            if (err) {
-              console.log("error querying database", err);
-            } else {
-              console.log("successfully query", data);
-            }
-            resolve(data);
-          });
-        });
-      });
-      return result;
-    } catch (error) {
-      console.error("Error Getting community", error);
-    }
-  }
-
-  async CreateComment(payload: CommentModel): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          const query = `INSERT INTO Comments(PostId,Comment,UserId,CreatedAt) VALUES(?,?,?,?)`;
-
-          connection?.query(
-            query,
-            [payload.PostId, payload.Comment, payload.UserId, new Date()],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                response = "Failed";
-              } else {
-                console.log("successfully query", data);
-                response = "Success";
-              }
-              resolve(response);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-  async UpdateComment(Id: number, payload: CommentModel): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          const query = `UPDATE Comments SET Comment= ?,UpdatedAt=? WHERE Id=?`;
-
-          connection?.query(
-            query,
-            [payload.Comment, new Date(), Id],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                response = "Failed";
-              } else {
-                console.log("successfully query", data);
-                response = "Success";
-              }
-              resolve(response);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-  async DeleteComment(Id: number): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          const query = `DELETE FROM Comments WHERE Id=?`;
-
-          connection?.query(query, [Id], (err, data) => {
-            connection.release();
-            if (err) {
-              console.log("error querying database", err);
-              response = "Failed";
-            } else {
-              console.log("successfully query", data);
-              response = "Success";
-            }
-            resolve(response);
-          });
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-  async GetAllComments(): Promise<any> {
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          const query = `SELECT * FROM Comments`;
-
-          connection?.query(query, (err, data) => {
-            connection.release();
-            if (err) {
-              console.log("error querying database", err);
-            } else {
-              console.log("successfully query", data);
-            }
-            resolve(data);
-          });
-        });
-      });
-      return result;
-    } catch (error) {
-      console.error("Error Getting community", error);
-    }
-  }
-
-  async GetCommentById(Id: number): Promise<any> {
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          const query = `SELECT * FROM Comments where Id = ?`;
-
-          connection?.query(query, [Id], (err, data) => {
-            connection.release();
-            if (err) {
-              console.log("error querying database", err);
-            } else {
-              console.log("successfully query", data);
-            }
-            resolve(data);
-          });
-        });
-      });
-      return result;
-    } catch (error) {
-      console.error("Error Getting community", error);
-    }
-  }
-
-  async createAppointment(payload: createAppointmentModel): Promise<string> {
-    let response: string = "";
-    let errorLog: any[] = [];
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection(async(err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-          // connection?.beginTransaction((err) => {
-          //   reject(err);
-          // });
-          await BeginTransaction(connection)
-          const appointUsers = JSON.parse(payload.UserIds);
-          const appointmentId = `Appoint-${GenerateUniqueId()}`;
-          const query1 = `INSERT INTO Appointment(Title,Date,Time,Venue,Description,PhotoPath,CommunityId,CreatorUserId,CreatedAt,AppointmentId,IsActive) VALUES(?,?,?,?,?,?,?,?,?,?,?)`;
-          const query2 =
-            "INSERT INTO AppointmentUsers(UserId,AppointmentId) VALUES(?,?)";
-          // connection?.query(
-          //   query1,
-          //   [
-          //     payload.Title,
-          //     payload.Date,
-          //     payload.Time,
-          //     payload.Venue,
-          //     payload.Description,
-          //     payload.PhotoPath,
-          //     payload.CommunityId,
-          //     payload.CreatorUserId,
-          //     getCurrentDate(),
-          //     appointmentId,
-          //     1,
-          //   ],
-          //   (err, data) => {
-          //     if (err) {
-          //       errorLog.push(err);
-          //       console.log("error querying database", err);
-          //       connection?.rollback((error) => {
-          //         console.log("error rolling back transaction", error);
-          //       });
-          //     }
-          //   }
-          // );
-
-
-          await QueryTransaction(connection,query1,[
-            payload.Title,
-            payload.Date,
-            payload.Time,
-            payload.Venue,
-            payload.Description,
-            payload.PhotoPath,
-            payload.CommunityId,
-            payload.CreatorUserId,
-            getCurrentDate(),
-            appointmentId,
-            1,
-          ])
-
-          for (let i = 0; i < appointUsers.length; i++) {
-            // connection?.query(
-            //   query2,
-            //   [appointUsers[i], appointmentId],
-            //   (err, data) => {
-            //     if (err) {
-            //       errorLog.push(err);
-            //       console.log("error querying database", err)
-            //       connection.rollback((error) => {
-            //         console.log("error rolling back transaction", error);
-            //       });
-            //     }
-            //   }
-            // );
-
-            await QueryTransaction(connection,query2,[appointUsers[i], appointmentId])
-          }
-
-          // connection?.commit((err) => {
-          //   connection?.release();
-          //   if (err) {
-          //     errorLog.push(err);
-          //     console.log("error committing changes", err);
-          //     connection?.rollback((error) => {
-          //       console.log("error rolling back transaction", error);
-          //     });
-          //   }
-
-          //   if (errorLog.length < 0) {
-          //     console.log('total error logged',errorLog)
-          //     resolve("Success");
-          //   } else {
-          //     resolve("Failed");
-          //   }
-
-          // });
-          await CommitTransaction(connection)
-          await ReleaseTransaction(connection)
-
-           resolve('Success')
-         
-        });
-
-      
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating appointment:", error);
-      return "Failed";
-    }
-  }
-
-  async updateAppointment(
-    AppointmentId: string,
-    payload: createAppointmentModel
-  ): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          const query = `UPDATE Appointment SET Title=?,Date=?,Time=?,Venue=?,Description=?,PhotoPath=?,CommunityId=?,UpdatedAt=? WHERE AppointmentId= ?`;
-
-          connection?.query(
-            query,
-            [
-              payload.Title,
-              payload.Date,
-              payload.Time,
-              payload.Venue,
-              payload.Description,
-              payload.PhotoPath,
-              payload.CommunityId,
+            [[
+              ConsultationId,
               getCurrentDate(),
-              AppointmentId,
-            ],
+              payload.Cost,
+              1,
+              payload.UserId
+            ]],
             (err, data) => {
               connection.release();
               if (err) {
@@ -1073,59 +84,48 @@ export default class baseRepositoryImpl implements BaseRepository {
 
       return result;
     } catch (error) {
-      console.error("Error creating user:", error);
+      console.error("Error Appointment :", error);
       return "Failed";
     }
   }
 
-  async deleteAppointment(appointmentId: string): Promise<string> {
+
+
+  async DeleteAppointment(consultationId: string): Promise<string> {
     let response: string = "";
     try {
       const connection = await this.getConnection();
       let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection(async (err, connection) => {
+        connection?.getConnection((err, connection) => {
           if (err) {
             console.log("connection error", err);
             reject(err);
           }
 
-          const query1 = `DELETE FROM  Appointment WHERE AppointmentId= ?`;
-          const query2 = `DELETE FROM  AppointmentUsers WHERE AppointmentId= ?`;
+          const query = `DELETE FROM Appointment WHERE ConsultationId=?`;
 
-          await BeginTransaction(connection)
-
-          // connection?.query(query, [appointmentId], (err, data) => {
-          //   connection.release();
-          //   if (err) {
-          //     console.log("error querying database", err);
-          //     response = "Failed";
-          //   } else {
-          //     console.log("successfully query", data);
-          //     response = "Success";
-          //   }
-          //   resolve(response);
-          // });
-
-          await QueryTransaction(connection,query1,[appointmentId])
-
-          await QueryTransaction(connection,query2,[appointmentId])
-
-          await CommitTransaction(connection)
-
-          await ReleaseTransaction(connection)
-          resolve('Success')
+          connection?.query(query, [consultationId], (err, data) => {
+            connection.release();
+            if (err) {
+              console.log("error querying database", err);
+              response = "Failed";
+            } else {
+              console.log("successfully query", data);
+              response = "Success";
+            }
+            resolve(response);
+          });
         });
       });
 
       return result;
     } catch (error) {
-      console.error("Error creating user:", error);
+      console.error("Error Deleting Appointment:", error);
       return "Failed";
     }
   }
 
-  async GetAllAppointment(): Promise<any> {
-    let result: any;
+  async GetAllAppointments(): Promise<any> {
     try {
       const connection = await this.getConnection();
       let result = await new Promise<any>((resolve, reject) => {
@@ -1135,7 +135,9 @@ export default class baseRepositoryImpl implements BaseRepository {
             reject(err);
           }
 
-          connection?.query(`SELECT a.*,b.FirstName as CreatorName FROM Appointment a left join users b ON b.UserId = a.CreatorUserId`, (err, data) => {
+          const query = `SELECT * FROM Appointment`;
+
+          connection?.query(query, (err, data) => {
             connection.release();
             if (err) {
               console.log("error querying database", err);
@@ -1146,13 +148,13 @@ export default class baseRepositoryImpl implements BaseRepository {
           });
         });
       });
-
       return result;
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error Getting Appointments", error);
+    }
   }
 
-  async GetAppointmentId(Id: number): Promise<any> {
-    let result: any;
+  async GetAllAppointmentsByUserId(userId: string): Promise<any> {
     try {
       const connection = await this.getConnection();
       let result = await new Promise<any>((resolve, reject) => {
@@ -1162,28 +164,26 @@ export default class baseRepositoryImpl implements BaseRepository {
             reject(err);
           }
 
-          connection?.query(
-            `SELECT a.*,b.FirstName as CreatorName FROM Appointment a left join users b ON b.UserId = a.CreatorUserId where a.Id=?`,
-            [Id],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-              } else {
-                console.log("successfully query", data);
-              }
-              resolve(data);
+          const query = `SELECT * FROM Appointment where UserId = ?`;
+
+          connection?.query(query, [userId], (err, data) => {
+            connection.release();
+            if (err) {
+              console.log("error querying database", err);
+            } else {
+              console.log("successfully query", data);
             }
-          );
+            resolve(data);
+          });
         });
       });
-
       return result;
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error Getting Appointments by userId", error);
+    }
   }
 
-  async GetAppointmentCommunityId(CommunityId: string): Promise<any> {
-    let result: any;
+  async GetAllAppointmentsByConsultationId(consultationId: string): Promise<any> {
     try {
       const connection = await this.getConnection();
       let result = await new Promise<any>((resolve, reject) => {
@@ -1193,27 +193,28 @@ export default class baseRepositoryImpl implements BaseRepository {
             reject(err);
           }
 
-          connection?.query(
-            `SELECT * FROM Appointment where CommunityId=?`,
-            [CommunityId],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-              } else {
-                console.log("successfully query", data);
-              }
-              resolve(data);
+          const query = `SELECT * FROM Appointment where ConsultationId = ?`;
+
+          connection?.query(query, [consultationId], (err, data) => {
+            connection.release();
+            if (err) {
+              console.log("error querying database", err);
+            } else {
+              console.log("successfully query", data);
             }
-          );
+            resolve(data);
+          });
         });
       });
-
       return result;
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error Getting Appointments by ConsultationId", error);
+    }
   }
 
-  async CreateTransaction(payload: TransactionModel): Promise<string> {
+
+
+  async CreateTransaction(payload: CreateTransactionModel): Promise<string> {
     let response: string = "";
     try {
       const connection = await this.getConnection();
@@ -1224,21 +225,20 @@ export default class baseRepositoryImpl implements BaseRepository {
             reject(err);
           }
 
-          const transid = `Trans-${GenerateUniqueId()}`;
-          const query = `INSERT INTO Transaction(TransactionId,Product,Plan,Phone,DateTime,Amount,TotalAmount,Status,PaymentMethod) VALUES(?,?,?,?,?,?,?,?,?)`;
+          const transid = `trans-${GenerateUniqueId()}`;
+          const query = `INSERT INTO Transaction(TransactionId,Name,CreatedAt,Plan,Amount,Currency,Status,UserId) VALUES(?,?,?,?,?,?,?,?)`;
 
           connection?.query(
             query,
             [
               transid,
-              payload.Product,
+              payload.Name,
+              getCurrentDate(),
               payload.Plan,
-              payload.Phone,
-              payload.DateTime,
               payload.Amount,
-              payload.TotalAmount,
-              payload.Status,
-              payload.PaymentMethod,
+              payload.Currency,
+              1,
+              payload.UserId,
             ],
             (err, data) => {
               connection.release();
@@ -1257,7 +257,7 @@ export default class baseRepositoryImpl implements BaseRepository {
 
       return result;
     } catch (error) {
-      console.error("Error creating user:", error);
+      console.error("Error creating transaction:", error);
       return "Failed";
     }
   }
@@ -1290,7 +290,42 @@ export default class baseRepositoryImpl implements BaseRepository {
       });
 
       return result;
-    } catch (error) {}
+    } catch (error) {
+      console.log('error getting transaction by transactionId',error)
+    }
+  }
+
+  async GetAllTransactionsByUserId(userId: string): Promise<any> {
+    let result: any;
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<any>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+
+          connection?.query(
+            `SELECT * FROM Transaction where UserId=?`,
+            [userId],
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+              } else {
+                console.log("successfully query", data);
+              }
+              resolve(data);
+            }
+          );
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.log('error getting transaction by userId',error)
+    }
   }
 
   async GetAllTransaction(): Promise<any> {
@@ -1317,7 +352,9 @@ export default class baseRepositoryImpl implements BaseRepository {
       });
 
       return result;
-    } catch (error) {}
+    } catch (error) {
+      console.log('error getting transactions',error)
+    }
   }
 
   async DeleteTransaction(transactionId: string): Promise<string> {
@@ -1349,13 +386,13 @@ export default class baseRepositoryImpl implements BaseRepository {
 
       return result;
     } catch (error) {
-      console.error("Error creating user:", error);
+      console.error("Error Deleting Transaction:", error);
       return "Failed";
     }
   }
 
-  async CreateServiceProvider(
-    payload: createServiceProviderModel
+  async CreateSubscription(
+    payload: CreateSubscriptionModel
   ): Promise<string> {
     let response: string = "";
     try {
@@ -1366,382 +403,21 @@ export default class baseRepositoryImpl implements BaseRepository {
             console.log("connection error", err);
             reject(err);
           }
-
-          const providerId = `Provider- ${GenerateUniqueId()}`;
-          const query = `INSERT INTO ServiceProviders(ProviderId,CreatedAt,BusinessName,BusinessCategory,BusinessType,RegistrationType,BusinessRegNum,BusinessTaxId,BusinessDescription,CACPhotoPath) VALUES(?,?,?,?,?,?,?,?,?,?)`;
+          const query = `INSERT INTO Subscription(Package,Thirty_Job,Fifty_job,Sponsored,Realtime_Dashboard,Optimize_Resume,Calibrate_Resume_ATS,One_One_Consultation,Price,UserId) VALUES(?,?,?,?,?,?,?,?,?,?)`;
 
           connection?.query(
             query,
             [
-              providerId,
-              new Date(),
-              payload.BusinessName,
-              payload.BusinessCategory,
-              payload.BusinessType,
-              payload.RegistrationType,
-              payload.BusinessRegNum,
-              payload.BusinessTaxId,
-              payload.BusinessDescription,
-              payload.CACPhotoPath,
-            ],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                response = "Failed";
-              } else {
-                console.log("successfully query", data);
-                response = "Success";
-              }
-              resolve(response);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-  async CreateBusinessCategory(
-    payload: BusinessCategoryModel
-  ): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          const query = `INSERT INTO BusinessCategory(Name,CreatedAt) VALUES(?,?)`;
-
-          connection?.query(
-            query,
-            [payload.Name, getCurrentDate()],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                response = "Failed";
-              } else {
-                console.log("successfully query", data);
-                response = "Success";
-              }
-              resolve(response);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-  async UpdateBusinessCategory(
-    Id: number,
-    payload: BusinessCategoryModel
-  ): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          const query = `UPDATE BusinessCategory SET Name = ?,UpdatedAt=? WHERE Id=?`;
-
-          connection?.query(
-            query,
-            [payload.Name, getCurrentDate(), Id],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                response = "Failed";
-              } else {
-                console.log("successfully query", data);
-                response = "Success";
-              }
-              resolve(response);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-  async GetAllBusinessCategory(): Promise<any> {
-    let result: any;
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          connection?.query(`SELECT * FROM BusinessCategory`, (err, data) => {
-            connection.release();
-            if (err) {
-              console.log("error querying database", err);
-            } else {
-              console.log("successfully query", data);
-            }
-            resolve(data);
-          });
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error Getting Business Categories:", error);
-    }
-  }
-  async GetBusinessCategoryById(Id: number): Promise<any> {
-    let result: any;
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          connection?.query(
-            `SELECT * FROM BusinessCategory WHERE Id=?`,
-            [Id],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-              } else {
-                console.log("successfully query", data);
-              }
-              resolve(data);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error Getting Business Category:", error);
-    }
-  }
-
-  async DeleteBusinessCategory(Id: number): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          const query = `DELETE FROM  BusinessCategory WHERE Id= ?`;
-
-          connection?.query(query, [Id], (err, data) => {
-            connection.release();
-            if (err) {
-              console.log("error querying database", err);
-              response = "Failed";
-            } else {
-              console.log("successfully query", data);
-              response = "Success";
-            }
-            resolve(response);
-          });
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-  async CreateSupport(payload: SupportModel): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-          const ticketId = `${GenerateUniqueId()}`;
-
-          const query = `INSERT INTO Support(TicketId,Heading,Complain,CreatorEmail,CreatedAt) VALUES(?,?,?,?,?)`;
-
-          connection?.query(
-            query,
-            [
-              ticketId,
-              payload.Heading,
-              payload.Complain,
-              payload.CreatorEmail,
-              getCurrentDate(),
-            ],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                response = "Failed";
-              } else {
-                console.log("successfully query", data);
-                response = "Success";
-              }
-              resolve(response);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-  async DeactivateSupport(TicketId: string): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          const query = `UPDATE Support SET IsActive=? WHERE TicketId= ?`;
-
-          connection?.query(query, [2, TicketId], (err, data) => {
-            connection.release();
-            if (err) {
-              console.log("error querying database", err);
-              response = "Failed";
-            } else {
-              console.log("successfully query", data);
-              response = "Success";
-            }
-            resolve(response);
-          });
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-  async GetAllSupport(): Promise<any> {
-    let result: any;
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          connection?.query(`SELECT * FROM Support`, (err, data) => {
-            connection.release();
-            if (err) {
-              console.log("error querying database", err);
-            } else {
-              console.log("successfully query", data);
-            }
-            resolve(data);
-          });
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error Getting Support:", error);
-    }
-  }
-
-  async GetSupportByTicketId(ticketId: string): Promise<any> {
-    let result: any;
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          connection?.query(
-            `SELECT * FROM Support WHERE TicketId=?`,
-            [ticketId],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-              } else {
-                console.log("successfully query", data);
-              }
-              resolve(data);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error Getting Business Category:", error);
-    }
-  }
-
-  async CreateSupportComment(payload: SupportCommentModel): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-          const ticketId = `${GenerateUniqueId()}`;
-
-          const query = `INSERT INTO SupportComment(TicketId,Comment,UserId,CreatedAt) VALUES(?,?,?,?,?)`;
-
-          connection?.query(
-            query,
-            [
-              payload.TicketId,
-              payload.Comment,
+              payload.Package,
+              payload.Thirty_Job,
+              payload.Fifty_job,
+              payload.Sponsored,
+              payload.Realtime_Dashboard,
+              payload.Optimize_Resume,
+              payload.Calibrate_Resume_ATS,
+              payload.One_One_Consultation,
+              payload.Price,
               payload.UserId,
-              getCurrentDate(),
             ],
             (err, data) => {
               connection.release();
@@ -1760,53 +436,13 @@ export default class baseRepositoryImpl implements BaseRepository {
 
       return result;
     } catch (error) {
-      console.error("Error creating user:", error);
+      console.error("Error creating subscription:", error);
       return "Failed";
     }
   }
 
-  async UpdateSupportComment(
-    Id: number,
-    payload: SupportCommentModel
-  ): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
 
-          const query = `UPDATE SupportComment SET Comment=?, UpdatedAt=? WHERE Id= ?`;
-
-          connection?.query(
-            query,
-            [payload.Comment, getCurrentDate(), Id],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                response = "Failed";
-              } else {
-                console.log("successfully query", data);
-                response = "Success";
-              }
-              resolve(response);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-  async GetSupportCommentById(Id: number): Promise<any> {
+  async GetAllSubscriptionsByUserId(userId: string): Promise<any> {
     let result: any;
     try {
       const connection = await this.getConnection();
@@ -1818,7 +454,70 @@ export default class baseRepositoryImpl implements BaseRepository {
           }
 
           connection?.query(
-            `SELECT * FROM SupportComment WHERE Id=?`,
+            `SELECT * FROM Subscription where UserId=?`,
+            [userId],
+            (err, data) => {
+              connection.release();
+              if (err) {
+                console.log("error querying database", err);
+              } else {
+                console.log("successfully query", data);
+              }
+              resolve(data);
+            }
+          );
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.log('error getting Subscription by userId',error)
+    }
+  }
+
+  async GetAllSubscription(): Promise<any> {
+    let result: any;
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<any>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+
+          connection?.query(`SELECT * FROM Subscription`, (err, data) => {
+            connection.release();
+            if (err) {
+              console.log("error querying database", err);
+            } else {
+              console.log("successfully query", data);
+            }
+            resolve(data);
+          });
+        });
+      });
+
+      return result;
+    } catch (error) {
+      console.log('error getting Subscription',error)
+    }
+  }
+
+
+  async GetAllSubscriptionsById(Id: number): Promise<any> {
+    let result: any;
+    try {
+      const connection = await this.getConnection();
+      let result = await new Promise<any>((resolve, reject) => {
+        connection?.getConnection((err, connection) => {
+          if (err) {
+            console.log("connection error", err);
+            reject(err);
+          }
+
+          connection?.query(
+            `SELECT * FROM Subscription where Id=?`,
             [Id],
             (err, data) => {
               connection.release();
@@ -1835,345 +534,11 @@ export default class baseRepositoryImpl implements BaseRepository {
 
       return result;
     } catch (error) {
-      console.error("Error Getting Business Category:", error);
+      console.log('error getting Subscription by Id',error)
     }
   }
 
-  async GetAllSupportComment(): Promise<any> {
-    let result: any;
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          connection?.query(`SELECT * FROM SupportComment`, (err, data) => {
-            connection.release();
-            if (err) {
-              console.log("error querying database", err);
-            } else {
-              console.log("successfully query", data);
-            }
-            resolve(data);
-          });
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error Getting Support:", error);
-    }
-  }
-
-
-  async GetAllIReportCategory(): Promise<any> {
-    let result: any;
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          connection?.query(`SELECT * FROM i-report-category`, (err, data) => {
-            connection.release();
-            if (err) {
-              console.log("error querying database", err);
-            } else {
-              console.log("successfully query", data);
-            }
-            resolve(data);
-          });
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error Getting Support:", error);
-    }
-  }
-
-
-  async CreateIReportCategory(payload: IReportCategory): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-          const ticketId = `${GenerateUniqueId()}`;
-
-          const query = `INSERT INTO i-report-category(Name,Description,CreatedAt) VALUES(?,?,?)`;
-
-          connection?.query(
-            query,
-            [
-              payload.Name,
-              payload.Description,
-              getCurrentDate(),
-            ],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                response = "Failed";
-              } else {
-                console.log("successfully query", data);
-                response = "Success";
-              }
-              resolve(response);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-  async CreateIReport(
-    PhotoPath: string[],
-    payload: CreateIReportModel
-  ): Promise<string> {
-    let response: string = "";
-    let errorLog: any[] = [];
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-          const reportId = `${GenerateUniqueId()}`;
-
-          connection.beginTransaction((err) => {
-            reject(err);
-          });
-
-          const query1 = `INSERT INTO I-Report(Category,Description,DateTimeOfOccurrence,Location,ReportId,IsVerified,CreatorUserId) VALUES(?,?,?,?,?,?,?)`;
-          const query2 = "INSERT INTO I-Report-Photos(ReportId,PhotoPath)";
-          connection?.query(
-            query1,
-            [
-              payload.Category,
-              payload.Description,
-              payload.DateTimeOfOccurrence,
-              payload.Location,
-              reportId,
-              0,
-              payload.CreatorUserId,
-            ],
-            (err, data) => {
-              //connection.release()
-              if (err) {
-                errorLog.push(err);
-                console.log("error querying database", err);
-                connection.rollback(() => {
-                  console.log("error rolling back transaction", err);
-                });
-              }
-            }
-          );
-          if (PhotoPath.length > 0) {
-            for (let i = 0; i < PhotoPath.length; i++) {
-              connection?.query(
-                query2,
-                [reportId, PhotoPath[i]],
-                (err, data) => {
-                  //connection.release()
-                  if (err) {
-                    errorLog.push(err);
-                    console.log("error querying database", err);
-                    connection.rollback(() => {
-                      console.log("error rolling back transaction", err);
-                    });
-                  }
-                }
-              );
-            }
-          }
-
-          connection.commit((err) => {
-            connection.release();
-            errorLog.push(err);
-            console.log("error during commit", err);
-            connection.rollback((error) => {
-              console.log("error rolling back commit", error);
-            });
-          });
-
-          if (errorLog.length > 0) {
-            resolve("Success");
-          } else {
-            resolve("Failed");
-          }
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-  async GetAllIReportByCreatorByUserId(creatorUserId: string): Promise<any> {
-    let result: any;
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          connection?.query(
-            `SELECT * FROM I-Report WHERE CreatorUserId=?`,
-            [creatorUserId],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-              } else {
-                console.log("successfully query", data);
-              }
-              resolve(data);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error Getting Support:", error);
-    }
-  }
-
-  async GetAllIReport(): Promise<any> {
-    let result: any;
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          connection?.query(`SELECT * FROM I-Report`, (err, data) => {
-            connection.release();
-            if (err) {
-              console.log("error querying database", err);
-            } else {
-              console.log("successfully query", data);
-            }
-            resolve(data);
-          });
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error Getting Support:", error);
-    }
-  }
-
-  async GetIReportPhotos(reportId: string): Promise<any> {
-    let result: any;
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          connection?.query(
-            `SELECT * FROM I-Report-Photos WHERE ReportId=?`,
-            [reportId],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-              } else {
-                console.log("successfully query", data);
-              }
-              resolve(data);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error Getting Support:", error);
-    }
-  }
-
-  async CreateDigitalRegistar(payload: CreateDigitalRegistar): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-          const registarId = `registar-${GenerateUniqueId()}`;
-          const query = `INSERT INTO DigitalRegistar(Name,ClockedInTime,ClockedInByUserId,Role,CreatedAt,IsActive,RegistarId) VALUES(?,?,?,?,?,?,?)`;
-
-          connection?.query(
-            query,
-            [
-              payload.Name,
-              payload.ClockedInTime,
-              payload.ClockedInByUserId,
-              payload.Role,
-              getCurrentDate(),
-              1,
-              registarId,
-            ],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                response = "Failed";
-              } else {
-                console.log("successfully query", data);
-                response = "Success";
-              }
-              resolve(response);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-  async UpdateDigitalRegistar(
-    registarId: string,
-    payload: CreateDigitalRegistar
-  ): Promise<string> {
+  async DeleteSubscription(Id: number): Promise<string> {
     let response: string = "";
     try {
       const connection = await this.getConnection();
@@ -2184,582 +549,7 @@ export default class baseRepositoryImpl implements BaseRepository {
             reject(err);
           }
 
-          const query = `UPDATE DigitalRegistar SET ClockedOutTime=?,ClockedOutByUserId=?,UpdatedAt=?,IsActive=? WHERE RegistarId=?`;
-
-          connection?.query(
-            query,
-            [
-              payload.ClockedOutTime,
-              payload.ClockedOutByUserId,
-              getCurrentDate(),
-              2,
-              registarId,
-            ],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                response = "Failed";
-              } else {
-                console.log("successfully query", data);
-                response = "Success";
-              }
-              resolve(response);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-  async GetAllDigitalRegistar(): Promise<any> {
-    let result: any;
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          connection?.query(
-            `select a.*,b.FirstName as ClockedInUserName,b.UserRole as ClockInUserRole,c.FirstName as ClockedOutUserName,c.UserRole as ClockOutUserRole from digitalregistar a  left join users b on b.UserId = a.ClockedInByUserId left join users c on c.UserId = a.ClockedOutByUserId
-              `,
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-              } else {
-                console.log("successfully query", data);
-              }
-              resolve(data);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error Getting Support:", error);
-    }
-  }
-  async GetDigitalRegistarByRegistarId(registarId: string): Promise<any> {
-    let result: any;
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          connection?.query(
-            `select a.*,b.FirstName as ClockedInUserName,b.UserRole as ClockInUserRole,c.FirstName as ClockedOutUserName,c.UserRole as ClockOutUserRole from digitalregistar a left join users b on b.UserId = a.ClockedInByUserId left join users c on c.UserId = a.ClockedOutByUserId  WHERE a.RegistarId=?`,
-            [registarId],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-              } else {
-                console.log("successfully query", data);
-              }
-              resolve(data);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error Getting Support:", error);
-    }
-  }
-
-
-
-  async CreateSuperAdminRoles(payload: SuperAdminRole): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-          //const ticketId = `${GenerateUniqueId()}`;
-
-          const query = `INSERT INTO superadminrole(Name,Description,ViewCommunity,ActivateDeactivateCommunity,CreateAdvert,EditAdvert,DeleteAdvert,CreateSubscription,EditSubscription,DeleteSubscription,CreatedAt) VALUES(?,?,?,?,?,?,?,?,?,?,?)`;
-
-          connection?.query(
-            query,
-            [
-              payload.Name,
-              payload.Description,
-              payload.ViewCommunity,
-              payload.ActivateDeactivateCommunity,
-              payload.CreateAdvert,
-              payload.EditAdvert,
-              payload.DeleteAdvert,
-              payload.CreateSubscription,
-              payload.EditSubscription,
-              payload.DeleteSubscription,
-              getCurrentDate(),
-            ],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                response = "Failed";
-              } else {
-                console.log("successfully query", data);
-                response = "Success";
-              }
-              resolve(response);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-
-  async GetSuperAdminRoles(): Promise<any> {
-    let result: any;
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          connection?.query(
-            `SELECT * FROM superadminrole`,
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                reject(err)
-              } else {
-                console.log("successfully query", data);
-              }
-              resolve(data);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error Getting superadminrole:", error);
-    }
-  }
-
-  async CreateSuperAdminTeam(payload: AdminTeam): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection(async(err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-          //const ticketId = `${GenerateUniqueId()}`;
-          const pass =  GenerateUniqueId(6)
-          const saltRound = 10;
-          const passwordEncrypt = await bcrypt.hash(pass, saltRound);
-
-          const query = `INSERT INTO adminteammember(FirstName,LastName,Email,Phone,RoleId,Password,CreatedAt) VALUES(?,?,?,?,?,?,?)`;
-
-          connection?.query(
-            query,
-            [
-              payload.FirstName,
-              payload.LastName,
-              payload.Email,
-              payload.Phone,
-              payload.RoleId,
-              passwordEncrypt,
-              getCurrentDate(),
-            ],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                response = "Failed";
-              } else {
-                console.log("successfully query", data);
-                
-                response = "Success";
-              }
-              resolve(response);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating super admin team:", error);
-      return "Failed";
-    }
-  }
-
-
-  async GetSuperAdminByPhoneOrEmail(Email:string): Promise<any> {
-    let result: any;
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          connection?.query(
-            `SELECT * FROM adminteammember WHERE (Email=? or Phone=?)`,[Email,Email],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                reject(err)
-              } else {
-                console.log("successfully query", data);
-              }
-              resolve(data);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error Getting superadmin:", error);
-    }
-  }
-
-
-
-  async CreateTargetAudience(
-    payload: TargetAudience
-  ): Promise<string> {
-    let response: string = "";
-    let errorLog: any[] = [];
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection(async(err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-          const reportId = `${GenerateUniqueId()}`;
-         try{
-          await BeginTransaction(connection)
-          const query1 = `INSERT INTO adverttargetaudience(Name,Allow_Male,Allow_Female,Allow_18_29,Allow_30_49,Allow_50_Plus,Allow_Role_Community_Admin,Allow_Role_SubAdmin,Allow_Role_Checker,Allow_Role_Member,Allow_Role_Dependant,TargetId,CreatedAt) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`;
-          const query2 = "INSERT INTO adverttargetcommunity(TargetId,CommunityId) VALUES(?,?)";
-          const audience = `Audience-${GenerateUniqueId()}`
-          await QueryTransaction(connection,query1,
-            [
-              payload.Name,
-              payload.Allow_Male,
-              payload.Allow_Female,
-              payload.Allow_18_29,
-              payload.Allow_30_49,
-              payload.Allow_50_Plus,
-              payload.Allow_Role_Community_Admin,
-              payload.Allow_Role_SubAdmin,
-              payload.Allow_Role_Checker,
-              payload.Allow_Role_Member,
-              payload.Allow_Role_Dependant,
-              audience,
-              getCurrentDate()
-
-            ])
-            //let communityIds = JSON.parse(payload.CommunityIds)
-            payload.CommunityIds.forEach(async(value:string)=>{
-              await QueryTransaction(connection,query2,[audience,value])
-            })  
-            
-            await CommitTransaction(connection)
-            await ReleaseTransaction(connection)
-            resolve('Success')
-         }catch(err){
-           console.log('An error occured in transaction',err)
-           reject(err)
-         }
-         
-        
-            
-       
-
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating Target Audience:", error);
-      return "Failed";
-    }
-  }
-
-  async CreateAdvert(payload: AdvertModel): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-          //const ticketId = `${GenerateUniqueId()}`;
-
-          const query = `INSERT INTO advert(Title,Type,TargetId,StartDate,EndDate,Content,Amount,FilePath,CreatedAt,IsActive) VALUES(?,?,?,?,?,?,?,?,?,?)`;
-
-          connection?.query(
-            query,
-            [
-              payload.Title,
-              payload.Type,
-              payload.TargetId,
-              payload.StartDate,
-              payload.EndDate,
-              payload.Content,
-              payload.Amount,
-              payload.FilePath,
-              getCurrentDate(),
-              1
-            ],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                response = "Failed";
-              } else {
-                console.log("successfully query", data);
-                response = "Success";
-              }
-              resolve(response);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-  async GetAdverts(): Promise<any> {
-    let result: any;
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          connection?.query(
-            `select a.*,(a.EndDate - a.StartDate) as Duration,datediff(a.EndDate, CURDATE()) as DaysLeft,b.Name as TargetAudience from advert a left join adverttargetaudience b on b.TargetId = a.TargetId`,
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                reject(err)
-              } else {
-                console.log("successfully query", data);
-              }
-              resolve(data);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error Getting advert:", error);
-    }
-  }
-
-  async GetAdvertById(Id:number): Promise<any> {
-    let result: any;
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          connection?.query(
-            `select a.*,(a.EndDate - a.StartDate) as Duration,datediff(a.EndDate, CURDATE()) as DaysLeft,b.Name as TargetAudience from advert a left join adverttargetaudience b on b.TargetId = a.TargetId where a.Id= ?`,
-            [Id],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                reject(err)
-              } else {
-                console.log("successfully query", data);
-              }
-              resolve(data);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error Getting advert by Id:", error);
-    }
-  }
-
-  async CreatePanicType(payload: PanicType): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-          //const ticketId = `${GenerateUniqueId()}`;
-
-          const query = `INSERT INTO PanicType(Name,Description,CreatorPhone,CreatedAt) VALUES(?,?,?,?)`;
-
-          connection?.query(
-            query,
-            [
-              payload.Name,
-              payload.Description,
-              payload.CreatorPhone,
-              getCurrentDate()
-            ],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                response = "Failed";
-              } else {
-                console.log("successfully query", data);
-                response = "Success";
-              }
-              resolve(response);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return "Failed";
-    }
-  }
-
-  async GetPanicTypes(): Promise<any> {
-    let result: any;
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          connection?.query(
-            `SELECT * FROM PanicType`,
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                reject(err)
-              } else {
-                console.log("successfully query", data);
-              }
-              resolve(data);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error Getting advert:", error);
-    }
-  }
-
-  async GetPanicTypeById(Id:number): Promise<any> {
-    let result: any;
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<any>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          connection?.query(
-            `SELECT * FROM PanicType WHERE Id=?`,
-            [Id],
-            (err, data) => {
-              connection.release();
-              if (err) {
-                console.log("error querying database", err);
-                reject(err)
-              } else {
-                console.log("successfully query", data);
-              }
-              resolve(data);
-            }
-          );
-        });
-      });
-
-      return result;
-    } catch (error) {
-      console.error("Error Getting Panic Type:", error);
-    }
-  }
-
-
-  async DeletePanicType(Id: number): Promise<string> {
-    let response: string = "";
-    try {
-      const connection = await this.getConnection();
-      let result = await new Promise<string>((resolve, reject) => {
-        connection?.getConnection((err, connection) => {
-          if (err) {
-            console.log("connection error", err);
-            reject(err);
-          }
-
-          const query = `DELETE FROM PanicType WHERE Id=?`;
+          const query = `DELETE FROM  Subscription WHERE Id= ?`;
 
           connection?.query(query, [Id], (err, data) => {
             connection.release();
@@ -2777,10 +567,18 @@ export default class baseRepositoryImpl implements BaseRepository {
 
       return result;
     } catch (error) {
-      console.error("Error Deleting Panic Type:", error);
+      console.error("Error Deleting Subscription:", error);
       return "Failed";
     }
   }
+
+
+
+
+
+
+
+
 
 
 

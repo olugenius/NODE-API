@@ -8,10 +8,7 @@ import { isAtLeast16YearsOld, isValidDateFormat } from './dateFormatter'
 [
   body('FirstName').notEmpty().trim().escape().withMessage('FirstName is required').matches(/^[a-zA-Z]+$/).withMessage('FirstName must contain only alphabetic characters'),
   body('LastName','LastName is required').notEmpty().trim().escape().matches(/^[a-zA-Z]+$/).withMessage('LastName must contain only alphabetic characters'),
-  body('Gender','Gender is required').notEmpty().trim().escape().matches(/^[a-zA-Z]+$/).withMessage('Gender must contain only alphabetic characters'),
-  body('Address','Address is required').notEmpty().trim().escape(),
   body('Phone').notEmpty().withMessage('PhoneNumber is required').trim().matches(/^\+?\d{1,}$/).isMobilePhone('any',{ strictMode: true }).withMessage('invalid phone number.'),
-  //body('PhotoPath').notEmpty().trim().escape(),
   body('Password').notEmpty().withMessage('Password is required').trim().escape().isLength({min:6}).withMessage('password length must not be less than 6').custom((value, { req }) => {
     // Regular expressions to check for at least one capital letter, one special character, and one number
     const capitalRegex = /[A-Z]/;
@@ -31,14 +28,13 @@ import { isAtLeast16YearsOld, isValidDateFormat } from './dateFormatter'
     // Return false with a custom error message if any condition fails
     throw new Error('Password must contain at least one capital letter, one special character, and one number');
 }),
-  //body('VerifyChannel','Verification channel is required').notEmpty().trim().escape(),
+  body('Gender','Gender is required').notEmpty().trim().escape(),
   //body('IsVerified').notEmpty().trim().escape(),
-  //body('Language','Language is required').notEmpty().trim().escape(),
+  body('Industry','Industry of interest is required').notEmpty().trim().escape(),
   //body('CompanyType','Company type is required').notEmpty().trim().escape(),
   //body('DOB','Date of Birth is required').isDate().toDate(),
-  body('DOB').custom(isValidDateFormat).withMessage('Date of Birth must be in YYYY-MM-DD format').custom(isAtLeast16YearsOld).withMessage('You must be at least 16 years old'),
-  body('UserRole','Please Pass the User Role').notEmpty().trim().escape(),
-  check('Email').optional().isEmail().withMessage('InValid Email').normalizeEmail(),
+  // body('DOB').custom(isValidDateFormat).withMessage('Date of Birth must be in YYYY-MM-DD format').custom(isAtLeast16YearsOld).withMessage('You must be at least 16 years old'),
+  check('Email').notEmpty().withMessage('Email field is required').isEmail().withMessage('InValid Email').normalizeEmail(),
 ]
 
 
@@ -52,15 +48,13 @@ export const UpdateUserValidator =
 
 export const EmailValidator = 
 [
-  body('Channel','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
-  body('Medium','Medium is required').notEmpty().trim().escape(),
- 
+  body('Email','Email is required').notEmpty().trim().escape(), 
 ]
 
 
 export const VerifyEmailValidator = 
 [
-  body('Channel','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
+  body('Email','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
   body('Token','Token is required').notEmpty().trim().escape(),
  
 ]
@@ -68,27 +62,25 @@ export const VerifyEmailValidator =
 
 export const ForgotPasswordValidator = 
 [
-  body('Channel','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
-  body('DOB').custom(isValidDateFormat).withMessage('Date of Birth must be in YYYY-MM-DD format'),
-  body('Medium','Medium is required').notEmpty().trim().escape(),
+  body('Email','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
 ]
 
 export const ForgotPasswordVerifyValidator = 
 [
-  body('Channel','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
+  body('Email','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
   body('Token','Token is required').notEmpty().trim().escape(),
 ]
 
 export const LoginValidator = 
 [
-  body('Channel').notEmpty().withMessage('Channel is required. In the form of Email or phone number').trim().escape(),
+  body('Email').notEmpty().withMessage('Email is required').trim().escape(),
   body('Password','Password is required').notEmpty().trim().escape(),
  
 ]
 
 export const RefreshTokenValidator = 
 [
-  body('Channel','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
+  body('Email','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
   body('RefreshToken','RefreshToken is required').notEmpty().trim().escape(),
  
 ]
@@ -96,7 +88,7 @@ export const RefreshTokenValidator =
 
 export const resetPasswordValidator = 
 [
-  body('Channel','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
+  body('Email','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
   body('NewPassword','NewPassword is required').notEmpty().trim().escape(),
   body('ConfirmPassword','ConfirmPassword is required').notEmpty().trim().custom((value,{req})=>{
      if(value !== req.body.NewPassword){
@@ -110,7 +102,7 @@ export const resetPasswordValidator =
 
 export const createPasswordValidator = 
 [
-  body('Channel','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
+  body('Email','Channel is required. In the form of Email or phone number').notEmpty().trim().escape(),
   body('Password','NewPassword is required').notEmpty().trim().escape(),
   body('ConfirmPassword','ConfirmPassword is required').notEmpty().trim().custom((value,{req})=>{
      if(value !== req.body.NewPassword){
@@ -123,7 +115,7 @@ export const createPasswordValidator =
 
 export const updatePasswordValidator = 
 [
-  body('Phone','Phone is required. In the form of Email or phone number').notEmpty().trim().escape(),
+  body('Email','Phone is required. In the form of Email or phone number').notEmpty().trim().escape(),
   body('OldPassword','OldPassword is required').notEmpty().trim(),
   body('NewPassword','NewPassword is required').notEmpty().trim(),
   // body('NewPassword','NewPassword is required').notEmpty().trim().custom((value,{req})=>{
